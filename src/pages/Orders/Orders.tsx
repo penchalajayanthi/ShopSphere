@@ -59,6 +59,7 @@ function Orders() {
   return (
     <main className="min-h-screen bg-[#fffaf0] px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
+
         {/* Header */}
         <section className="mb-8 overflow-hidden rounded-3xl bg-gradient-to-r from-[#fff3d6] via-[#fff7ed] to-[#fdf0ff] p-6 shadow-sm sm:p-8">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
@@ -79,8 +80,8 @@ function Orders() {
               </h1>
 
               <p className="mt-2 text-sm leading-6 text-gray-600 sm:text-base">
-                View your previous purchases and track your
-                orders in one place.
+                View your previous purchases and track
+                your orders in one place.
               </p>
             </div>
 
@@ -112,13 +113,13 @@ function Orders() {
               shopping and your orders will appear here.
             </p>
 
-           <Link
-  to="/products"
-  className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#e87500] px-6 py-3 text-sm font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
->
-  <ShoppingBag size={18} />
-  Start Shopping
-</Link>
+            <Link
+              to="/products"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#e87500] px-6 py-3 text-sm font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              <ShoppingBag size={18} />
+              Start Shopping
+            </Link>
           </section>
         )}
 
@@ -145,7 +146,9 @@ function Orders() {
                   {/* Order Header */}
                   <div className="border-b border-orange-100 p-5 sm:p-6">
                     <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+
                       <div className="grid grid-cols-2 gap-5 sm:grid-cols-4">
+
                         <div>
                           <p className="text-xs font-medium text-gray-500">
                             Order ID
@@ -172,7 +175,10 @@ function Orders() {
                           </p>
 
                           <p className="mt-1 text-sm font-bold text-[#d97706]">
-                            ₹{order.total.toLocaleString("en-IN")}
+                            ₹
+                            {order.total.toLocaleString(
+                              "en-IN",
+                            )}
                           </p>
                         </div>
 
@@ -189,31 +195,48 @@ function Orders() {
                             {order.status}
                           </span>
                         </div>
+
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() =>
-                          toggleOrder(order.id)
-                        }
-                        className="inline-flex items-center justify-center gap-2 rounded-xl border border-purple-200 bg-purple-50 px-4 py-2.5 text-sm font-bold text-[#7c3aed] transition hover:bg-purple-100"
-                      >
-                        {isExpanded
-                          ? "Hide Details"
-                          : "View Details"}
+                      {/* Order Actions */}
+                      <div className="flex flex-col gap-2 sm:flex-row">
 
-                        {isExpanded ? (
-                          <ChevronUp size={18} />
-                        ) : (
-                          <ChevronDown size={18} />
-                        )}
-                      </button>
+                        {/* Track Order */}
+                        <Link
+                          to={`/orders/${order.id}`}
+                          className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#ec4899] px-4 py-2.5 text-sm font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
+                        >
+                          <Truck size={18} />
+                          Track Order
+                        </Link>
+
+                        {/* View Details */}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            toggleOrder(order.id)
+                          }
+                          className="inline-flex items-center justify-center gap-2 rounded-xl border border-purple-200 bg-purple-50 px-4 py-2.5 text-sm font-bold text-[#7c3aed] transition hover:bg-purple-100"
+                        >
+                          {isExpanded
+                            ? "Hide Details"
+                            : "View Details"}
+
+                          {isExpanded ? (
+                            <ChevronUp size={18} />
+                          ) : (
+                            <ChevronDown size={18} />
+                          )}
+                        </button>
+
+                      </div>
                     </div>
                   </div>
 
                   {/* Order Details */}
                   {isExpanded && (
                     <div className="space-y-6 bg-[#fffdfa] p-5 sm:p-6">
+
                       {/* Products */}
                       <div>
                         <h2 className="mb-4 flex items-center gap-2 text-lg font-extrabold text-[#29221b]">
@@ -257,7 +280,9 @@ function Orders() {
                                   {(
                                     item.price *
                                     item.quantity
-                                  ).toLocaleString("en-IN")}
+                                  ).toLocaleString(
+                                    "en-IN",
+                                  )}
                                 </p>
                               </div>
                             </div>
@@ -267,6 +292,7 @@ function Orders() {
 
                       {/* Information Grid */}
                       <div className="grid gap-5 lg:grid-cols-2">
+
                         {/* Delivery Address */}
                         <div className="rounded-2xl border border-orange-100 bg-white p-5">
                           <h2 className="flex items-center gap-2 text-base font-extrabold text-[#29221b]">
@@ -334,6 +360,7 @@ function Orders() {
                           </h2>
 
                           <div className="mt-4 space-y-3">
+
                             <div className="flex items-center justify-between gap-3 text-sm">
                               <span className="text-gray-500">
                                 Delivery
@@ -394,6 +421,7 @@ function Orders() {
                                 )}
                               </span>
                             </div>
+
                           </div>
                         </div>
                       </div>
@@ -419,6 +447,7 @@ function Orders() {
                           </div>
                         </div>
                       </div>
+
                     </div>
                   )}
                 </section>

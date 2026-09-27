@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 import { products } from "../../data/products";
 import { useCartStore } from "../../store/cartStore";
-
+import RecommendationRail from "../../components/recommendations/RecommendationRail";
 function Home() {
   const addToCart = useCartStore(
     (state) => state.addToCart,
@@ -85,8 +85,8 @@ function Home() {
             <div className="relative overflow-hidden rounded-[2rem] border-8 border-white/70 bg-white shadow-2xl">
 
               <img
-                src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d"
-                alt="ShopSphere shopping"
+                src="https://images.unsplash.com/photo-1607082349566-187342175e2f"
+                alt="ShopSphere online shopping"
                 className="h-[280px] w-full object-cover sm:h-[380px] lg:h-[460px]"
               />
 
@@ -249,10 +249,10 @@ function Home() {
 
                   {product.discountPercentage >
                     15 && (
-                    <span className="absolute left-2 top-2 rounded-full bg-[#ef476f] px-2.5 py-1 text-[9px] font-black uppercase text-white shadow-sm">
-                      Sale
-                    </span>
-                  )}
+                      <span className="absolute left-2 top-2 rounded-full bg-[#ef476f] px-2.5 py-1 text-[9px] font-black uppercase text-white shadow-sm">
+                        Sale
+                      </span>
+                    )}
 
                   {index === 0 && (
                     <span className="absolute right-2 top-2 rounded-full bg-[#8b5cf6] px-2.5 py-1 text-[9px] font-black text-white">
@@ -345,20 +345,25 @@ function Home() {
                 your interests and shopping activity.
               </p>
             </div>
-<Link
-  to="/products"
-  className="group inline-flex w-fit items-center gap-2 rounded-xl bg-[#f59e0b] px-6 py-3 font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#d97706] hover:shadow-xl"
->
-  Explore Now
+            <Link
+              to="/products"
+              className="group inline-flex w-fit items-center gap-2 rounded-xl bg-[#f59e0b] px-6 py-3 font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#d97706] hover:shadow-xl"
+            >
+              Explore Now
 
-  <ArrowRight
-    size={17}
-    className="transition-transform duration-300 group-hover:translate-x-1"
-  />
-</Link>
+              <ArrowRight
+                size={17}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
 
           </div>
         </div>
+        <RecommendationRail
+          title="Picked Just for You ✨"
+          subtitle="ShopSphere AI selected these products based on your activity."
+          limit={4}
+        />
       </section>
 
     </main>

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { useCartStore } from "../../store/cartStore";
+import RecommendationRail from "../../components/recommendations/RecommendationRail";
 
 export default function Cart() {
   const {
@@ -316,6 +317,11 @@ export default function Cart() {
             </div>
           </aside>
         </div>
+        <RecommendationRail
+          title="Complete Your Shopping"
+          subtitle="Products you may like based on your cart."
+          limit={4}
+        />
       </div>
     </main>
   );

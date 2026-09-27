@@ -1,33 +1,25 @@
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-} from "react-router-dom";
-
-import Header from "./components/layout/Header";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import ProtectedLayout from "./components/layout/ProtectedLayout";
 
 import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
 import ProductDetails from "./pages/Products/ProductDetails";
 import Cart from "./pages/Cart/Cart";
 import Wishlist from "./pages/wishlist/Wishlist";
-
-import Login from "./components/auth/Login";
-import Register from "./components/auth/Register";
-
+import Dashboard from "./pages/Dashboard/Dashboard";
 import Checkout from "./pages/Checkout/Checkout";
 import OrderSuccess from "./pages/OrderSuccess/OrderSuccess";
 import Orders from "./pages/Orders/Orders";
-import Dashboard from "./pages/Dashboard/Dashboard";
+import OrderTracking from "./pages/OrderTracking/OrderTracking";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
 
 function App() {
   return (
     <BrowserRouter>
-
       <Routes>
-
-        {/* PUBLIC */}
+        {/* Public */}
         <Route
           path="/login"
           element={<Login />}
@@ -38,122 +30,72 @@ function App() {
           element={<Register />}
         />
 
-        {/* PROTECTED */}
+        {/* Protected */}
         <Route element={<ProtectedRoute />}>
+          <Route element={<ProtectedLayout />}>
+            <Route
+              path="/"
+              element={<Home />}
+            />
 
-          <Route
-            path="/"
-            element={
-              <>
-                <Header />
-                <Home />
-              </>
-            }
-          />
-           <Route
-  path="/dashboard"
-  element={
-    <>
-      <Header />
-      <Dashboard />
-    </>
-  }
-/>
-          <Route
-            path="/products"
-            element={
-              <>
-                <Header />
-                <Products />
-              </>
-            }
-          />
+            <Route
+              path="/products"
+              element={<Products />}
+            />
 
-          <Route
-            path="/products/:id"
-            element={
-              <>
-                <Header />
-                <ProductDetails />
-              </>
-            }
-          />
+            <Route
+              path="/products/:id"
+              element={<ProductDetails />}
+            />
 
-          <Route
-            path="/cart"
-            element={
-              <>
-                <Header />
-                <Cart />
-              </>
-            }
-          />
+            <Route
+              path="/cart"
+              element={<Cart />}
+            />
 
-          <Route
-            path="/wishlist"
-            element={
-              <>
-                <Header />
-                <Wishlist />
-              </>
-            }
-          />
+            <Route
+              path="/wishlist"
+              element={<Wishlist />}
+            />
 
-          <Route
-            path="/checkout"
-            element={
-              <>
-                <Header />
-                <Checkout />
-              </>
-            }
-          />
+            <Route
+              path="/dashboard"
+              element={<Dashboard />}
+            />
 
-          <Route
-            path="/order-success"
-            element={
-              <>
-                <Header />
-                <OrderSuccess />
-              </>
-            }
-          />
+            <Route
+              path="/checkout"
+              element={<Checkout />}
+            />
 
-          <Route
-            path="/orders"
-            element={
-              <>
-                <Header />
-                <Orders />
-              </>
-            }
-          />
+            <Route
+              path="/order-success"
+              element={<OrderSuccess />}
+            />
 
-          <Route
-            path="*"
-            element={
-              <div className="flex min-h-screen items-center justify-center bg-[#fffaf0] px-4">
-                <div className="text-center">
-                  <div className="text-6xl">
-                    🛍️
-                  </div>
+            <Route
+              path="/orders"
+              element={<Orders />}
+            />
 
-                  <h1 className="mt-4 text-3xl font-black text-[#29221b]">
+            <Route
+              path="/orders/:id"
+              element={<OrderTracking />}
+            />
+
+            <Route
+              path="*"
+              element={
+                <div className="min-h-screen bg-[#fffaf0] p-10 text-center">
+                  <h1 className="text-3xl font-bold text-[#29221b]">
                     Page Not Found
                   </h1>
-
-                  <p className="mt-2 text-[#8c7a63]">
-                    The page you're looking for doesn't exist.
-                  </p>
                 </div>
-              </div>
-            }
-          />
-
+              }
+            />
+          </Route>
         </Route>
-
       </Routes>
-
     </BrowserRouter>
   );
 }

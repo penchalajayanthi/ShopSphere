@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { useWishlistStore } from "../../store/wishlistStore";
 import { useCartStore } from "../../store/cartStore";
 import type { Product } from "../../types/product";
+import RecommendationRail from "../../components/recommendations/RecommendationRail";
 
 function Wishlist() {
   const items = useWishlistStore(
@@ -247,6 +248,11 @@ function Wishlist() {
             </section>
           </>
         )}
+        <RecommendationRail
+          title="More Products You May Like"
+          subtitle="AI recommendations based on your wishlist."
+          limit={4}
+        />
       </div>
     </main>
   );

@@ -16,15 +16,22 @@ import {
 } from "react";
 
 import Toast from "../../components/ui/Toast";
+import RecommendationRail from "../../components/recommendations/RecommendationRail";
+import ReviewForm from "../../components/reviews/ReviewForm";
+import ReviewList from "../../components/reviews/ReviewList";
+
 import { products } from "../../data/products";
+
 import { useCartStore } from "../../store/cartStore";
 import { useWishlistStore } from "../../store/wishlistStore";
+
+import { recentlyViewed } from "../../utils/recentlyViewed";
 
 function ProductDetails() {
   const { id } = useParams();
 
-  const [showToast, setShowToast] =
-    useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [reviewRefreshKey, setReviewRefreshKey] = useState(0);
 
   const product = products.find(
     (item) => item.id === Number(id),
@@ -58,7 +65,6 @@ function ProductDetails() {
     if (!product) return;
 
     addToCart(product);
-
     setShowToast(true);
   };
 
@@ -73,7 +79,6 @@ function ProductDetails() {
 
   /*
    * Automatically hide toast
-   * after 2.5 seconds
    */
   useEffect(() => {
     if (!showToast) return;
@@ -86,6 +91,15 @@ function ProductDetails() {
       clearTimeout(timer);
     };
   }, [showToast]);
+
+  /*
+   * Save product to recently viewed
+   */
+  useEffect(() => {
+    if (!product) return;
+
+    recentlyViewed.add(product);
+  }, [product]);
 
   /*
    * Product not found
@@ -114,6 +128,9 @@ function ProductDetails() {
     );
   }
 
+  /*
+   * Calculate discounted price
+   */
   const discountedPrice =
     product.price -
     (product.price *
@@ -130,7 +147,7 @@ function ProductDetails() {
         />
       )}
 
-      {/* Page content */}
+      {/* Main content */}
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         {/* Back button */}
         <Link
@@ -213,7 +230,9 @@ function ProductDetails() {
             {/* Rating */}
             <div className="mt-4 flex items-center gap-3">
               <div className="flex items-center gap-1 rounded-lg bg-[#fff1c7] px-3 py-1.5">
-                <span className="text-lg">★</span>
+                <span className="text-lg">
+                  ★
+                </span>
 
                 <span className="font-bold text-[#29221b]">
                   {product.rating}
@@ -233,12 +252,26 @@ function ProductDetails() {
             {/* Price */}
             <div className="mt-7 flex flex-wrap items-end gap-3">
               <span className="text-3xl font-extrabold text-[#d97706]">
-                ${discountedPrice.toFixed(2)}
+                ₹
+                {discountedPrice.toLocaleString(
+                  "en-IN",
+                  {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  },
+                )}
               </span>
 
               {product.discountPercentage > 0 && (
                 <span className="pb-1 text-lg text-gray-400 line-through">
-                  ${product.price.toFixed(2)}
+                  ₹
+                  {product.price.toLocaleString(
+                    "en-IN",
+                    {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    },
+                  )}
                 </span>
               )}
 
@@ -352,6 +385,31 @@ function ProductDetails() {
             </div>
           </div>
         </div>
+
+        {/* Recommendation Rail */}
+        <RecommendationRail
+          currentProduct={product}
+          title="You May Also Like"
+          subtitle="AI-powered recommendations based on this product."
+          limit={4}
+        />
+
+        {/* Reviews */}
+        <section className="mt-12 space-y-6">
+          <ReviewForm
+            productId={product.id}
+            onReviewAdded={() =>
+              setReviewRefreshKey(
+                (current) => current + 1,
+              )
+            }
+          />
+
+          <ReviewList
+            productId={product.id}
+            refreshKey={reviewRefreshKey}
+          />
+        </section>
       </div>
     </main>
   );
