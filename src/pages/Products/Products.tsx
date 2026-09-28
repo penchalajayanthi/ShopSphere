@@ -1,6 +1,5 @@
 import {
   ChevronDown,
-  Filter,
   Heart,
   Search,
   ShoppingCart,
