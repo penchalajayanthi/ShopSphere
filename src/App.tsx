@@ -12,14 +12,18 @@ import Checkout from "./pages/Checkout/Checkout";
 import OrderSuccess from "./pages/OrderSuccess/OrderSuccess";
 import Orders from "./pages/Orders/Orders";
 import OrderTracking from "./pages/OrderTracking/OrderTracking";
+
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
+
+import ShoppingAssistant from "./components/assistant/ShoppingAssistant";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public */}
+        {/* ==================== PUBLIC ROUTES ==================== */}
+
         <Route
           path="/login"
           element={<Login />}
@@ -30,7 +34,8 @@ function App() {
           element={<Register />}
         />
 
-        {/* Protected */}
+        {/* ==================== PROTECTED ROUTES ==================== */}
+
         <Route element={<ProtectedRoute />}>
           <Route element={<ProtectedLayout />}>
             <Route
@@ -83,6 +88,7 @@ function App() {
               element={<OrderTracking />}
             />
 
+            {/* 404 */}
             <Route
               path="*"
               element={
@@ -93,9 +99,18 @@ function App() {
                 </div>
               }
             />
+
+            {/* AI Shopping Assistant */}
+            <Route
+              path="/ai-assistant"
+              element={<ShoppingAssistant />}
+            />
           </Route>
         </Route>
       </Routes>
+
+      {/* Floating AI Assistant */}
+      <ShoppingAssistant />
     </BrowserRouter>
   );
 }

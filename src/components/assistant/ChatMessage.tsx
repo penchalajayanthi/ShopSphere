@@ -1,5 +1,12 @@
-import { Bot, User } from "lucide-react";
+import {
+  Bot,
+  User,
+} from "lucide-react";
+
 import type { AssistantMessage } from "../../types/assistant";
+
+import { products } from "../../data/products";
+
 import AssistantProductCard from "./AssistantProductCard";
 
 interface ChatMessageProps {
@@ -9,12 +16,30 @@ interface ChatMessageProps {
 function ChatMessage({
   message,
 }: ChatMessageProps) {
-  const isUser = message.role === "user";
+  const isUser =
+    message.role === "user";
+
+  const messageProducts =
+    message.productIds
+      ?.map((id) =>
+        products.find(
+          (product) =>
+            product.id === id,
+        ),
+      )
+      .filter(
+        (
+          product,
+        ): product is (typeof products)[number] =>
+          Boolean(product),
+      ) ?? [];
 
   return (
     <div
       className={`flex gap-3 ${
-        isUser ? "justify-end" : "justify-start"
+        isUser
+          ? "justify-end"
+          : "justify-start"
       }`}
     >
       {!isUser && (
@@ -34,17 +59,19 @@ function ChatMessage({
           {message.text}
         </p>
 
-        {message.products &&
-          message.products.length > 0 && (
-            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {message.products.map((product) => (
+        {messageProducts.length >
+          0 && (
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {messageProducts.map(
+              (product) => (
                 <AssistantProductCard
                   key={product.id}
                   product={product}
                 />
-              ))}
-            </div>
-          )}
+              ),
+            )}
+          </div>
+        )}
       </div>
 
       {isUser && (

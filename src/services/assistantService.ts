@@ -1,339 +1,427 @@
-import { products } from "../data/products";
+import type { Product } from "../types/product";
 import type {
   AssistantFilters,
   AssistantIntent,
 } from "../types/assistant";
-import type { Product } from "../types/product";
+import { products } from "../data/products";
 
-interface AssistantResult {
-  intent: AssistantIntent;
+export interface AssistantResult {
   message: string;
   products: Product[];
   filters: AssistantFilters;
 }
 
-const normalize = (value: string) => value.toLowerCase().trim();
+/* ----------------------------------------
+   Helpers
+----------------------------------------- */
 
-const extractPrice = (text: string): number | undefined => {
-  const normalized = normalize(text);
+function normalize(text: string): string {
+  return text.toLowerCase().trim();
+}
 
-  const match = normalized.match(
-    /(?:₹|rs\.?|rs|under|below|less than|upto|up to)\s*([\d,]+)/
+/* ----------------------------------------
+   Price detection
+----------------------------------------- */
+
+function detectPrice(
+  text: string,
+): number | undefined {
+  const match = text.match(
+    /(?:under|below|less than|upto|up to|max|maximum|within)\s*₹?\s*(\d+(?:\.\d+)?)\s*(k|thousand|lakh)?/i,
   );
 
   if (!match) {
     return undefined;
   }
 
-  const price = Number(match[1].replace(/,/g, ""));
+  let value = Number(match[1]);
 
-  return Number.isNaN(price) ? undefined : price;
-};
+  const unit = match[2]?.toLowerCase();
 
-const extractCategory = (text: string): string | undefined => {
-  const normalized = normalize(text);
-
-  const categories = [
-    ...new Set(products.map((product) => product.category)),
-  ];
-
-  return categories.find((category) =>
-    normalized.includes(normalize(category)),
-  );
-};
-
-const getRatingFilter = (text: string): number | undefined => {
-  const normalized = normalize(text);
-
-  if (
-    normalized.includes("5 star") ||
-    normalized.includes("five star") ||
-    normalized.includes("top rated") ||
-    normalized.includes("highly rated")
-  ) {
-    return 4.5;
+  if (unit === "k" || unit === "thousand") {
+    value *= 1000;
   }
 
-  if (
-    normalized.includes("4 star") ||
-    normalized.includes("four star") ||
-    normalized.includes("good rating")
-  ) {
-    return 4;
+  if (unit === "lakh") {
+    value *= 100000;
   }
 
-  return undefined;
-};
+  return value;
+}
 
-const filterProducts = (
-  source: Product[],
-  filters: AssistantFilters,
-): Product[] => {
-  let result = [...source];
+/* ----------------------------------------
+   Rating detection
+----------------------------------------- */
 
-  if (filters.category) {
-    result = result.filter(
-      (product) =>
-        normalize(product.category) ===
-        normalize(filters.category!),
-    );
-  }
-
-  if (filters.maxPrice !== undefined) {
-    result = result.filter(
-      (product) => product.price <= filters.maxPrice!,
-    );
-  }
-
-  if (filters.minPrice !== undefined) {
-    result = result.filter(
-      (product) => product.price >= filters.minPrice!,
-    );
-  }
-
-  if (filters.minRating !== undefined) {
-    result = result.filter(
-      (product) => product.rating >= filters.minRating!,
-    );
-  }
-
-  if (filters.sortBy === "price-low") {
-    result.sort((a, b) => a.price - b.price);
-  }
-
-  if (filters.sortBy === "price-high") {
-    result.sort((a, b) => b.price - a.price);
-  }
-
-  if (filters.sortBy === "rating") {
-    result.sort((a, b) => b.rating - a.rating);
-  }
-
-  return result.slice(0, 6);
-};
-
-const findSimilarProducts = (
+function detectRating(
   text: string,
-): Product[] => {
-  const normalized = normalize(text);
-
-  const mentionedProduct = products.find((product) =>
-    normalized.includes(normalize(product.title)),
+): number | undefined {
+  const match = text.match(
+    /(?:rating|rated|ratings?)\s*(?:above|over|at least|of)?\s*(\d(?:\.\d)?)/i,
   );
 
-  if (!mentionedProduct) {
-    return [...products]
-      .sort((a, b) => b.rating - a.rating)
-      .slice(0, 6);
+  if (!match) {
+    return undefined;
   }
 
-  return products
-    .filter((product) => product.id !== mentionedProduct.id)
-    .sort((a, b) => {
-      const aScore =
-        (a.category === mentionedProduct.category ? 3 : 0) +
-        (a.brand === mentionedProduct.brand ? 2 : 0) +
-        Math.max(0, 2 - Math.abs(a.price - mentionedProduct.price) / 1000);
+  return Number(match[1]);
+}
 
-      const bScore =
-        (b.category === mentionedProduct.category ? 3 : 0) +
-        (b.brand === mentionedProduct.brand ? 2 : 0) +
-        Math.max(0, 2 - Math.abs(b.price - mentionedProduct.price) / 1000);
+/* ----------------------------------------
+   Category detection
+----------------------------------------- */
 
-      return bScore - aScore;
-    })
-    .slice(0, 6);
-};
-
-export const askAssistant = (
+function detectCategory(
   text: string,
-  previousFilters: AssistantFilters = {},
-): AssistantResult => {
-  const normalized = normalize(text);
+): string | undefined {
+  const value = normalize(text);
 
-  if (!normalized) {
-    return {
-      intent: "help",
-      message:
-        "Tell me what you're looking for. For example: “Show phones under ₹20,000” or “Show highly rated products”.",
-      products: [],
-      filters: previousFilters,
-    };
-  }
+  const aliases: Record<string, string> = {
+    phone: "smartphones",
+    phones: "smartphones",
+    mobile: "smartphones",
+    mobiles: "smartphones",
 
-  // Similar products
-  if (
-    normalized.includes("similar") ||
-    normalized.includes("like this") ||
-    normalized.includes("same like")
-  ) {
-    return {
-      intent: "similar",
-      message:
-        "Here are some products that are similar to what you're looking for.",
-      products: findSimilarProducts(normalized),
-      filters: previousFilters,
-    };
-  }
+    laptop: "laptops",
+    laptops: "laptops",
+    computer: "laptops",
+    computers: "laptops",
 
-  // Cheaper products
-  if (
-    normalized.includes("cheaper") ||
-    normalized.includes("less expensive") ||
-    normalized.includes("lower price")
-  ) {
-    const currentMaxPrice =
-      previousFilters.maxPrice ??
-      Math.max(...products.map((product) => product.price));
+    perfume: "fragrances",
+    perfumes: "fragrances",
+    fragrance: "fragrances",
+    fragrances: "fragrances",
 
-    const newMaxPrice = Math.round(currentMaxPrice * 0.8);
+    skincare: "skincare",
+    "skin care": "skincare",
+    skin: "skincare",
 
-    const filters: AssistantFilters = {
-      ...previousFilters,
-      maxPrice: newMaxPrice,
-      sortBy: "price-low",
-    };
-
-    const result = filterProducts(products, filters);
-
-    return {
-      intent: "cheaper",
-      message: `Sure! I found options around ₹${newMaxPrice.toLocaleString(
-        "en-IN",
-      )} or less.`,
-      products: result,
-      filters,
-    };
-  }
-
-  // Better rated
-  if (
-    normalized.includes("better rated") ||
-    normalized.includes("higher rated") ||
-    normalized.includes("best rated")
-  ) {
-    const filters: AssistantFilters = {
-      ...previousFilters,
-      minRating: Math.max(previousFilters.minRating ?? 4, 4.5),
-      sortBy: "rating",
-    };
-
-    const result = filterProducts(products, filters);
-
-    return {
-      intent: "better-rated",
-      message:
-        "Here are the higher-rated options matching your request.",
-      products: result,
-      filters,
-    };
-  }
-
-  const price = extractPrice(normalized);
-  const category = extractCategory(normalized);
-  const rating = getRatingFilter(normalized);
-
-  const filters: AssistantFilters = {
-    ...previousFilters,
+    beauty: "beauty",
   };
 
-  if (price !== undefined) {
-    filters.maxPrice = price;
-  }
-
-  if (category) {
-    filters.category = category;
-  }
-
-  if (rating !== undefined) {
-    filters.minRating = rating;
-    filters.sortBy = "rating";
-  }
-
-  // Price/category/rating search
-  if (
-    price !== undefined ||
-    category !== undefined ||
-    rating !== undefined
-  ) {
-    const result = filterProducts(products, filters);
-
-    let message = "I found these products for you.";
-
-    if (category && price !== undefined) {
-      message = `Here are ${category} products under ₹${price.toLocaleString(
-        "en-IN",
-      )}.`;
-    } else if (category) {
-      message = `Here are some ${category} products for you.`;
-    } else if (price !== undefined) {
-      message = `Here are products under ₹${price.toLocaleString(
-        "en-IN",
-      )}.`;
-    } else if (rating !== undefined) {
-      message = "Here are some highly rated products.";
+  for (const [keyword, category] of Object.entries(
+    aliases,
+  )) {
+    if (value.includes(keyword)) {
+      return category;
     }
+  }
 
+  const matchingCategory = products.find(
+    (product) =>
+      value.includes(
+        product.category.toLowerCase(),
+      ),
+  );
+
+  return matchingCategory?.category;
+}
+
+/* ----------------------------------------
+   Intent parser
+----------------------------------------- */
+
+export function parseAssistantIntent(
+  text: string,
+): AssistantIntent {
+  const value = normalize(text);
+
+  const maxPrice = detectPrice(value);
+  const minRating = detectRating(value);
+  const category = detectCategory(value);
+
+  /* Cheaper refinement */
+
+  if (
+    value.includes("cheaper") ||
+    value.includes("less expensive") ||
+    value.includes("lower price")
+  ) {
     return {
-      intent:
-        category !== undefined
-          ? "category"
-          : price !== undefined
-            ? "price"
-            : "rating",
-      message:
-        result.length > 0
-          ? message
-          : "I couldn't find products matching those filters. Try increasing the price range or changing the category.",
-      products: result,
-      filters,
+      type: "refine",
+      query: text,
+      category,
+      maxPrice,
+      minRating,
+      refinement: "cheaper",
     };
   }
 
-  // Search by product name, brand, or category
-  const searchTerms = normalized
-    .replace(
-      /\b(show|find|search|give|me|some|products|product|please|want|need|for|the|a|an)\b/g,
-      "",
-    )
-    .trim();
+  /* Better rated refinement */
 
-  const searchResults = products
-    .filter((product) => {
-      const searchableText = [
-        product.title,
-        product.description,
-        product.category,
-        product.brand,
-      ]
-        .join(" ")
-        .toLowerCase();
-
-      return searchTerms
-        .split(/\s+/)
-        .filter(Boolean)
-        .some((term) =>
-          searchableText.includes(term),
-        );
-    })
-    .slice(0, 6);
-
-  if (searchResults.length > 0) {
+  if (
+    value.includes("better rated") ||
+    value.includes("higher rated") ||
+    value.includes("best rated")
+  ) {
     return {
-      intent: "search",
-      message: `I found ${searchResults.length} product${
-        searchResults.length === 1 ? "" : "s"
-      } that may match your search.`,
-      products: searchResults,
-      filters: previousFilters,
+      type: "refine",
+      query: text,
+      category,
+      maxPrice,
+      minRating,
+      refinement: "better-rated",
+    };
+  }
+
+  /* Similar products */
+
+  if (
+    value.includes("similar") ||
+    value.includes("like this")
+  ) {
+    return {
+      type: "similar",
+      query: text,
+      category,
+      maxPrice,
+      minRating,
+      refinement: "similar",
+    };
+  }
+
+  /* Help */
+
+  if (
+    value.includes("help") ||
+    value.includes("what can you do")
+  ) {
+    return {
+      type: "help",
+      query: text,
+    };
+  }
+
+  /* Search */
+
+  if (
+    category ||
+    maxPrice !== undefined ||
+    minRating !== undefined
+  ) {
+    return {
+      type: "search",
+      query: text,
+      category,
+      maxPrice,
+      minRating,
     };
   }
 
   return {
-    intent: "help",
-    message:
-      "I couldn't find an exact match. Try something like “electronics under ₹20,000”, “highly rated products”, “cheaper”, or “show similar products”.",
-    products: [],
-    filters: previousFilters,
+    type: "unknown",
+    query: text,
   };
-};
+}
+
+/* ----------------------------------------
+   Product search
+----------------------------------------- */
+
+export function searchAssistantProducts(
+  intent: AssistantIntent,
+  previousProducts: Product[] = [],
+): Product[] {
+  let result = [...products];
+
+  /* Category */
+
+  if (intent.category) {
+    result = result.filter(
+      (product) =>
+        product.category.toLowerCase() ===
+        intent.category!.toLowerCase(),
+    );
+  }
+
+  /* Maximum price */
+
+  if (intent.maxPrice !== undefined) {
+    result = result.filter(
+      (product) =>
+        product.price <= intent.maxPrice!,
+    );
+  }
+
+  /* Minimum rating */
+
+  if (intent.minRating !== undefined) {
+    result = result.filter(
+      (product) =>
+        product.rating >= intent.minRating!,
+    );
+  }
+
+  /* Cheaper than previous results */
+
+  if (
+    intent.refinement === "cheaper" &&
+    previousProducts.length > 0
+  ) {
+    const previousMinimumPrice =
+      Math.min(
+        ...previousProducts.map(
+          (product) => product.price,
+        ),
+      );
+
+    result = result.filter(
+      (product) =>
+        product.price < previousMinimumPrice,
+    );
+
+    result.sort(
+      (a, b) => a.price - b.price,
+    );
+  }
+
+  /* Better rated than previous results */
+
+  else if (
+    intent.refinement === "better-rated" &&
+    previousProducts.length > 0
+  ) {
+    const previousMaximumRating =
+      Math.max(
+        ...previousProducts.map(
+          (product) => product.rating,
+        ),
+      );
+
+    result = result.filter(
+      (product) =>
+        product.rating > previousMaximumRating,
+    );
+
+    result.sort(
+      (a, b) => b.rating - a.rating,
+    );
+  }
+
+  /* Similar products */
+
+  else if (
+    intent.refinement === "similar" &&
+    previousProducts.length > 0
+  ) {
+    const previousCategories =
+      new Set(
+        previousProducts.map(
+          (product) => product.category,
+        ),
+      );
+
+    const previousBrands =
+      new Set(
+        previousProducts.map(
+          (product) => product.brand,
+        ),
+      );
+
+    result = result.filter(
+      (product) =>
+        previousCategories.has(
+          product.category,
+        ) ||
+        previousBrands.has(product.brand),
+    );
+
+    result.sort(
+      (a, b) => b.rating - a.rating,
+    );
+  }
+
+  /* Default sorting */
+
+  else {
+    result.sort((a, b) => {
+      if (b.rating !== a.rating) {
+        return b.rating - a.rating;
+      }
+
+      return a.price - b.price;
+    });
+  }
+
+  return result.slice(0, 6);
+}
+
+/* ----------------------------------------
+   Assistant response
+----------------------------------------- */
+
+export function getAssistantReply(
+  intent: AssistantIntent,
+  productCount: number,
+): string {
+  if (intent.type === "help") {
+    return "I can help you find products by category, price, rating, or shopping preferences. Try asking something like \"Show laptops under ₹50,000\".";
+  }
+
+  if (intent.type === "unknown") {
+    return "I can help you find products. Try asking for a category, price, or rating, such as \"Show smartphones under ₹30,000\".";
+  }
+
+  if (productCount === 0) {
+    return "I couldn't find products matching those preferences. Try increasing your budget or changing the category.";
+  }
+
+  if (intent.refinement === "cheaper") {
+    return "Here are some cheaper options you may like.";
+  }
+
+  if (intent.refinement === "better-rated") {
+    return "Here are some better-rated options you may like.";
+  }
+
+  if (intent.refinement === "similar") {
+    return "Here are some similar products you may like.";
+  }
+
+  return `I found ${productCount} product${
+    productCount === 1 ? "" : "s"
+  } that match your request.`;
+}
+
+/* ----------------------------------------
+   Combined assistant function
+----------------------------------------- */
+
+export function askAssistant(
+  text: string,
+  filters: AssistantFilters = {},
+): AssistantResult {
+  const intent =
+    parseAssistantIntent(text);
+
+  const combinedIntent: AssistantIntent = {
+    ...intent,
+    category:
+      intent.category ?? filters.category,
+    maxPrice:
+      intent.maxPrice ?? filters.maxPrice,
+    minRating:
+      intent.minRating ?? filters.minRating,
+  };
+
+  const resultProducts =
+    searchAssistantProducts(
+      combinedIntent,
+    );
+
+  const message =
+    getAssistantReply(
+      combinedIntent,
+      resultProducts.length,
+    );
+
+  return {
+    message,
+    products: resultProducts,
+    filters: {
+      category: combinedIntent.category,
+      maxPrice: combinedIntent.maxPrice,
+      minRating: combinedIntent.minRating,
+    },
+  };
+}

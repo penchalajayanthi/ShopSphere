@@ -1,26 +1,29 @@
-import type { Product } from "./product";
-
-export type AssistantIntent =
+export type AssistantIntentType =
   | "search"
-  | "category"
-  | "price"
-  | "rating"
-  | "cheaper"
-  | "better-rated"
+  | "refine"
   | "similar"
-  | "help";
+  | "help"
+  | "unknown";
+
+export interface AssistantFilters {
+  category?: string;
+  maxPrice?: number;
+  minRating?: number;
+}
+
+export interface AssistantIntent {
+  type: AssistantIntentType;
+  query: string;
+  category?: string;
+  maxPrice?: number;
+  minRating?: number;
+  refinement?: "cheaper" | "better-rated" | "similar";
+}
 
 export interface AssistantMessage {
   id: string;
   role: "user" | "assistant";
   text: string;
-  products?: Product[];
-}
-
-export interface AssistantFilters {
-  category?: string;
-  maxPrice?: number;
-  minPrice?: number;
-  minRating?: number;
-  sortBy?: "price-low" | "price-high" | "rating";
+  productIds?: number[];
+  createdAt: string;
 }
