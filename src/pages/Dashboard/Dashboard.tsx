@@ -26,6 +26,7 @@ import type { Order } from "../../types/order";
 import RecentlyViewed from "../Products/RecentlyViewed";
 
 import AddressManager from "../../components/addresses/AddressManager";
+import RecommendationPreferences from "../../components/recommendations/RecommendationPreferences";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -382,7 +383,9 @@ function Dashboard() {
 
                 Continue Shopping
               </Link>
-
+              <section className="mt-6">
+                <RecommendationPreferences />
+              </section>
               <button
                 type="button"
                 onClick={handleLogout}

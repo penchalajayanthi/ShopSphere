@@ -60,7 +60,7 @@ function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-orange-100 bg-white/95 shadow-sm backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-purple-900/30 bg-gradient-to-r from-[#4C1D95] via-[#6D28D9] to-[#7C3AED] shadow-lg backdrop-blur">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
 
@@ -114,6 +114,12 @@ function Header() {
                   {wishlistCount}
                 </span>
               )}
+            </Link>
+            <Link
+              to="/orders"
+              className="rounded-xl px-4 py-2 text-sm font-bold text-white transition hover:bg-white/15 hover:text-yellow-300"
+            >
+              Orders
             </Link>
           </nav>
 
@@ -346,6 +352,15 @@ function Header() {
                   {wishlistCount}
                 </span>
               )}
+            </Link>
+
+            <Link
+              to="/orders"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
+            >
+              <Package size={18} />
+              Orders
             </Link>
 
             {user ? (
