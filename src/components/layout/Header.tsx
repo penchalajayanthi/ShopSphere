@@ -25,6 +25,9 @@ function Header() {
   const [accountOpen, setAccountOpen] =
     useState(false);
 
+  const [logoutConfirmOpen, setLogoutConfirmOpen] =
+    useState(false);
+
   const user = useAuthStore(
     (state) => state.user,
   );
@@ -50,9 +53,18 @@ function Header() {
   const wishlistCount =
     wishlistItems.length;
 
-  const handleLogout = () => {
+  const requestLogout = () => {
+    setLogoutConfirmOpen(true);
+  };
+
+  const cancelLogout = () => {
+    setLogoutConfirmOpen(false);
+  };
+
+  const confirmLogout = () => {
     logout();
 
+    setLogoutConfirmOpen(false);
     setAccountOpen(false);
     setMobileMenuOpen(false);
 
@@ -60,406 +72,466 @@ function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-purple-900/30 bg-gradient-to-r from-[#4C1D95] via-[#6D28D9] to-[#7C3AED] shadow-lg backdrop-blur">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between gap-4">
+    <>
+      <header className="sticky top-0 z-50 border-b border-purple-900/30 bg-gradient-to-r from-[#4C1D95] via-[#6D28D9] to-[#7C3AED] shadow-lg backdrop-blur">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between gap-4">
 
-          {/* Logo */}
-          <Link
-            to="/"
-            onClick={() =>
-              setMobileMenuOpen(false)
-            }
-            className="flex items-center gap-2"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f59e0b] to-[#ec4899] text-xl shadow-md">
-              🛍️
-            </div>
-
-            <div className="hidden sm:block">
-              <h1 className="text-lg font-black text-[#29221b]">
-                ShopSphere
-              </h1>
-
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b5cf6]">
-                AI Shopping
-              </p>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden items-center gap-1 md:flex">
+            {/* Logo */}
             <Link
               to="/"
-              className="rounded-xl px-4 py-2 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
+              onClick={() =>
+                setMobileMenuOpen(false)
+              }
+              className="flex items-center gap-2"
             >
-              Home
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f59e0b] to-[#ec4899] text-xl shadow-md">
+                🛍️
+              </div>
+
+              <div className="hidden sm:block">
+                <h1 className="text-lg font-black text-[#29221b]">
+                  ShopSphere
+                </h1>
+
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[#8b5cf6]">
+                  AI Shopping
+                </p>
+              </div>
             </Link>
 
-            <Link
-              to="/products"
-              className="rounded-xl px-4 py-2 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
-            >
-              Products
-            </Link>
+            {/* Desktop Navigation */}
+            <nav className="hidden items-center gap-1 md:flex">
+              <Link
+                to="/"
+                className="rounded-xl px-4 py-2 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
+              >
+                Home
+              </Link>
 
-            <Link
-              to="/wishlist"
-              className="relative rounded-xl px-4 py-2 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
-            >
-              Wishlist
+              <Link
+                to="/products"
+                className="rounded-xl px-4 py-2 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
+              >
+                Products
+              </Link>
 
-              {wishlistCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#ec4899] px-1 text-[10px] font-black text-white">
-                  {wishlistCount}
-                </span>
-              )}
-            </Link>
-            <Link
-              to="/orders"
-              className="rounded-xl px-4 py-2 text-sm font-bold text-white transition hover:bg-white/15 hover:text-yellow-300"
-            >
-              Orders
-            </Link>
-          </nav>
+              <Link
+                to="/wishlist"
+                className="relative rounded-xl px-4 py-2 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
+              >
+                Wishlist
 
-          {/* Right Side */}
-          <div className="hidden items-center gap-2 md:flex">
+                {wishlistCount > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#ec4899] px-1 text-[10px] font-black text-white">
+                    {wishlistCount}
+                  </span>
+                )}
+              </Link>
 
-            {/* Cart */}
-            <Link
-              to="/cart"
-              aria-label="Shopping cart"
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
-            >
-              <ShoppingCart size={21} />
+              <Link
+                to="/orders"
+                className="rounded-xl px-4 py-2 text-sm font-bold text-white transition hover:bg-white/15 hover:text-yellow-300"
+              >
+                Orders
+              </Link>
+            </nav>
 
-              {cartCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#f59e0b] px-1 text-[10px] font-black text-white">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
+            {/* Right Side */}
+            <div className="hidden items-center gap-2 md:flex">
 
-            {/* Guest */}
-            {!user ? (
-              <>
-                <Link
-                  to="/login"
-                  className="flex items-center gap-2 rounded-xl border border-orange-200 px-4 py-2 text-sm font-bold text-[#d97706] transition hover:bg-orange-50"
-                >
-                  <LogIn size={17} />
-                  Login
-                </Link>
+              {/* Cart */}
+              <Link
+                to="/cart"
+                aria-label="Shopping cart"
+                className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
+              >
+                <ShoppingCart size={21} />
 
-                <Link
-                  to="/register"
-                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#ec4899] px-4 py-2 text-sm font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
-                >
-                  <UserPlus size={17} />
-                  Register
-                </Link>
-              </>
-            ) : (
-              /* Logged-in User */
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setAccountOpen(
-                      (open) => !open,
-                    )
-                  }
-                  aria-expanded={accountOpen}
-                  aria-haspopup="menu"
-                  className="flex items-center gap-2 rounded-xl border border-orange-100 bg-orange-50 px-3 py-2 transition hover:bg-orange-100"
-                >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#ec4899] text-sm font-black text-white">
-                    {user.name
-                      .charAt(0)
-                      .toUpperCase()}
-                  </div>
+                {cartCount > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#f59e0b] px-1 text-[10px] font-black text-white">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
 
-                  <div className="hidden lg:block text-left">
-                    <p className="max-w-[120px] truncate text-sm font-black text-[#29221b]">
-                      {user.name}
-                    </p>
-
-                    <p className="text-[10px] font-bold uppercase text-[#8b5cf6]">
-                      {user.role}
-                    </p>
-                  </div>
-                </button>
-
-                {accountOpen && (
-                  <div
-                    role="menu"
-                    className="absolute right-0 top-14 w-64 overflow-hidden rounded-2xl border border-orange-100 bg-white p-2 shadow-2xl"
+              {/* Guest */}
+              {!user ? (
+                <>
+                  <Link
+                    to="/login"
+                    className="flex items-center gap-2 rounded-xl border border-orange-200 px-4 py-2 text-sm font-bold text-[#d97706] transition hover:bg-orange-50"
                   >
-                    <div className="border-b border-orange-100 px-3 py-3">
-                      <p className="font-black text-[#29221b]">
+                    <LogIn size={17} />
+                    Login
+                  </Link>
+
+                  <Link
+                    to="/register"
+                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#ec4899] px-4 py-2 text-sm font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
+                  >
+                    <UserPlus size={17} />
+                    Register
+                  </Link>
+                </>
+              ) : (
+                /* Logged-in User */
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setAccountOpen(
+                        (open) => !open,
+                      )
+                    }
+                    aria-expanded={accountOpen}
+                    aria-haspopup="menu"
+                    className="flex items-center gap-2 rounded-xl border border-orange-100 bg-orange-50 px-3 py-2 transition hover:bg-orange-100"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#ec4899] text-sm font-black text-white">
+                      {user.name
+                        .charAt(0)
+                        .toUpperCase()}
+                    </div>
+
+                    <div className="hidden text-left lg:block">
+                      <p className="max-w-[120px] truncate text-sm font-black text-[#29221b]">
                         {user.name}
                       </p>
 
-                      <p className="truncate text-xs text-[#8c7a63]">
-                        {user.email}
+                      <p className="text-[10px] font-bold uppercase text-[#8b5cf6]">
+                        {user.role}
                       </p>
                     </div>
+                  </button>
 
-                    <Link
-                      to="/dashboard"
-                      role="menuitem"
-                      onClick={() =>
-                        setAccountOpen(false)
-                      }
-                      className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
+                  {accountOpen && (
+                    <div
+                      role="menu"
+                      className="absolute right-0 top-14 w-64 overflow-hidden rounded-2xl border border-orange-100 bg-white p-2 shadow-2xl"
                     >
-                      <User size={18} />
-                      My Dashboard
-                    </Link>
+                      <div className="border-b border-orange-100 px-3 py-3">
+                        <p className="font-black text-[#29221b]">
+                          {user.name}
+                        </p>
 
-                    <Link
-                      to="/orders"
-                      role="menuitem"
-                      onClick={() =>
-                        setAccountOpen(false)
-                      }
-                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
-                    >
-                      <Package size={18} />
-                      My Orders
-                    </Link>
+                        <p className="truncate text-xs text-[#8c7a63]">
+                          {user.email}
+                        </p>
+                      </div>
 
-                    <Link
-                      to="/wishlist"
-                      role="menuitem"
-                      onClick={() =>
-                        setAccountOpen(false)
-                      }
-                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
-                    >
-                      <Heart size={18} />
-                      Wishlist
-                    </Link>
-
-                    {user.role === "admin" && (
                       <Link
-                        to="/admin"
+                        to="/dashboard"
                         role="menuitem"
                         onClick={() =>
                           setAccountOpen(false)
                         }
-                        className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#8b5cf6] transition hover:bg-purple-50"
+                        className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
                       >
-                        <span className="text-lg">
-                          ⚙️
-                        </span>
-                        Admin Dashboard
+                        <User size={18} />
+                        My Dashboard
                       </Link>
-                    )}
 
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-bold text-[#ef476f] transition hover:bg-pink-50"
-                    >
-                      <LogOut size={18} />
-                      Logout
-                    </button>
-                  </div>
+                      <Link
+                        to="/orders"
+                        role="menuitem"
+                        onClick={() =>
+                          setAccountOpen(false)
+                        }
+                        className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
+                      >
+                        <Package size={18} />
+                        My Orders
+                      </Link>
+
+                      <Link
+                        to="/wishlist"
+                        role="menuitem"
+                        onClick={() =>
+                          setAccountOpen(false)
+                        }
+                        className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
+                      >
+                        <Heart size={18} />
+                        Wishlist
+                      </Link>
+
+                      {user.role === "admin" && (
+                        <Link
+                          to="/admin"
+                          role="menuitem"
+                          onClick={() =>
+                            setAccountOpen(false)
+                          }
+                          className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#8b5cf6] transition hover:bg-purple-50"
+                        >
+                          <span className="text-lg">
+                            ⚙️
+                          </span>
+                          Admin Dashboard
+                        </Link>
+                      )}
+
+                      {/* Logout */}
+                      <button
+                        type="button"
+                        onClick={requestLogout}
+                        className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-bold text-[#ef476f] transition hover:bg-pink-50"
+                      >
+                        <LogOut size={18} />
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Actions */}
+            <div className="flex items-center gap-1 md:hidden">
+              <Link
+                to="/cart"
+                aria-label="Shopping cart"
+                className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#6b5b47]"
+              >
+                <ShoppingCart size={21} />
+
+                {cartCount > 0 && (
+                  <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#f59e0b] px-1 text-[9px] font-black text-white">
+                    {cartCount}
+                  </span>
                 )}
-              </div>
-            )}
-          </div>
+              </Link>
 
-          {/* Mobile Actions */}
-          <div className="flex items-center gap-1 md:hidden">
-
-            <Link
-              to="/cart"
-              aria-label="Shopping cart"
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl text-[#6b5b47]"
-            >
-              <ShoppingCart size={21} />
-
-              {cartCount > 0 && (
-                <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#f59e0b] px-1 text-[9px] font-black text-white">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-
-            <button
-              type="button"
-              onClick={() =>
-                setMobileMenuOpen(
-                  (open) => !open,
-                )
-              }
-              aria-label={
-                mobileMenuOpen
-                  ? "Close menu"
-                  : "Open menu"
-              }
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-[#6b5b47] transition hover:bg-orange-50"
-            >
-              {mobileMenuOpen ? (
-                <X size={23} />
-              ) : (
-                <Menu size={23} />
-              )}
-            </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setMobileMenuOpen(
+                    (open) => !open,
+                  )
+                }
+                aria-label={
+                  mobileMenuOpen
+                    ? "Close menu"
+                    : "Open menu"
+                }
+                className="flex h-10 w-10 items-center justify-center rounded-xl text-[#6b5b47] transition hover:bg-orange-50"
+              >
+                {mobileMenuOpen ? (
+                  <X size={23} />
+                ) : (
+                  <Menu size={23} />
+                )}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="border-t border-orange-100 bg-white px-4 py-4 shadow-lg md:hidden">
-          <nav className="mx-auto max-w-7xl space-y-1">
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="border-t border-orange-100 bg-white px-4 py-4 shadow-lg md:hidden">
+            <nav className="mx-auto max-w-7xl space-y-1">
 
-            <Link
-              to="/"
-              onClick={() =>
-                setMobileMenuOpen(false)
-              }
-              className="block rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
-            >
-              Home
-            </Link>
+              <Link
+                to="/"
+                onClick={() =>
+                  setMobileMenuOpen(false)
+                }
+                className="block rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
+              >
+                Home
+              </Link>
 
-            <Link
-              to="/products"
-              onClick={() =>
-                setMobileMenuOpen(false)
-              }
-              className="block rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
-            >
-              Products
-            </Link>
+              <Link
+                to="/products"
+                onClick={() =>
+                  setMobileMenuOpen(false)
+                }
+                className="block rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
+              >
+                Products
+              </Link>
 
-            <Link
-              to="/wishlist"
-              onClick={() =>
-                setMobileMenuOpen(false)
-              }
-              className="flex items-center justify-between rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
-            >
-              <span>Wishlist</span>
+              <Link
+                to="/wishlist"
+                onClick={() =>
+                  setMobileMenuOpen(false)
+                }
+                className="flex items-center justify-between rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
+              >
+                <span>Wishlist</span>
 
-              {wishlistCount > 0 && (
-                <span className="rounded-full bg-[#ec4899] px-2 py-1 text-xs font-black text-white">
-                  {wishlistCount}
-                </span>
-              )}
-            </Link>
+                {wishlistCount > 0 && (
+                  <span className="rounded-full bg-[#ec4899] px-2 py-1 text-xs font-black text-white">
+                    {wishlistCount}
+                  </span>
+                )}
+              </Link>
 
-            <Link
-              to="/orders"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
-            >
-              <Package size={18} />
-              Orders
-            </Link>
+              <Link
+                to="/orders"
+                onClick={() =>
+                  setMobileMenuOpen(false)
+                }
+                className="flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
+              >
+                <Package size={18} />
+                Orders
+              </Link>
 
-            {user ? (
-              <>
-                <div className="my-2 border-t border-orange-100" />
+              {user ? (
+                <>
+                  <div className="my-2 border-t border-orange-100" />
 
-                <div className="flex items-center gap-3 rounded-xl bg-orange-50 px-4 py-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#ec4899] font-black text-white">
-                    {user.name
-                      .charAt(0)
-                      .toUpperCase()}
+                  <div className="flex items-center gap-3 rounded-xl bg-orange-50 px-4 py-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#ec4899] font-black text-white">
+                      {user.name
+                        .charAt(0)
+                        .toUpperCase()}
+                    </div>
+
+                    <div>
+                      <p className="font-black text-[#29221b]">
+                        {user.name}
+                      </p>
+
+                      <p className="text-xs font-bold capitalize text-[#8b5cf6]">
+                        {user.role}
+                      </p>
+                    </div>
                   </div>
 
-                  <div>
-                    <p className="font-black text-[#29221b]">
-                      {user.name}
-                    </p>
-
-                    <p className="text-xs font-bold capitalize text-[#8b5cf6]">
-                      {user.role}
-                    </p>
-                  </div>
-                </div>
-
-                <Link
-                  to="/dashboard"
-                  onClick={() =>
-                    setMobileMenuOpen(false)
-                  }
-                  className="mt-1 flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
-                >
-                  <User size={18} />
-                  My Dashboard
-                </Link>
-
-                <Link
-                  to="/orders"
-                  onClick={() =>
-                    setMobileMenuOpen(false)
-                  }
-                  className="flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
-                >
-                  <Package size={18} />
-                  My Orders
-                </Link>
-
-                {user.role === "admin" && (
                   <Link
-                    to="/admin"
+                    to="/dashboard"
                     onClick={() =>
                       setMobileMenuOpen(false)
                     }
-                    className="flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#8b5cf6] hover:bg-purple-50"
+                    className="mt-1 flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
                   >
-                    ⚙️
-                    Admin Dashboard
+                    <User size={18} />
+                    My Dashboard
                   </Link>
-                )}
 
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-bold text-[#ef476f] hover:bg-pink-50"
-                >
-                  <LogOut size={18} />
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <div className="my-2 border-t border-orange-100" />
+                  <Link
+                    to="/orders"
+                    onClick={() =>
+                      setMobileMenuOpen(false)
+                    }
+                    className="flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#6b5b47] hover:bg-orange-50"
+                  >
+                    <Package size={18} />
+                    My Orders
+                  </Link>
 
-                <Link
-                  to="/login"
-                  onClick={() =>
-                    setMobileMenuOpen(false)
-                  }
-                  className="flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#d97706] hover:bg-orange-50"
-                >
-                  <LogIn size={18} />
-                  Login
-                </Link>
+                  {user.role === "admin" && (
+                    <Link
+                      to="/admin"
+                      onClick={() =>
+                        setMobileMenuOpen(false)
+                      }
+                      className="flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#8b5cf6] hover:bg-purple-50"
+                    >
+                      ⚙️
+                      Admin Dashboard
+                    </Link>
+                  )}
 
-                <Link
-                  to="/register"
-                  onClick={() =>
-                    setMobileMenuOpen(false)
-                  }
-                  className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#ec4899] px-4 py-3 font-bold text-white"
-                >
-                  <UserPlus size={18} />
-                  Register
-                </Link>
-              </>
-            )}
-          </nav>
+                  {/* Mobile Logout */}
+                  <button
+                    type="button"
+                    onClick={requestLogout}
+                    className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-bold text-[#ef476f] hover:bg-pink-50"
+                  >
+                    <LogOut size={18} />
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="my-2 border-t border-orange-100" />
+
+                  <Link
+                    to="/login"
+                    onClick={() =>
+                      setMobileMenuOpen(false)
+                    }
+                    className="flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#d97706] hover:bg-orange-50"
+                  >
+                    <LogIn size={18} />
+                    Login
+                  </Link>
+
+                  <Link
+                    to="/register"
+                    onClick={() =>
+                      setMobileMenuOpen(false)
+                    }
+                    className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#ec4899] px-4 py-3 font-bold text-white"
+                  >
+                    <UserPlus size={18} />
+                    Register
+                  </Link>
+                </>
+              )}
+            </nav>
+          </div>
+        )}
+      </header>
+
+      {/* Logout Confirmation Modal */}
+      {logoutConfirmOpen && (
+        <div
+          className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/50 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="logout-confirm-title"
+        >
+          <div className="w-full max-w-sm rounded-3xl border border-orange-100 bg-white p-6 shadow-2xl">
+
+            {/* Icon */}
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-pink-100">
+              <LogOut
+                size={26}
+                className="text-[#ef476f]"
+              />
+            </div>
+
+            {/* Title */}
+            <h2
+              id="logout-confirm-title"
+              className="mt-4 text-center text-xl font-black text-[#29221b]"
+            >
+              Are you sure you want to logout?
+            </h2>
+
+            {/* Description */}
+            <p className="mt-2 text-center text-sm leading-6 text-[#8c7a63]">
+              You will be signed out of your
+              ShopSphere account.
+            </p>
+
+            {/* Buttons */}
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={cancelLogout}
+                className="flex-1 rounded-xl border border-[#eadcc2] bg-white px-4 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-[#fffaf0]"
+              >
+                No
+              </button>
+
+              <button
+                type="button"
+                onClick={confirmLogout}
+                className="flex-1 rounded-xl bg-[#ef476f] px-4 py-3 text-sm font-black text-white transition hover:bg-[#db2777]"
+              >
+                Yes, Logout
+              </button>
+            </div>
+          </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
 

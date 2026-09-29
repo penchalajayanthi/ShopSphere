@@ -30,22 +30,29 @@ import { recentlyViewed } from "../../utils/recentlyViewed";
 function ProductDetails() {
   const { id } = useParams();
 
-  const [showToast, setShowToast] = useState(false);
-  const [reviewRefreshKey, setReviewRefreshKey] = useState(0);
+  const [toastMessage, setToastMessage] =
+    useState<string | null>(null);
+
+  const [reviewRefreshKey, setReviewRefreshKey] =
+    useState(0);
 
   const product = products.find(
     (item) => item.id === Number(id),
   );
 
   /*
-   * Cart
+   * =====================================
+   * CART
+   * =====================================
    */
   const addToCart = useCartStore(
     (state) => state.addToCart,
   );
 
   /*
-   * Wishlist
+   * =====================================
+   * WISHLIST
+   * =====================================
    */
   const toggleWishlist = useWishlistStore(
     (state) => state.toggleWishlist,
@@ -59,50 +66,84 @@ function ProductDetails() {
   );
 
   /*
-   * Add product to cart
+   * =====================================
+   * ADD TO CART
+   * =====================================
    */
   const handleAddToCart = () => {
-    if (!product) return;
+    if (!product) {
+      return;
+    }
 
     addToCart(product);
-    setShowToast(true);
+
+    setToastMessage(
+      `${product.title} added to cart!`,
+    );
   };
 
   /*
-   * Toggle wishlist
+   * =====================================
+   * TOGGLE WISHLIST
+   * =====================================
    */
   const handleToggleWishlist = () => {
-    if (!product) return;
+    if (!product) {
+      return;
+    }
+
+    const alreadyInWishlist =
+      isInWishlist;
 
     toggleWishlist(product);
+
+    if (alreadyInWishlist) {
+      setToastMessage(
+        `${product.title} removed from wishlist.`,
+      );
+    } else {
+      setToastMessage(
+        `${product.title} added to wishlist!`,
+      );
+    }
   };
 
   /*
-   * Automatically hide toast
+   * =====================================
+   * AUTOMATICALLY HIDE TOAST
+   * =====================================
    */
   useEffect(() => {
-    if (!showToast) return;
+    if (!toastMessage) {
+      return;
+    }
 
     const timer = setTimeout(() => {
-      setShowToast(false);
+      setToastMessage(null);
     }, 2500);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [showToast]);
+  }, [toastMessage]);
 
   /*
-   * Save product to recently viewed
+   * =====================================
+   * SAVE PRODUCT TO RECENTLY VIEWED
+   * =====================================
    */
   useEffect(() => {
-    if (!product) return;
+    if (!product) {
+      return;
+    }
 
     recentlyViewed.add(product);
   }, [product]);
 
   /*
-   * Product not found
+   * =====================================
+   * PRODUCT NOT FOUND
+   * =====================================
    */
   if (!product) {
     return (
@@ -129,7 +170,9 @@ function ProductDetails() {
   }
 
   /*
-   * Calculate discounted price
+   * =====================================
+   * CALCULATE DISCOUNTED PRICE
+   * =====================================
    */
   const discountedPrice =
     product.price -
@@ -139,16 +182,24 @@ function ProductDetails() {
 
   return (
     <main className="min-h-screen bg-[#fffaf0]">
-      {/* Toast */}
-      {showToast && (
+
+      {/* =====================================
+          TOAST
+      ====================================== */}
+      {toastMessage && (
         <Toast
-          message="Added to cart successfully!"
-          onClose={() => setShowToast(false)}
+          message={toastMessage}
+          onClose={() =>
+            setToastMessage(null)
+          }
         />
       )}
 
-      {/* Main content */}
+      {/* =====================================
+          MAIN CONTENT
+      ====================================== */}
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+
         {/* Back button */}
         <Link
           to="/products"
@@ -158,11 +209,17 @@ function ProductDetails() {
           Back to Products
         </Link>
 
-        {/* Product section */}
+        {/* =====================================
+            PRODUCT SECTION
+        ====================================== */}
         <div className="grid gap-8 lg:grid-cols-2">
-          {/* Product Image */}
+
+          {/* =====================================
+              PRODUCT IMAGE
+          ====================================== */}
           <div className="rounded-3xl border border-orange-100 bg-white p-4 shadow-sm sm:p-6">
             <div className="relative overflow-hidden rounded-2xl bg-[#fff7e6]">
+
               <img
                 src={product.thumbnail}
                 alt={product.title}
@@ -182,7 +239,9 @@ function ProductDetails() {
               {/* Wishlist Image Button */}
               <button
                 type="button"
-                onClick={handleToggleWishlist}
+                onClick={
+                  handleToggleWishlist
+                }
                 aria-label={
                   isInWishlist
                     ? "Remove from wishlist"
@@ -204,11 +263,15 @@ function ProductDetails() {
                   }
                 />
               </button>
+
             </div>
           </div>
 
-          {/* Product Information */}
+          {/* =====================================
+              PRODUCT INFORMATION
+          ====================================== */}
           <div className="flex flex-col justify-center">
+
             {/* Category */}
             <p className="mb-2 text-sm font-bold uppercase tracking-wide text-[#8b5cf6]">
               {product.category}
@@ -251,6 +314,7 @@ function ProductDetails() {
 
             {/* Price */}
             <div className="mt-7 flex flex-wrap items-end gap-3">
+
               <span className="text-3xl font-extrabold text-[#d97706]">
                 ₹
                 {discountedPrice.toLocaleString(
@@ -284,13 +348,15 @@ function ProductDetails() {
                   %
                 </span>
               )}
+
             </div>
 
             {/* Stock */}
             <div className="mt-5">
               {product.stock > 0 ? (
                 <span className="font-semibold text-green-600">
-                  ✓ In stock ({product.stock} available)
+                  ✓ In stock (
+                  {product.stock} available)
                 </span>
               ) : (
                 <span className="font-semibold text-red-500">
@@ -299,8 +365,11 @@ function ProductDetails() {
               )}
             </div>
 
-            {/* Buttons */}
+            {/* =====================================
+                BUTTONS
+            ====================================== */}
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+
               {/* Add to Cart */}
               <button
                 type="button"
@@ -321,7 +390,9 @@ function ProductDetails() {
               {/* Wishlist */}
               <button
                 type="button"
-                onClick={handleToggleWishlist}
+                onClick={
+                  handleToggleWishlist
+                }
                 aria-label={
                   isInWishlist
                     ? "Remove from wishlist"
@@ -348,6 +419,7 @@ function ProductDetails() {
                   ? "Wishlisted"
                   : "Add to Wishlist"}
               </button>
+
             </div>
 
             {/* Wishlist shortcut */}
@@ -364,9 +436,13 @@ function ProductDetails() {
               </Link>
             )}
 
-            {/* AI Recommendation */}
+            {/* =====================================
+                AI RECOMMENDATION
+            ====================================== */}
             <div className="mt-7 rounded-2xl bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] p-5 text-white shadow-md">
+
               <div className="flex items-start gap-3">
+
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20">
                   <Sparkles size={21} />
                 </div>
@@ -381,12 +457,17 @@ function ProductDetails() {
                     for your shopping preferences.
                   </p>
                 </div>
+
               </div>
+
             </div>
+
           </div>
         </div>
 
-        {/* Recommendation Rail */}
+        {/* =====================================
+            RECOMMENDATION RAIL
+        ====================================== */}
         <RecommendationRail
           currentProduct={product}
           title="You May Also Like"
@@ -394,8 +475,11 @@ function ProductDetails() {
           limit={4}
         />
 
-        {/* Reviews */}
+        {/* =====================================
+            REVIEWS
+        ====================================== */}
         <section className="mt-12 space-y-6">
+
           <ReviewForm
             productId={product.id}
             onReviewAdded={() =>
@@ -409,7 +493,9 @@ function ProductDetails() {
             productId={product.id}
             refreshKey={reviewRefreshKey}
           />
+
         </section>
+
       </div>
     </main>
   );

@@ -1,4 +1,9 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+} from "react-router-dom";
+
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import ProtectedLayout from "./components/layout/ProtectedLayout";
 
@@ -16,14 +21,13 @@ import OrderTracking from "./pages/OrderTracking/OrderTracking";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 
-import ShoppingAssistant from "./components/assistant/ShoppingAssistant";
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* ==================== PUBLIC ROUTES ==================== */}
-
+        {/* ================================
+            PUBLIC PAGES
+        ================================= */}
         <Route
           path="/login"
           element={<Login />}
@@ -34,10 +38,12 @@ function App() {
           element={<Register />}
         />
 
-        {/* ==================== PROTECTED ROUTES ==================== */}
-
+        {/* ================================
+            PROTECTED PAGES
+        ================================= */}
         <Route element={<ProtectedRoute />}>
           <Route element={<ProtectedLayout />}>
+
             <Route
               path="/"
               element={<Home />}
@@ -88,7 +94,9 @@ function App() {
               element={<OrderTracking />}
             />
 
-            {/* 404 */}
+            {/* ================================
+                PAGE NOT FOUND
+            ================================= */}
             <Route
               path="*"
               element={
@@ -96,21 +104,17 @@ function App() {
                   <h1 className="text-3xl font-bold text-[#29221b]">
                     Page Not Found
                   </h1>
+
+                  <p className="mt-2 text-[#8c7a63]">
+                    The page you're looking for doesn't exist.
+                  </p>
                 </div>
               }
             />
 
-            {/* AI Shopping Assistant */}
-            <Route
-              path="/ai-assistant"
-              element={<ShoppingAssistant />}
-            />
           </Route>
         </Route>
       </Routes>
-
-      {/* Floating AI Assistant */}
-      <ShoppingAssistant />
     </BrowserRouter>
   );
 }

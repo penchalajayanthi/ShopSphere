@@ -35,8 +35,8 @@ type SortOption =
 function Products() {
   const [search, setSearch] = useState("");
 
-  const [showToast, setShowToast] =
-    useState(false);
+  const [toastMessage, setToastMessage] =
+    useState<string | null>(null);
 
   const [selectedCategory, setSelectedCategory] =
     useState("all");
@@ -48,7 +48,9 @@ function Products() {
     useState(false);
 
   /*
+   * =====================================
    * CART
+   * =====================================
    */
   const addToCart = useCartStore(
     (state) => state.addToCart,
@@ -56,26 +58,16 @@ function Products() {
 
   const handleAddToCart = (product: Product) => {
     addToCart(product);
-    setShowToast(true);
+
+    setToastMessage(
+      `${product.title} added to cart!`,
+    );
   };
 
   /*
-   * Automatically hide toast
-   */
-  useEffect(() => {
-    if (!showToast) return;
-
-    const timer = setTimeout(() => {
-      setShowToast(false);
-    }, 2500);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [showToast]);
-
-  /*
+   * =====================================
    * WISHLIST
+   * =====================================
    */
   const toggleWishlist = useWishlistStore(
     (state) => state.toggleWishlist,
@@ -85,8 +77,48 @@ function Products() {
     (state) => state.isInWishlist,
   );
 
+  const handleToggleWishlist = (
+    product: Product,
+  ) => {
+    const alreadyInWishlist =
+      isInWishlist(product.id);
+
+    toggleWishlist(product);
+
+    if (alreadyInWishlist) {
+      setToastMessage(
+        `${product.title} removed from wishlist.`,
+      );
+    } else {
+      setToastMessage(
+        `${product.title} added to wishlist!`,
+      );
+    }
+  };
+
   /*
+   * =====================================
+   * AUTOMATICALLY HIDE TOAST
+   * =====================================
+   */
+  useEffect(() => {
+    if (!toastMessage) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setToastMessage(null);
+    }, 2500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [toastMessage]);
+
+  /*
+   * =====================================
    * FILTER + SORT
+   * =====================================
    */
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -98,8 +130,15 @@ function Products() {
       const searchTerm =
         search.toLowerCase().trim();
 
-      result = result.filter(
-        (product) =>
+      result = result.filter((product) => {
+        const categoryName =
+          categories.find(
+            (category) =>
+              category.id ===
+              product.category,
+          )?.name.toLowerCase() ?? "";
+
+        return (
           product.title
             .toLowerCase()
             .includes(searchTerm) ||
@@ -109,10 +148,14 @@ function Products() {
           product.category
             .toLowerCase()
             .includes(searchTerm) ||
+          categoryName.includes(
+            searchTerm,
+          ) ||
           product.description
             .toLowerCase()
-            .includes(searchTerm),
-      );
+            .includes(searchTerm)
+        );
+      });
     }
 
     /*
@@ -167,7 +210,9 @@ function Products() {
   ]);
 
   /*
+   * =====================================
    * CLEAR FILTERS
+   * =====================================
    */
   const clearFilters = () => {
     setSearch("");
@@ -181,10 +226,12 @@ function Products() {
       {/* =====================================
           SUCCESS TOAST
       ====================================== */}
-      {showToast && (
+      {toastMessage && (
         <Toast
-          message="Added to cart successfully!"
-          onClose={() => setShowToast(false)}
+          message={toastMessage}
+          onClose={() =>
+            setToastMessage(null)
+          }
         />
       )}
 
@@ -202,29 +249,17 @@ function Products() {
                 SHOPSPHERE AI
               </p>
 
-              <h1 className="mt-1 text-3xl font-black text-[#29221b] sm:text-4xl">
-                All Products
-              </h1>
-
               <p className="mt-2 max-w-2xl text-sm text-[#7c6a54] sm:text-base">
-                Explore our collection and discover
-                products made for your shopping journey.
-              </p>
-            </div>
-
-            {/* Product count */}
-            <div className="rounded-2xl border border-[#f3d9a5] bg-white/80 px-4 py-3 shadow-sm">
-              <p className="text-xs font-bold uppercase tracking-wider text-[#a6957e]">
-                Products
-              </p>
-
-              <p className="mt-1 text-2xl font-black text-[#d97706]">
-                {filteredProducts.length}
+                Explore our collection and
+                discover products made for
+                your shopping journey.
               </p>
             </div>
 
           </div>
+
         </div>
+
       </section>
 
       {/* =====================================
@@ -249,7 +284,9 @@ function Products() {
               type="text"
               value={search}
               onChange={(event) =>
-                setSearch(event.target.value)
+                setSearch(
+                  event.target.value,
+                )
               }
               placeholder="Search products, brands or categories..."
               className="w-full rounded-2xl border border-[#eadcc2] bg-white py-3.5 pl-11 pr-11 text-sm text-[#29221b] outline-none transition placeholder:text-[#b3a38d] focus:border-[#f59e0b] focus:ring-4 focus:ring-[#f59e0b]/10"
@@ -296,6 +333,7 @@ function Products() {
                 Category:
               </span>
 
+              {/* All */}
               <button
                 type="button"
                 onClick={() =>
@@ -310,22 +348,34 @@ function Products() {
                 All
               </button>
 
-              {categories.map((category) => (
-                <button
-                  type="button"
-                  key={category}
-                  onClick={() =>
-                    setSelectedCategory(category)
-                  }
-                  className={`shrink-0 rounded-full px-4 py-2 text-xs font-bold capitalize transition ${
-                    selectedCategory === category
-                      ? "bg-[#8b5cf6] text-white shadow-md"
-                      : "bg-[#f8f3ff] text-[#6b5b47] hover:bg-[#eee5ff]"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+              {/* Categories */}
+              {categories.map(
+                (category) => (
+                  <button
+                    type="button"
+                    key={category.id}
+                    onClick={() =>
+                      setSelectedCategory(
+                        category.id,
+                      )
+                    }
+                    className={`flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition ${
+                      selectedCategory ===
+                      category.id
+                        ? "bg-[#8b5cf6] text-white shadow-md"
+                        : "bg-[#f8f3ff] text-[#6b5b47] hover:bg-[#eee5ff]"
+                    }`}
+                  >
+                    <span>
+                      {category.icon}
+                    </span>
+
+                    <span>
+                      {category.name}
+                    </span>
+                  </button>
+                ),
+              )}
 
             </div>
 
@@ -336,7 +386,8 @@ function Products() {
                 value={sortBy}
                 onChange={(event) =>
                   setSortBy(
-                    event.target.value as SortOption,
+                    event.target
+                      .value as SortOption,
                   )
                 }
                 className="appearance-none rounded-xl border border-[#eadcc2] bg-[#fffaf0] py-2.5 pl-4 pr-10 text-sm font-bold text-[#5f503f] outline-none transition focus:border-[#f59e0b]"
@@ -370,6 +421,7 @@ function Products() {
             </div>
 
           </div>
+
         </div>
 
         {/* =====================================
@@ -425,13 +477,17 @@ function Products() {
 
                 <div className="flex flex-wrap gap-2">
 
+                  {/* All */}
                   <button
                     type="button"
                     onClick={() =>
-                      setSelectedCategory("all")
+                      setSelectedCategory(
+                        "all",
+                      )
                     }
                     className={`rounded-full px-4 py-2.5 text-xs font-bold ${
-                      selectedCategory === "all"
+                      selectedCategory ===
+                      "all"
                         ? "bg-[#f59e0b] text-white"
                         : "bg-white text-[#6b5b47]"
                     }`}
@@ -439,22 +495,34 @@ function Products() {
                     All
                   </button>
 
-                  {categories.map((category) => (
-                    <button
-                      type="button"
-                      key={category}
-                      onClick={() =>
-                        setSelectedCategory(category)
-                      }
-                      className={`rounded-full px-4 py-2.5 text-xs font-bold capitalize ${
-                        selectedCategory === category
-                          ? "bg-[#8b5cf6] text-white"
-                          : "bg-white text-[#6b5b47]"
-                      }`}
-                    >
-                      {category}
-                    </button>
-                  ))}
+                  {/* Categories */}
+                  {categories.map(
+                    (category) => (
+                      <button
+                        type="button"
+                        key={category.id}
+                        onClick={() =>
+                          setSelectedCategory(
+                            category.id,
+                          )
+                        }
+                        className={`flex items-center gap-1.5 rounded-full px-4 py-2.5 text-xs font-bold ${
+                          selectedCategory ===
+                          category.id
+                            ? "bg-[#8b5cf6] text-white"
+                            : "bg-white text-[#6b5b47]"
+                        }`}
+                      >
+                        <span>
+                          {category.icon}
+                        </span>
+
+                        <span>
+                          {category.name}
+                        </span>
+                      </button>
+                    ),
+                  )}
 
                 </div>
 
@@ -500,7 +568,8 @@ function Products() {
                         )
                       }
                       className={`rounded-xl border px-4 py-3 text-left text-sm font-bold transition ${
-                        sortBy === option.value
+                        sortBy ===
+                        option.value
                           ? "border-[#f59e0b] bg-[#fff0cc] text-[#d97706]"
                           : "border-[#eadcc2] bg-white text-[#6b5b47]"
                       }`}
@@ -527,7 +596,9 @@ function Products() {
                 <button
                   type="button"
                   onClick={() =>
-                    setMobileFiltersOpen(false)
+                    setMobileFiltersOpen(
+                      false,
+                    )
                   }
                   className="flex-1 rounded-xl bg-[#f59e0b] px-4 py-3 font-bold text-white shadow-md transition hover:bg-[#d97706]"
                 >
@@ -557,7 +628,13 @@ function Products() {
 
             {selectedCategory !== "all" && (
               <span className="rounded-full bg-[#eee5ff] px-3 py-1 text-xs font-bold capitalize text-[#7c3aed]">
-                {selectedCategory}
+                {
+                  categories.find(
+                    (category) =>
+                      category.id ===
+                      selectedCategory,
+                  )?.name
+                }
               </span>
             )}
 
@@ -570,7 +647,8 @@ function Products() {
           </div>
 
           {(search ||
-            selectedCategory !== "all" ||
+            selectedCategory !==
+              "all" ||
             sortBy !== "featured") && (
             <button
               type="button"
@@ -590,129 +668,143 @@ function Products() {
         {filteredProducts.length > 0 ? (
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5 xl:grid-cols-5">
 
-            {filteredProducts.map((product) => (
-              <article
-                key={product.id}
-                className="group overflow-hidden rounded-2xl border border-[#eadcc2] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-              >
+            {filteredProducts.map(
+              (product) => (
+                <article
+                  key={product.id}
+                  className="group overflow-hidden rounded-2xl border border-[#eadcc2] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                >
 
-                {/* Product Image */}
-                <div className="relative aspect-square overflow-hidden bg-[#fff8e8]">
+                  {/* Product Image */}
+                  <div className="relative aspect-square overflow-hidden bg-[#fff8e8]">
 
-                  <Link
-                    to={`/products/${product.id}`}
-                    aria-label={`View ${product.title}`}
-                  >
-                    <img
-                      src={product.thumbnail}
-                      alt={product.title}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    />
-                  </Link>
+                    <Link
+                      to={`/products/${product.id}`}
+                      aria-label={`View ${product.title}`}
+                    >
+                      <img
+                        src={product.thumbnail}
+                        alt={product.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      />
+                    </Link>
 
-                  {/* Sale badge */}
-                  {product.discountPercentage > 15 && (
-                    <span className="absolute left-2 top-2 rounded-full bg-[#ef476f] px-2.5 py-1 text-[9px] font-black uppercase tracking-wide text-white shadow-sm">
-                      Sale
-                    </span>
-                  )}
-
-                  {/* Wishlist */}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      toggleWishlist(product)
-                    }
-                    className={`absolute right-2 top-2 rounded-full p-2.5 shadow-md transition hover:scale-110 ${
-                      isInWishlist(product.id)
-                        ? "bg-[#ffe7f0]"
-                        : "bg-white"
-                    }`}
-                    aria-label={
-                      isInWishlist(product.id)
-                        ? `Remove ${product.title} from wishlist`
-                        : `Add ${product.title} to wishlist`
-                    }
-                    aria-pressed={isInWishlist(
-                      product.id,
+                    {/* Sale badge */}
+                    {product.discountPercentage >
+                      15 && (
+                      <span className="absolute left-2 top-2 rounded-full bg-[#ef476f] px-2.5 py-1 text-[9px] font-black uppercase tracking-wide text-white shadow-sm">
+                        Sale
+                      </span>
                     )}
-                  >
-                    <Heart
-                      size={17}
-                      className={
-                        isInWishlist(product.id)
-                          ? "fill-[#ef476f] text-[#ef476f]"
-                          : "text-[#6b5b47]"
-                      }
-                    />
-                  </button>
 
-                </div>
-
-                {/* Product Details */}
-                <div className="p-3 sm:p-4">
-
-                  {/* Brand */}
-                  <p className="truncate text-[10px] font-bold uppercase tracking-wider text-[#a6957e]">
-                    {product.brand}
-                  </p>
-
-                  {/* Title */}
-                  <Link
-                    to={`/products/${product.id}`}
-                  >
-                    <h2 className="mt-1 line-clamp-2 min-h-10 text-sm font-bold text-[#29221b] transition hover:text-[#d97706] sm:text-base">
-                      {product.title}
-                    </h2>
-                  </Link>
-
-                  {/* Rating */}
-                  <div className="mt-2 flex items-center gap-1 text-xs">
-
-                    <span className="text-[#f59e0b]">
-                      ★
-                    </span>
-
-                    <span className="font-bold text-[#6b5b47]">
-                      {product.rating}
-                    </span>
-
-                    <span className="text-[#b8a991]">
-                      / 5
-                    </span>
-
-                  </div>
-
-                  {/* Price */}
-                  <div className="mt-3 flex items-center justify-between gap-2">
-
-                    <span className="text-sm font-black text-[#29221b] sm:text-lg">
-                      ₹{product.price}
-                    </span>
-
-                    {/* Add to Cart */}
+                    {/* Wishlist */}
                     <button
                       type="button"
                       onClick={() =>
-                        handleAddToCart(product)
+                        handleToggleWishlist(
+                          product,
+                        )
                       }
-                      className="flex items-center gap-1.5 rounded-lg bg-[#f59e0b] px-2.5 py-2 text-xs font-bold text-white transition hover:bg-[#d97706] hover:shadow-md active:scale-95 sm:px-3"
+                      className={`absolute right-2 top-2 rounded-full p-2.5 shadow-md transition hover:scale-110 ${
+                        isInWishlist(
+                          product.id,
+                        )
+                          ? "bg-[#ffe7f0]"
+                          : "bg-white"
+                      }`}
+                      aria-label={
+                        isInWishlist(
+                          product.id,
+                        )
+                          ? `Remove ${product.title} from wishlist`
+                          : `Add ${product.title} to wishlist`
+                      }
+                      aria-pressed={isInWishlist(
+                        product.id,
+                      )}
                     >
-                      <ShoppingCart
-                        size={15}
+                      <Heart
+                        size={17}
+                        className={
+                          isInWishlist(
+                            product.id,
+                          )
+                            ? "fill-[#ef476f] text-[#ef476f]"
+                            : "text-[#6b5b47]"
+                        }
                       />
-
-                      <span className="hidden sm:inline">
-                        Add
-                      </span>
                     </button>
 
                   </div>
 
-                </div>
-              </article>
-            ))}
+                  {/* Product Details */}
+                  <div className="p-3 sm:p-4">
+
+                    {/* Brand */}
+                    <p className="truncate text-[10px] font-bold uppercase tracking-wider text-[#a6957e]">
+                      {product.brand}
+                    </p>
+
+                    {/* Title */}
+                    <Link
+                      to={`/products/${product.id}`}
+                    >
+                      <h2 className="mt-1 line-clamp-2 min-h-10 text-sm font-bold text-[#29221b] transition hover:text-[#d97706] sm:text-base">
+                        {product.title}
+                      </h2>
+                    </Link>
+
+                    {/* Rating */}
+                    <div className="mt-2 flex items-center gap-1 text-xs">
+
+                      <span className="text-[#f59e0b]">
+                        ★
+                      </span>
+
+                      <span className="font-bold text-[#6b5b47]">
+                        {product.rating}
+                      </span>
+
+                      <span className="text-[#b8a991]">
+                        / 5
+                      </span>
+
+                    </div>
+
+                    {/* Price */}
+                    <div className="mt-3 flex items-center justify-between gap-2">
+
+                      <span className="text-sm font-black text-[#29221b] sm:text-lg">
+                        ₹{product.price}
+                      </span>
+
+                      {/* Add to Cart */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleAddToCart(
+                            product,
+                          )
+                        }
+                        className="flex items-center gap-1.5 rounded-lg bg-[#f59e0b] px-2.5 py-2 text-xs font-bold text-white transition hover:bg-[#d97706] hover:shadow-md active:scale-95 sm:px-3"
+                      >
+                        <ShoppingCart
+                          size={15}
+                        />
+
+                        <span className="hidden sm:inline">
+                          Add
+                        </span>
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </article>
+              ),
+            )}
 
           </div>
         ) : (
@@ -734,9 +826,11 @@ function Products() {
             </h2>
 
             <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#8c7a63]">
-              We couldn't find products matching
-              your current search or filters.
-              Try changing your search or category.
+              We couldn't find products
+              matching your current
+              search or filters. Try
+              changing your search or
+              category.
             </p>
 
             <button
@@ -770,12 +864,14 @@ function Products() {
               </div>
 
               <h2 className="mt-3 text-2xl font-black sm:text-3xl">
-                Smart shopping starts here
+                Smart shopping starts
+                here
               </h2>
 
               <p className="mt-2 text-sm leading-6 text-white/85 sm:text-base">
-                Explore products, save your favorites,
-                and build your perfect cart with
+                Explore products, save
+                your favorites, and build
+                your perfect cart with
                 ShopSphere AI.
               </p>
 

@@ -1,14 +1,18 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-import AIAssistant from "../assistant/AIAssistant";
+import ShoppingAssistant from "../assistant/ShoppingAssistant";
 
 function ProtectedLayout() {
   return (
-    <>
+    <div className="min-h-screen bg-[#fffaf0]">
       <Header />
-      <Outlet />
-      <AIAssistant />
-    </>
+
+      <main>
+        <Outlet />
+      </main>
+
+      <ShoppingAssistant />
+    </div>
   );
 }
 
