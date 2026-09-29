@@ -618,14 +618,6 @@ function Products() {
 
           <div className="flex flex-wrap items-center gap-2">
 
-            <p className="text-sm font-bold text-[#6b5b47]">
-              Showing{" "}
-              <span className="font-black text-[#29221b]">
-                {filteredProducts.length}
-              </span>{" "}
-              products
-            </p>
-
             {selectedCategory !== "all" && (
               <span className="rounded-full bg-[#eee5ff] px-3 py-1 text-xs font-bold capitalize text-[#7c3aed]">
                 {

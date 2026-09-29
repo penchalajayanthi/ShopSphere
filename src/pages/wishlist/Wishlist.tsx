@@ -300,13 +300,13 @@ function Wishlist() {
                     {/* Discount */}
                     {product.discountPercentage >
                       0 && (
-                      <span className="absolute bottom-2 left-2 rounded-lg bg-[#f59e0b] px-2 py-1 text-[10px] font-extrabold text-white">
-                        {Math.round(
-                          product.discountPercentage,
-                        )}
-                        % OFF
-                      </span>
-                    )}
+                        <span className="absolute bottom-2 left-2 rounded-lg bg-[#f59e0b] px-2 py-1 text-[10px] font-extrabold text-white">
+                          {Math.round(
+                            product.discountPercentage,
+                          )}
+                          % OFF
+                        </span>
+                      )}
 
                   </div>
 
@@ -371,14 +371,10 @@ function Wishlist() {
                         ? "Add to Cart"
                         : "Out of Stock"}
                     </button>
-
                   </div>
-
                 </article>
               ))}
-
             </div>
-
             {/* =====================================
                 AI BANNER
             ====================================== */}
@@ -410,12 +406,14 @@ function Wishlist() {
 
                 <Link
                   to="/products"
-                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-[#7c3aed] transition hover:bg-gray-50"
+                  className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] via-[#ec4899] to-[#8b5cf6] px-5 py-3 text-sm font-bold text-white shadow-lg transition duration-300 hover:-translate-y-0.5 hover:shadow-xl"
                 >
                   Continue Shopping
-                  <ArrowRight size={17} />
+                  <ArrowRight
+                    size={17}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
                 </Link>
-
               </div>
 
             </section>
