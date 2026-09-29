@@ -17,6 +17,7 @@ import Checkout from "./pages/Checkout/Checkout";
 import OrderSuccess from "./pages/OrderSuccess/OrderSuccess";
 import Orders from "./pages/Orders/Orders";
 import OrderTracking from "./pages/OrderTracking/OrderTracking";
+import Admin from "./pages/Admin/Admin";
 
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
@@ -25,6 +26,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         {/* ================================
             PUBLIC PAGES
         ================================= */}
@@ -39,7 +41,7 @@ function App() {
         />
 
         {/* ================================
-            PROTECTED PAGES
+            AUTHENTICATED PAGES
         ================================= */}
         <Route element={<ProtectedRoute />}>
           <Route element={<ProtectedLayout />}>
@@ -95,6 +97,22 @@ function App() {
             />
 
             {/* ================================
+                ADMIN ONLY
+            ================================= */}
+            <Route
+              element={
+                <ProtectedRoute
+                  adminOnly
+                />
+              }
+            >
+              <Route
+                path="/admin"
+                element={<Admin />}
+              />
+            </Route>
+
+            {/* ================================
                 PAGE NOT FOUND
             ================================= */}
             <Route
@@ -106,7 +124,8 @@ function App() {
                   </h1>
 
                   <p className="mt-2 text-[#8c7a63]">
-                    The page you're looking for doesn't exist.
+                    The page you're looking for
+                    doesn't exist.
                   </p>
                 </div>
               }
