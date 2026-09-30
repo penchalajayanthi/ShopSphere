@@ -5,7 +5,6 @@ import {
   CircleDollarSign,
   Edit3,
   Eye,
-  Menu,
   Package,
   Plus,
   Search,
@@ -21,6 +20,7 @@ import {
   useMemo,
   useState,
 } from "react";
+
 import { useSearchParams } from "react-router-dom";
 import { useProductStore } from "../../store/productStore";
 import { useAuthStore } from "../../store/authStore";
@@ -72,7 +72,11 @@ const formatCurrency = (amount: number) =>
   })}`;
 
 function Admin() {
-
+  /*
+   * ---------------------------------------------------
+   * GLOBAL PRODUCT CATALOGUE
+   * ---------------------------------------------------
+   */
   const products = useProductStore(
     (state) => state.items,
   );
@@ -89,7 +93,11 @@ function Admin() {
     (state) => state.deleteProduct,
   );
 
-
+  /*
+   * ---------------------------------------------------
+   * GLOBAL USERS
+   * ---------------------------------------------------
+   */
   const users = useAuthStore(
     (state) => state.users,
   );
@@ -125,35 +133,35 @@ function Admin() {
    * UI STATE
    * ---------------------------------------------------
    */
-  const [searchParams] =
-  useSearchParams();
   const [activeTab, setActiveTab] =
     useState<Tab>("overview");
-useEffect(() => {
-  const requestedTab =
-    searchParams.get("tab");
 
-  const validTabs: Tab[] = [
-    "overview",
-    "products",
-    "orders",
-    "customers",
-    "analytics",
-  ];
+  const [searchParams] =
+    useSearchParams();
 
-  if (
-    requestedTab &&
-    validTabs.includes(
-      requestedTab as Tab,
-    )
-  ) {
-    setActiveTab(
-      requestedTab as Tab,
-    );
-  }
-}, [searchParams]);
-  const [mobileAdminMenuOpen, setMobileAdminMenuOpen] =
-    useState(false);
+  useEffect(() => {
+    const requestedTab =
+      searchParams.get("tab");
+
+    const validTabs: Tab[] = [
+      "overview",
+      "products",
+      "orders",
+      "customers",
+      "analytics",
+    ];
+
+    if (
+      requestedTab &&
+      validTabs.includes(
+        requestedTab as Tab,
+      )
+    ) {
+      setActiveTab(
+        requestedTab as Tab,
+      );
+    }
+  }, [searchParams]);
 
   const [productSearch, setProductSearch] =
     useState("");
@@ -450,16 +458,24 @@ useEffect(() => {
     );
   };
 
+  /*
+   * ---------------------------------------------------
+   * TAB CHANGE
+   * ---------------------------------------------------
+   */
   const changeTab = (tab: Tab) => {
     setActiveTab(tab);
 
     setProductSearch("");
     setOrderSearch("");
     setCustomerSearch("");
-
-    setMobileAdminMenuOpen(false);
   };
 
+  /*
+   * ---------------------------------------------------
+   * TOAST
+   * ---------------------------------------------------
+   */
   const showToast = (
     message: string,
   ) => {
@@ -958,10 +974,12 @@ useEffect(() => {
         </div>
       )}
 
-      {/* ==================================================
-          BEAUTIFUL ADMIN HEADER
-      ================================================== */}
-     <header className="sticky top-16 z-[9990] overflow-hidden bg-gradient-to-br from-[#2f1650] via-[#6d267f] to-[#d85b3d] text-white shadow-xl">
+      {/* =========================================================
+          ADMIN SECONDARY NAVIGATION
+          Hidden on mobile only. Visible on tablet, laptop, desktop.
+          Mobile navigation is handled by the main blue Header.tsx.
+      ========================================================= */}
+      <header className="sticky top-16 z-[9990] hidden overflow-hidden bg-gradient-to-br from-[#2f1650] via-[#6d267f] to-[#d85b3d] text-white shadow-xl sm:block">
 
         {/* Decorative background circles */}
         <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#f59e0b]/20 blur-3xl" />
@@ -970,31 +988,28 @@ useEffect(() => {
 
         <div className="relative mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
 
-      
           <nav
             aria-label="Admin navigation"
             className="border-t border-white/10"
           >
 
-            <div className="hidden py-3 md:block">
-              <div className="flex items-center gap-2">
+            <div className="py-3">
+              <div className="flex items-center gap-2 overflow-x-auto pb-1">
 
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
-                  const active =
-                    activeTab === tab.id;
+                  const active = activeTab === tab.id;
 
                   return (
                     <button
                       key={tab.id}
                       type="button"
-                      onClick={() =>
-                        changeTab(tab.id)
-                      }
-                      className={`group inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-black whitespace-nowrap transition-all duration-200 ${active
+                      onClick={() => changeTab(tab.id)}
+                      className={`group inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-xl border px-4 py-2.5 text-sm font-black transition-all duration-200 ${
+                        active
                           ? "border-white/20 bg-white text-[#6d267f] shadow-lg"
                           : "border-white/10 bg-white/5 text-white/80 hover:border-white/20 hover:bg-white/10 hover:text-white"
-                        }`}
+                      }`}
                     >
                       <Icon
                         size={17}
@@ -1005,9 +1020,7 @@ useEffect(() => {
                         }
                       />
 
-                      <span>
-                        {tab.label}
-                      </span>
+                      <span>{tab.label}</span>
                     </button>
                   );
                 })}
@@ -1015,114 +1028,6 @@ useEffect(() => {
               </div>
             </div>
 
-            {/* ================================================
-      MOBILE MENU BAR
-  ================================================= */}
-            <div className="md:hidden py-3">
-
-              {/* Mobile Menu Button */}
-              <button
-                type="button"
-                onClick={() =>
-                  setMobileAdminMenuOpen(
-                    (value) => !value,
-                  )
-                }
-                aria-expanded={
-                  mobileAdminMenuOpen
-                }
-                aria-controls="mobile-admin-navigation"
-                className="flex w-full items-center justify-between rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-left shadow-md backdrop-blur transition hover:bg-white/15"
-              >
-
-                <div className="flex items-center gap-3">
-
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#8b5cf6] shadow-sm">
-                    {mobileAdminMenuOpen ? (
-                      <X size={19} />
-                    ) : (
-                      <Menu size={19} />
-                    )}
-                  </div>
-
-                  <div>
-                    <p className="text-[9px] font-black uppercase tracking-[0.15em] text-yellow-300">
-                      Admin Menu
-                    </p>
-
-                    <p className="mt-0.5 text-sm font-black text-white">
-                      {tabs.find(
-                        (tab) =>
-                          tab.id === activeTab,
-                      )?.label ?? "Overview"}
-                    </p>
-                  </div>
-
-                </div>
-
-                <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-black text-white/75">
-                  {mobileAdminMenuOpen
-                    ? "Close"
-                    : "Open"}
-                </span>
-
-              </button>
-
-              {/* Mobile Dropdown */}
-              {mobileAdminMenuOpen && (
-                <div
-                  id="mobile-admin-navigation"
-                  className="mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[#3b1957]/95 p-2 shadow-xl backdrop-blur-xl"
-                >
-
-                  <div className="space-y-1">
-
-                    {tabs.map((tab) => {
-                      const Icon = tab.icon;
-                      const active =
-                        activeTab === tab.id;
-
-                      return (
-                        <button
-                          key={tab.id}
-                          type="button"
-                          onClick={() =>
-                            changeTab(tab.id)
-                          }
-                          className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-black transition ${active
-                              ? "bg-white text-[#6d267f] shadow-md"
-                              : "text-white/85 hover:bg-white/10 hover:text-white"
-                            }`}
-                        >
-
-                          <div
-                            className={`flex h-9 w-9 items-center justify-center rounded-xl ${active
-                                ? "bg-gradient-to-br from-[#f59e0b] to-[#ec4899] text-white"
-                                : "bg-white/10 text-yellow-300"
-                              }`}
-                          >
-                            <Icon size={17} />
-                          </div>
-
-                          <span className="flex-1">
-                            {tab.label}
-                          </span>
-
-                          {active && (
-                            <span className="rounded-full bg-purple-100 px-2 py-1 text-[9px] font-black uppercase text-[#7c3aed]">
-                              Active
-                            </span>
-                          )}
-
-                        </button>
-                      );
-                    })}
-
-                  </div>
-                </div>
-              )}
-
-            </div>
           </nav>
 
         </div>
@@ -1834,9 +1739,9 @@ useEffect(() => {
 
                               <span
                                 className={`rounded-full px-2.5 py-1 text-xs font-black ${product.stock <=
-                                  10
-                                  ? "bg-red-100 text-red-600"
-                                  : "bg-green-100 text-green-700"
+                                    10
+                                    ? "bg-red-100 text-red-600"
+                                    : "bg-green-100 text-green-700"
                                   }`}
                               >
                                 Stock:{" "}
@@ -3254,9 +3159,9 @@ useEffect(() => {
                             className={`rounded-full px-3 py-1.5 text-xs font-black ${Number(
                               productForm.stock,
                             ) <=
-                              10
-                              ? "bg-red-100 text-red-600"
-                              : "bg-green-100 text-green-700"
+                                10
+                                ? "bg-red-100 text-red-600"
+                                : "bg-green-100 text-green-700"
                               }`}
                           >
                             {
@@ -3840,9 +3745,9 @@ useEffect(() => {
                             status
                           }
                           className={`rounded-full px-3 py-1.5 text-xs font-black ${status ===
-                            selectedOrder.status
-                            ? "bg-[#8b5cf6] text-white"
-                            : "bg-white text-[#8c7a63]"
+                              selectedOrder.status
+                              ? "bg-[#8b5cf6] text-white"
+                              : "bg-white text-[#8c7a63]"
                             }`}
                         >
                           {
