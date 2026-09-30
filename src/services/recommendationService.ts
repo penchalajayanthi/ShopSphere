@@ -1,348 +1,302 @@
+import { products } from "../data/products";
+
+import { useCartStore } from "../store/cartStore";
+
+import { useWishlistStore } from "../store/wishlistStore";
+
+import { recommendationStorage } from "../utils/recommendationStorage";
+
+import { storage } from "../utils/storage";
+
 import type { Product } from "../types/product";
 
-import type {
-  RecommendedProduct,
-  RecommendationEngineSignal,
-  RecommendationPreference,
-} from "../types/recommendation";
+import type { Order } from "../types/order";
 
-interface RecommendationOptions {
-  products: Product[];
-  currentProduct?: Product;
-  wishlistProducts?: Product[];
-  cartProducts?: Product[];
-  recentlyViewedProducts?: Product[];
-  purchasedProducts?: Product[];
-  preference?: RecommendationPreference;
+import type { RecommendationSignal } from "../types/recommendation";
+
+import type {
+  RecommendationCandidate,
+  RecommendationStrategy,
+} from "../providers/recommendation/recommendationProvider";
+
+import {
+  mockRecommendationProvider,
+} from "../providers/recommendation/mockRecommendationProvider";
+
+const ORDERS_KEY = "shopsphere_orders";
+
+
+const strategyOrder: RecommendationStrategy[] = [
+  "personalized",
+  "recently-viewed",
+  "similar-products",
+  "category-based",
+  "price-based",
+  "wishlist-based",
+  "cart-based",
+  "frequently-bought-together",
+  "trending",
+];
+
+
+export interface GetRecommendationsParams {
+  currentProduct?: Product | null;
+
+  userId?: number;
+
   limit?: number;
+
+  strategy?: RecommendationStrategy;
 }
 
-const DEFAULT_LIMIT = 6;
+/*
+ * =========================================================
+ * HELPERS
+ * =========================================================
+ */
 
-const getPriceDifferenceScore = (
-  productPrice: number,
-  targetPrice: number,
-): number => {
-  if (targetPrice <= 0) {
-    return 0;
-  }
+/*
+ * Remove duplicate products while preserving the
+ * first recommendation candidate returned.
+ */
+const uniqueByProductId = (
+  items: RecommendationCandidate[],
+): RecommendationCandidate[] => {
+  const seen = new Set<number>();
 
-  const difference = Math.abs(
-    productPrice - targetPrice,
-  );
+  return items.filter((item) => {
+    const productId = item.product.id;
 
-  const percentageDifference =
-    difference / targetPrice;
+    if (seen.has(productId)) {
+      return false;
+    }
 
-  return Math.max(
-    0,
-    1 - percentageDifference,
-  );
-};
+    seen.add(productId);
 
-const getRatingScore = (
-  rating: number,
-): number => {
-  return Math.min(
-    Math.max(rating / 5, 0),
-    1,
-  );
+    return true;
+  });
 };
 
 /*
- * Create recommendation signals.
- *
- * These are internal engine signals.
- * They are different from RecommendationSignal
- * stored in localStorage.
+ * Read locally stored order history.
  */
-const createSignals = (
-  product: Product,
-  allProducts: Product[],
-  currentProduct?: Product,
-  wishlistProducts: Product[] = [],
-  cartProducts: Product[] = [],
-  recentlyViewedProducts: Product[] = [],
-  purchasedProducts: Product[] = [],
-): RecommendationEngineSignal[] => {
-  const signals: RecommendationEngineSignal[] = [];
-
-  // --------------------------------------------------
-  // 1. CATEGORY STRATEGY
-  // --------------------------------------------------
-
-  if (
-    currentProduct &&
-    product.category === currentProduct.category
-  ) {
-    signals.push({
-      strategy: "category",
-      weight: 4,
-      reason: `Similar category: ${product.category}`,
-    });
-  }
-
-  // --------------------------------------------------
-  // 2. SIMILAR PRODUCT STRATEGY
-  // --------------------------------------------------
-
-  if (
-    currentProduct &&
-    product.brand === currentProduct.brand
-  ) {
-    signals.push({
-      strategy: "similar",
-      weight: 3,
-      reason: `Same brand: ${product.brand}`,
-    });
-  }
-
-  // --------------------------------------------------
-  // 3. PRICE STRATEGY
-  // --------------------------------------------------
-
-  if (currentProduct) {
-    const priceScore =
-      getPriceDifferenceScore(
-        product.price,
-        currentProduct.price,
-      );
-
-    if (priceScore > 0.5) {
-      signals.push({
-        strategy: "price",
-        weight: 2 * priceScore,
-        reason: "Similar price range",
-      });
-    }
-  }
-
-  // --------------------------------------------------
-  // 4. RATING STRATEGY
-  // --------------------------------------------------
-
-  const ratingScore =
-    getRatingScore(product.rating);
-
-  if (ratingScore >= 0.8) {
-    signals.push({
-      strategy: "rating",
-      weight: 2 * ratingScore,
-      reason: "Highly rated product",
-    });
-  }
-
-  // --------------------------------------------------
-  // 5. WISHLIST STRATEGY
-  // --------------------------------------------------
-
-  const isInWishlist =
-    wishlistProducts.some(
-      (wishlistProduct) =>
-        wishlistProduct.id === product.id,
-    );
-
-  if (isInWishlist) {
-    signals.push({
-      strategy: "wishlist",
-      weight: 5,
-      reason: "Based on your wishlist",
-    });
-  }
-
-  // --------------------------------------------------
-  // 6. CART STRATEGY
-  // --------------------------------------------------
-
-  const isInCart =
-    cartProducts.some(
-      (cartProduct) =>
-        cartProduct.id === product.id,
-    );
-
-  if (isInCart) {
-    signals.push({
-      strategy: "cart",
-      weight: 4,
-      reason: "Based on your cart",
-    });
-  }
-
-  // --------------------------------------------------
-  // 7. RECENTLY VIEWED STRATEGY
-  // --------------------------------------------------
-
-  const isRecentlyViewed =
-    recentlyViewedProducts.some(
-      (recentProduct) =>
-        recentProduct.id === product.id,
-    );
-
-  if (isRecentlyViewed) {
-    signals.push({
-      strategy: "recently-viewed",
-      weight: 3,
-      reason: "Recently viewed by you",
-    });
-  }
-
-  // --------------------------------------------------
-  // 8. PURCHASE STRATEGY
-  // --------------------------------------------------
-
-  const isPurchased =
-    purchasedProducts.some(
-      (purchasedProduct) =>
-        purchasedProduct.category === product.category ||
-        purchasedProduct.brand === product.brand,
-    );
-
-  if (isPurchased) {
-    signals.push({
-      strategy: "purchase",
-      weight: 4,
-      reason: "Based on your previous purchases",
-    });
-  }
-
-  // --------------------------------------------------
-  // 9. POPULAR STRATEGY
-  // --------------------------------------------------
-  //
-  // Since this project uses local/mock product data,
-  // rating + review-like popularity is approximated
-  // using product rating and stock availability.
-  //
-  // Higher-rated products receive a popularity signal.
-  // --------------------------------------------------
-
-  const averageRating =
-    allProducts.reduce(
-      (total, item) =>
-        total + item.rating,
-      0,
-    ) / Math.max(allProducts.length, 1);
-
-  if (
-    product.rating >= averageRating &&
-    product.rating >= 4
-  ) {
-    signals.push({
-      strategy: "popular",
-      weight: 2.5,
-      reason: "Popular choice among shoppers",
-    });
-  }
-
-  return signals;
+const getOrderData = (): Order[] => {
+  return storage.get<Order[]>(ORDERS_KEY, []);
 };
 
-export const getRecommendations = ({
-  products,
-  currentProduct,
-  wishlistProducts = [],
-  cartProducts = [],
-  recentlyViewedProducts = [],
-  purchasedProducts = [],
-  preference = "personalized",
-  limit = DEFAULT_LIMIT,
-}: RecommendationOptions): RecommendedProduct[] => {
-  const scoredProducts = products
-    .filter((product) => {
-      if (!currentProduct) {
-        return true;
-      }
+/*
+ * Read recommendation signals for the current user.
+ */
+const getSignals = (
+  userId?: number,
+): RecommendationSignal[] => {
+  if (typeof userId !== "number") {
+    return [];
+  }
 
-      return product.id !== currentProduct.id;
-    })
-    .map((product) => {
-      const signals = createSignals(
-        product,
-        products,
-        currentProduct,
-        wishlistProducts,
-        cartProducts,
-        recentlyViewedProducts,
-        purchasedProducts,
-      );
+  return recommendationStorage.getUserSignals(userId);
+};
 
-      let score = 0;
+/*
+ * =========================================================
+ * RECOMMENDATION SERVICE
+ * =========================================================
+ */
 
-      // ----------------------------------------------
-      // PERSONALIZED MODE
-      // ----------------------------------------------
+export const recommendationService = {
+  getRecommendations({
+    currentProduct = null,
+    userId,
+    limit = 4,
+    strategy,
+  }: GetRecommendationsParams): RecommendationCandidate[] {
+    /*
+     * Keep the requested limit within a safe range.
+     */
+    const safeLimit = Math.max(
+      1,
+      Math.min(limit, 20),
+    );
 
-      if (preference === "personalized") {
-        score = signals.reduce(
-          (total, signal) =>
-            total + signal.weight,
-          0,
+    /*
+     * -----------------------------------------------------
+     * Read Zustand client state
+     * -----------------------------------------------------
+     */
+
+    const cartItems = useCartStore.getState().items;
+
+    const wishlistItems =
+      useWishlistStore.getState().items;
+
+    const cartProductIds = cartItems.map(
+      (item) => item.product.id,
+    );
+
+    const wishlistProductIds = wishlistItems.map(
+      (item) => item.id,
+    );
+
+    /*
+     * -----------------------------------------------------
+     * Read purchase/order history
+     * -----------------------------------------------------
+     */
+
+    const orders = getOrderData();
+
+    const purchasedProductIds = orders.flatMap(
+      (order) =>
+        order.items.map(
+          (item) => item.product.id,
+        ),
+    );
+
+    /*
+     * -----------------------------------------------------
+     * Read recommendation signals
+     * -----------------------------------------------------
+     */
+
+    const signals = getSignals(userId);
+
+    /*
+     * -----------------------------------------------------
+     * Provider context
+     * -----------------------------------------------------
+     */
+
+    const context = {
+      products,
+
+      currentProduct,
+
+      signals,
+
+      wishlistProductIds,
+
+      cartProductIds,
+
+      purchasedProductIds,
+
+      orders,
+
+      limit: safeLimit,
+    };
+
+    /*
+     * -----------------------------------------------------
+     * Explicit strategy
+     * -----------------------------------------------------
+     *
+     * Used when the caller wants one specific strategy.
+     *
+     * Example:
+     * recommendationService.getByStrategy("popular")
+     *
+     * -----------------------------------------------------
+     */
+
+    if (strategy) {
+      const recommendations =
+        mockRecommendationProvider.getRecommendations(
+          strategy,
+          context,
         );
-      }
 
-      // ----------------------------------------------
-      // POPULAR MODE
-      // ----------------------------------------------
+      /*
+       * Never recommend the current PDP product itself.
+       */
+      return recommendations
+        .filter(
+          (item) =>
+            item.product.id !== currentProduct?.id,
+        )
+        .slice(0, safeLimit);
+    }
 
-      if (preference === "popular") {
-        score = signals
-          .filter(
-            (signal) =>
-              signal.strategy === "popular" ||
-              signal.strategy === "rating",
-          )
-          .reduce(
-            (total, signal) =>
-              total + signal.weight,
-            0,
-          );
-      }
+    /*
+     * -----------------------------------------------------
+     * Combined personalized recommendation rail
+     * -----------------------------------------------------
+     *
+     * Run all strategies and merge their results.
+     * The provider applies the individual strategy scores.
+     *
+     * -----------------------------------------------------
+     */
 
-      // ----------------------------------------------
-      // RECENT MODE
-      // ----------------------------------------------
-
-      if (preference === "recent") {
-        score = signals
-          .filter(
-            (signal) =>
-              signal.strategy ===
-                "recently-viewed" ||
-              signal.strategy === "category" ||
-              signal.strategy === "similar",
-          )
-          .reduce(
-            (total, signal) =>
-              total + signal.weight,
-            0,
-          );
-      }
-
-      const reason =
-        signals.length > 0
-          ? [...signals].sort(
-              (a, b) =>
-                b.weight - a.weight,
-            )[0].reason
-          : "Popular choice for you";
-
-      return {
-        product,
-        score,
-        reason,
-      };
-    });
-
-  return scoredProducts
-    .sort((a, b) => {
-      if (b.score !== a.score) {
-        return b.score - a.score;
-      }
-
-      return (
-        b.product.rating -
-        a.product.rating
+    const candidates =
+      strategyOrder.flatMap(
+        (strategyName) =>
+          mockRecommendationProvider.getRecommendations(
+            strategyName,
+            context,
+          ),
       );
-    })
-    .slice(0, limit);
+
+    /*
+     * Remove duplicate products.
+     */
+    const unique =
+      uniqueByProductId(candidates);
+
+    /*
+     * Never recommend the current product itself.
+     */
+    const withoutCurrent =
+      unique.filter(
+        (item) =>
+          item.product.id !== currentProduct?.id,
+      );
+
+    /*
+     * Highest recommendation score first.
+     *
+     * IMPORTANT:
+     * The candidate uses `score`, not
+     * `recommendationScore`.
+     */
+    return withoutCurrent
+      .sort(
+        (a, b) => b.score - a.score,
+      )
+      .slice(0, safeLimit);
+  },
+
+  /*
+   * =======================================================
+   * GET ONE SPECIFIC STRATEGY
+   * =======================================================
+   *
+   * Useful for:
+   * - testing individual strategies
+   * - analytics
+   * - admin recommendation controls
+   * - strategy demos
+   *
+   * =======================================================
+   */
+
+  getByStrategy(
+    strategy: RecommendationStrategy,
+    params: Omit<
+      GetRecommendationsParams,
+      "strategy"
+    > = {},
+  ): RecommendationCandidate[] {
+    return this.getRecommendations({
+      ...params,
+      strategy,
+    });
+  },
+};
+
+/*
+ * Re-export provider types for modules that already
+ * import them from the recommendation service.
+ */
+export type {
+  RecommendationCandidate,
+  RecommendationStrategy,
 };

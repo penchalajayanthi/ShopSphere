@@ -72,11 +72,7 @@ const formatCurrency = (amount: number) =>
   })}`;
 
 function Admin() {
-  /*
-   * ---------------------------------------------------
-   * GLOBAL PRODUCT CATALOGUE
-   * ---------------------------------------------------
-   */
+
   const products = useProductStore(
     (state) => state.items,
   );
@@ -93,20 +89,10 @@ function Admin() {
     (state) => state.deleteProduct,
   );
 
-  /*
-   * ---------------------------------------------------
-   * GLOBAL USERS
-   * ---------------------------------------------------
-   */
   const users = useAuthStore(
     (state) => state.users,
   );
 
-  /*
-   * ---------------------------------------------------
-   * GLOBAL ORDERS
-   * ---------------------------------------------------
-   */
   const [orders, setOrders] = useState<Order[]>(
     () =>
       storage.get<Order[]>(
@@ -115,11 +101,6 @@ function Admin() {
       ),
   );
 
-  /*
-   * ---------------------------------------------------
-   * GLOBAL CATEGORIES
-   * ---------------------------------------------------
-   */
   const [adminCategories, setAdminCategories] =
     useState<AdminCategory[]>(() =>
       storage.get<AdminCategory[]>(
@@ -128,11 +109,6 @@ function Admin() {
       ),
     );
 
-  /*
-   * ---------------------------------------------------
-   * UI STATE
-   * ---------------------------------------------------
-   */
   const [activeTab, setActiveTab] =
     useState<Tab>("overview");
 
@@ -199,11 +175,6 @@ function Admin() {
   const [toast, setToast] =
     useState("");
 
-  /*
-   * ---------------------------------------------------
-   * PRODUCT FORM
-   * ---------------------------------------------------
-   */
   const emptyProductForm: Product = {
     id: 0,
     title: "",
@@ -224,22 +195,12 @@ function Admin() {
       emptyProductForm,
     );
 
-  /*
-   * ---------------------------------------------------
-   * CUSTOMER DATA
-   * ---------------------------------------------------
-   */
   const customers = useMemo(() => {
     return users.filter(
       (user) => user.role !== "admin",
     );
   }, [users]);
 
-  /*
-   * ---------------------------------------------------
-   * OVERVIEW METRICS
-   * ---------------------------------------------------
-   */
   const totalRevenue = useMemo(() => {
     return orders.reduce(
       (sum, order) =>
@@ -274,11 +235,7 @@ function Admin() {
     totalRevenue,
   ]);
 
-  /*
-   * ---------------------------------------------------
-   * TOP PRODUCTS
-   * ---------------------------------------------------
-   */
+
   const topProducts = useMemo(() => {
     const salesMap = new Map<
       number,
@@ -315,11 +272,6 @@ function Admin() {
     products,
   ]);
 
-  /*
-   * ---------------------------------------------------
-   * FILTERED PRODUCTS
-   * ---------------------------------------------------
-   */
   const filteredProducts = useMemo(() => {
     const term =
       productSearch
@@ -368,11 +320,6 @@ function Admin() {
     adminCategories,
   ]);
 
-  /*
-   * ---------------------------------------------------
-   * FILTERED ORDERS
-   * ---------------------------------------------------
-   */
   const filteredOrders = useMemo(() => {
     const term =
       orderSearch
@@ -415,11 +362,6 @@ function Admin() {
     orderStatusFilter,
   ]);
 
-  /*
-   * ---------------------------------------------------
-   * FILTERED CUSTOMERS
-   * ---------------------------------------------------
-   */
   const filteredCustomers =
     useMemo(() => {
       const term =
@@ -442,11 +384,7 @@ function Admin() {
       customerSearch,
     ]);
 
-  /*
-   * ---------------------------------------------------
-   * CUSTOMER ORDER COUNTS
-   * ---------------------------------------------------
-   */
+
   const getCustomerOrders = (
     email: string,
   ) => {
@@ -458,11 +396,7 @@ function Admin() {
     );
   };
 
-  /*
-   * ---------------------------------------------------
-   * TAB CHANGE
-   * ---------------------------------------------------
-   */
+  
   const changeTab = (tab: Tab) => {
     setActiveTab(tab);
 

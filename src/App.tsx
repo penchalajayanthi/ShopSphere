@@ -27,9 +27,6 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* ================================
-            PUBLIC PAGES
-        ================================= */}
         <Route
           path="/login"
           element={<Login />}
@@ -39,10 +36,6 @@ function App() {
           path="/register"
           element={<Register />}
         />
-
-        {/* ================================
-            AUTHENTICATED PAGES
-        ================================= */}
         <Route element={<ProtectedRoute />}>
           <Route element={<ProtectedLayout />}>
 
@@ -96,9 +89,6 @@ function App() {
               element={<OrderTracking />}
             />
 
-            {/* ================================
-                ADMIN ONLY
-            ================================= */}
             <Route
               element={
                 <ProtectedRoute
@@ -111,10 +101,6 @@ function App() {
                 element={<Admin />}
               />
             </Route>
-
-            {/* ================================
-                PAGE NOT FOUND
-            ================================= */}
             <Route
               path="*"
               element={

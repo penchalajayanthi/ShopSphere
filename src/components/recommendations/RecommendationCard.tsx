@@ -22,19 +22,11 @@ function RecommendationCard({
 }: RecommendationCardProps) {
   const { product, reason } = recommendation;
 
-  /*
-   * =====================================
-   * TOAST
-   * =====================================
-   */
+
   const [toastMessage, setToastMessage] =
     useState<string | null>(null);
 
-  /*
-   * =====================================
-   * CART
-   * =====================================
-   */
+  
   const addToCart = useCartStore(
     (state) => state.addToCart,
   );
@@ -47,11 +39,7 @@ function RecommendationCard({
     );
   };
 
-  /*
-   * =====================================
-   * WISHLIST
-   * =====================================
-   */
+  
   const toggleWishlist = useWishlistStore(
     (state) => state.toggleWishlist,
   );
@@ -77,11 +65,6 @@ function RecommendationCard({
     }
   };
 
-  /*
-   * =====================================
-   * AUTOMATICALLY HIDE TOAST
-   * =====================================
-   */
   useEffect(() => {
     if (!toastMessage) {
       return;

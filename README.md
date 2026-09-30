@@ -1,75 +1,87 @@
-# React + TypeScript + Vite
+## ShopSphere AI – Simple README
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Project
 
-Currently, two official plugins are available:
+* ShopSphere AI is an e-commerce website.
+* Built with React, TypeScript and Vite.
+* Frontend-based project using local data and localStorage.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Features
 
-## React Compiler
+* Register and Login
+* Product Search
+* Category Filter
+* Product Details
+* Cart
+* Wishlist
+* Checkout
+* Orders
+* Order Tracking
+* Product Reviews
+* Customer Dashboard
+* Admin Dashboard
+* AI Shopping Assistant
+* Product Recommendations
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Recommendation System
 
-## Expanding the ESLint configuration
+* Recently Viewed
+* Similar Products
+* Category Based
+* Price Based
+* Wishlist Based
+* Cart Based
+* Frequently Bought Together
+* Trending
+* Personalized For You 
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Technologies
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* Zustand
+* React Router
+* Lucide React
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Storage
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+* Uses `localStorage` for users, cart, wishlist, orders, reviews and recommendation data.
 
+### AI Assistant
+
+* Rule-based mock AI.
+* Helps users find products based on their requirements.
+
+### Responsive Design
+
+* Works on mobile, tablet, laptop and desktop. 
+
+### Testing
+
+* Vitest
+* React Testing Library
+* Playwright 
+
+### Run Project
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+### Build Project
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm run build
 ```
+
+### GitHub
+
+`https://github.com/penchalajayanthi/ShopSphere`
+
+### Deployment
+
+* Deployed using Vercel.
+* Production routes should work correctly on refresh and direct access. 

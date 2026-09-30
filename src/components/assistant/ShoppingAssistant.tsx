@@ -21,18 +21,14 @@ import { askAssistant } from "../../services/assistantService";
 
 import ChatMessage from "./ChatMessage";
 
-/* =========================================================
-   HELPERS
-========================================================= */
+
 
 const createMessageId = () =>
   `${Date.now()}-${Math.random()
     .toString(36)
     .slice(2)}`;
 
-/* =========================================================
-   INITIAL MESSAGE
-========================================================= */
+
 
 const createInitialMessage = (): AssistantMessage => ({
   id: "welcome",
@@ -42,9 +38,6 @@ const createInitialMessage = (): AssistantMessage => ({
   createdAt: new Date().toISOString(),
 });
 
-/* =========================================================
-   SUGGESTIONS
-========================================================= */
 
 const suggestions = [
   "Show mobiles under ₹30000",
@@ -53,9 +46,6 @@ const suggestions = [
   "Show highly rated products",
 ];
 
-/* =========================================================
-   COMPONENT
-========================================================= */
 
 function ShoppingAssistant() {
   const [isOpen, setIsOpen] = useState(false);
@@ -72,15 +62,10 @@ function ShoppingAssistant() {
   const [isTyping, setIsTyping] =
     useState(false);
 
-  /* =======================================================
-     GET PREVIOUS PRODUCTS
-  ======================================================= */
+
 
   const getPreviousProducts = (): Product[] => {
-    /*
-     * Find the latest assistant message
-     * that contains product recommendations.
-     */
+
     const lastAssistantMessage = [...messages]
       .reverse()
       .find(
@@ -106,9 +91,6 @@ function ShoppingAssistant() {
       );
   };
 
-  /* =======================================================
-     SEND MESSAGE
-  ======================================================= */
 
   const sendMessage = (messageText?: string) => {
     const text = (
@@ -119,9 +101,6 @@ function ShoppingAssistant() {
       return;
     }
 
-    /* -----------------------------------------------------
-       USER MESSAGE
-    ----------------------------------------------------- */
 
     const userMessage: AssistantMessage = {
       id: createMessageId(),
@@ -138,16 +117,12 @@ function ShoppingAssistant() {
     setInput("");
     setIsTyping(true);
 
-    /* -----------------------------------------------------
-       SAVE PREVIOUS PRODUCTS BEFORE TIMEOUT
-    ----------------------------------------------------- */
+
 
     const previousProducts =
       getPreviousProducts();
 
-    /* -----------------------------------------------------
-       ASSISTANT RESPONSE
-    ----------------------------------------------------- */
+   
 
     window.setTimeout(() => {
       const result = askAssistant(
@@ -177,9 +152,6 @@ function ShoppingAssistant() {
     }, 500);
   };
 
-  /* =======================================================
-     CLEAR CHAT
-  ======================================================= */
 
   const clearChat = () => {
     setMessages([
@@ -194,31 +166,22 @@ function ShoppingAssistant() {
     setIsTyping(false);
   };
 
-  /* =======================================================
-     OPEN ASSISTANT
-  ======================================================= */
 
   const openAssistant = () => {
     setIsOpen(true);
   };
 
-  /* =======================================================
-     CLOSE ASSISTANT
-  ======================================================= */
+ 
 
   const closeAssistant = () => {
     setIsOpen(false);
   };
 
-  /* =======================================================
-     RENDER
-  ======================================================= */
+
 
   return (
     <>
-      {/* ===================================================
-          FLOATING AI ASSISTANT BUTTON
-      =================================================== */}
+    
 
       {!isOpen && (
         <div className="group fixed bottom-6 right-6 z-50">
@@ -248,19 +211,13 @@ function ShoppingAssistant() {
         </div>
       )}
 
-      {/* ===================================================
-          ASSISTANT WINDOW
-      =================================================== */}
+   
 
       {isOpen && (
         <section
           aria-label="ShopSphere AI Shopping Assistant"
           className="fixed bottom-4 right-4 z-50 flex h-[calc(100vh-2rem)] max-h-[720px] w-[calc(100vw-2rem)] max-w-[440px] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-orange-100 sm:bottom-6 sm:right-6 sm:h-[680px]"
         >
-          {/* =================================================
-              HEADER
-          ================================================= */}
-
           <header className="flex items-center justify-between bg-gradient-to-r from-[#8b5cf6] via-[#ec4899] to-[#f59e0b] p-4 text-white">
             {/* Logo + Title */}
 
@@ -309,10 +266,6 @@ function ShoppingAssistant() {
             </div>
           </header>
 
-          {/* =================================================
-              MESSAGES
-          ================================================= */}
-
           <div
             className="flex-1 space-y-4 overflow-y-auto bg-[#fffaf0] p-4"
             aria-live="polite"
@@ -345,10 +298,6 @@ function ShoppingAssistant() {
             )}
           </div>
 
-          {/* =================================================
-              SUGGESTIONS
-          ================================================= */}
-
           {messages.length === 1 && (
             <div className="border-t border-orange-100 bg-white px-3 py-3">
               <p className="mb-2 text-xs font-bold text-gray-500">
@@ -376,10 +325,6 @@ function ShoppingAssistant() {
               </div>
             </div>
           )}
-
-          {/* =================================================
-              INPUT
-          ================================================= */}
 
           <form
             onSubmit={(event) => {

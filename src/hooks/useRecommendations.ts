@@ -1,53 +1,194 @@
-import { useMemo } from "react";
-import { products } from "../data/products";
-import { useCartStore } from "../store/cartStore";
-import { useWishlistStore } from "../store/wishlistStore";
-import { storage } from "../utils/storage";
-import { getRecommendations } from "../services/recommendationService";
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import type { Product } from "../types/product";
 
-const RECENTLY_VIEWED_KEY = "shopsphere_recently_viewed";
+import {
+  recommendationService,
+} from "../services/recommendationService";
+
+import type {
+  RecommendationCandidate,
+  RecommendationStrategy,
+} from "../providers/recommendation/recommendationProvider";
 
 interface UseRecommendationsOptions {
-  currentProduct?: Product;
+  currentProduct?: Product | null;
+
+  userId?: number;
+
   limit?: number;
+
+  strategy?: RecommendationStrategy;
+
+  enabled?: boolean;
 }
 
-export const useRecommendations = ({
-  currentProduct,
-  limit = 6,
-}: UseRecommendationsOptions = {}) => {
-  const cartItems = useCartStore((state) => state.items);
-  const wishlistItems = useWishlistStore((state) => state.items);
+interface UseRecommendationsResult {
+  recommendations:
+    RecommendationCandidate[];
 
-  const recentlyViewed = storage.get<Product[]>(
-    RECENTLY_VIEWED_KEY,
-    [],
+  loading: boolean;
+
+  error: string | null;
+
+  retry: () => void;
+}
+
+export function useRecommendations({
+  currentProduct = null,
+  userId,
+  limit = 4,
+  strategy,
+  enabled = true,
+}: UseRecommendationsOptions): UseRecommendationsResult {
+  const [
+    recommendations,
+    setRecommendations,
+  ] = useState<
+    RecommendationCandidate[]
+  >([]);
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(
+    enabled,
   );
 
-  const cartProducts = useMemo(
-    () => cartItems.map((item) => item.product),
-    [cartItems],
-  );
+  const [
+    error,
+    setError,
+  ] = useState<
+    string | null
+  >(null);
 
-  const recommendations = useMemo(() => {
-    return getRecommendations({
-      products,
-      currentProduct,
-      wishlistProducts: wishlistItems,
-      cartProducts,
-      recentlyViewedProducts: recentlyViewed,
-      limit,
-    });
+  const [
+    refreshKey,
+    setRefreshKey,
+  ] = useState(0);
+
+  useEffect(() => {
+    if (!enabled) {
+      setRecommendations(
+        [],
+      );
+
+      setLoading(false);
+
+      setError(null);
+
+      return;
+    }
+
+    let cancelled =
+      false;
+
+    const loadRecommendations =
+      () => {
+        try {
+          setLoading(true);
+
+          setError(null);
+          const timer =
+            window.setTimeout(
+              () => {
+                if (
+                  cancelled
+                ) {
+                  return;
+                }
+
+                try {
+                  const result =
+                    recommendationService.getRecommendations(
+                      {
+                        currentProduct,
+                        userId,
+                        limit,
+                        strategy,
+                      },
+                    );
+
+                  setRecommendations(
+                    result,
+                  );
+                } catch {
+                  setRecommendations(
+                    [],
+                  );
+
+                  setError(
+                    "Recommendations could not be loaded. Please try again.",
+                  );
+                } finally {
+                  setLoading(
+                    false,
+                  );
+                }
+              },
+              100,
+            );
+
+          return () => {
+            window.clearTimeout(
+              timer,
+            );
+          };
+        } catch {
+          if (
+            cancelled
+          ) {
+            return;
+          }
+
+          setRecommendations(
+            [],
+          );
+
+          setError(
+            "Recommendations could not be loaded. Please try again.",
+          );
+
+          setLoading(false);
+
+          return undefined;
+        }
+      };
+
+    const cleanup =
+      loadRecommendations();
+
+    return () => {
+      cancelled = true;
+
+      cleanup?.();
+    };
   }, [
     currentProduct,
-    wishlistItems,
-    cartProducts,
-    recentlyViewed,
+    userId,
     limit,
+    strategy,
+    enabled,
+    refreshKey,
   ]);
+
+  const retry = () => {
+    setRefreshKey(
+      (value) =>
+        value + 1,
+    );
+  };
 
   return {
     recommendations,
+
+    loading,
+
+    error,
+
+    retry,
   };
-};
+}

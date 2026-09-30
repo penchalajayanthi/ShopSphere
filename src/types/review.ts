@@ -1,4 +1,3 @@
-
 export interface Review {
   id: string;
   productId: number;
@@ -7,8 +6,7 @@ export interface Review {
   rating: number;
   comment: string;
   createdAt: string;
-}
-
-export interface ReviewState {
-  reviews: Review[];
+  helpful: number;
+  notHelpful: number;
+  verifiedPurchase: boolean;
 }

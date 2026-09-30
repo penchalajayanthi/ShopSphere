@@ -63,9 +63,6 @@ function AIAssistant() {
       return;
     }
 
-    /* -----------------------------
-       User message
-    ------------------------------ */
 
     const userMessage: AssistantMessage = {
       id: createMessageId(),
@@ -82,9 +79,6 @@ function AIAssistant() {
     setInput("");
     setIsTyping(true);
 
-    /* -----------------------------
-       AI response
-    ------------------------------ */
 
     window.setTimeout(() => {
       const result = askAssistant(
@@ -122,9 +116,6 @@ function AIAssistant() {
     }, 500);
   };
 
-  /* -----------------------------
-     Clear conversation
-  ------------------------------ */
 
   const clearChat = () => {
     setMessages([
@@ -138,9 +129,7 @@ function AIAssistant() {
 
   return (
     <>
-      {/* =================================
-          Floating AI Button
-      ================================== */}
+   
 
       {!isOpen && (
         <div className="fixed bottom-6 right-6 z-50 group">
@@ -168,18 +157,13 @@ function AIAssistant() {
         </div>
       )}
 
-      {/* =================================
-          AI Assistant Window
-      ================================== */}
 
       {isOpen && (
         <section
           aria-label="ShopSphere AI Shopping Assistant"
           className="fixed bottom-4 right-4 z-50 flex h-[calc(100vh-2rem)] max-h-[720px] w-[calc(100vw-2rem)] max-w-[440px] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-orange-100 sm:bottom-6 sm:right-6 sm:h-[680px]"
         >
-          {/* =================================
-              Header
-          ================================== */}
+         
 
           <header className="flex items-center justify-between bg-gradient-to-r from-[#8b5cf6] via-[#ec4899] to-[#f59e0b] p-4 text-white">
             <div className="flex items-center gap-3">
@@ -224,9 +208,7 @@ function AIAssistant() {
             </div>
           </header>
 
-          {/* =================================
-              Messages
-          ================================== */}
+
 
           <div
             className="flex-1 space-y-4 overflow-y-auto bg-[#fffaf0] p-4"
@@ -262,10 +244,6 @@ function AIAssistant() {
             )}
           </div>
 
-          {/* =================================
-              Suggestions
-          ================================== */}
-
           {messages.length === 1 && (
             <div className="border-t border-orange-100 bg-white px-3 py-3">
               <p className="mb-2 text-xs font-bold text-gray-500">
@@ -293,10 +271,6 @@ function AIAssistant() {
               </div>
             </div>
           )}
-
-          {/* =================================
-              Input
-          ================================== */}
 
           <form
             onSubmit={(event) => {

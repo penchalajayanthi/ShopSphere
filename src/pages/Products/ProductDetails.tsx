@@ -17,8 +17,7 @@ import {
 
 import Toast from "../../components/ui/Toast";
 import RecommendationRail from "../../components/recommendations/RecommendationRail";
-import ReviewForm from "../../components/reviews/ReviewForm";
-import ReviewList from "../../components/reviews/ReviewList";
+import ReviewSection from "../../components/reviews/ReviewSection";
 
 import { products } from "../../data/products";
 
@@ -32,9 +31,6 @@ function ProductDetails() {
 
   const [toastMessage, setToastMessage] =
     useState<string | null>(null);
-
-  const [reviewRefreshKey, setReviewRefreshKey] =
-    useState(0);
 
   const product = products.find(
     (item) => item.id === Number(id),
@@ -154,7 +150,8 @@ function ProductDetails() {
           </h1>
 
           <p className="mt-2 text-gray-500">
-            The product you're looking for doesn't exist.
+            The product you're looking for
+            doesn't exist.
           </p>
 
           <Link
@@ -182,7 +179,6 @@ function ProductDetails() {
 
   return (
     <main className="min-h-screen bg-[#fffaf0]">
-
       {/* =====================================
           TOAST
       ====================================== */}
@@ -200,7 +196,9 @@ function ProductDetails() {
       ====================================== */}
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
-        {/* Back button */}
+        {/* =====================================
+            BACK BUTTON
+        ====================================== */}
         <Link
           to="/products"
           className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-[#8b5cf6] transition hover:text-[#d97706]"
@@ -224,6 +222,10 @@ function ProductDetails() {
                 src={product.thumbnail}
                 alt={product.title}
                 className="h-[320px] w-full object-contain transition duration-500 hover:scale-105 sm:h-[430px]"
+                onError={(event) => {
+                  event.currentTarget.src =
+                    "https://via.placeholder.com/800x600?text=Product+Image";
+                }}
               />
 
               {/* Discount */}
@@ -263,7 +265,6 @@ function ProductDetails() {
                   }
                 />
               </button>
-
             </div>
           </div>
 
@@ -348,7 +349,6 @@ function ProductDetails() {
                   %
                 </span>
               )}
-
             </div>
 
             {/* Stock */}
@@ -419,7 +419,6 @@ function ProductDetails() {
                   ? "Wishlisted"
                   : "Add to Wishlist"}
               </button>
-
             </div>
 
             {/* Wishlist shortcut */}
@@ -453,15 +452,14 @@ function ProductDetails() {
                   </h3>
 
                   <p className="mt-1 text-sm leading-6 text-white/90">
-                    This product may be a great match
-                    for your shopping preferences.
+                    This product may be a great
+                    match for your shopping
+                    preferences.
                   </p>
                 </div>
 
               </div>
-
             </div>
-
           </div>
         </div>
 
@@ -478,24 +476,9 @@ function ProductDetails() {
         {/* =====================================
             REVIEWS
         ====================================== */}
-        <section className="mt-12 space-y-6">
-
-          <ReviewForm
-            productId={product.id}
-            onReviewAdded={() =>
-              setReviewRefreshKey(
-                (current) => current + 1,
-              )
-            }
-          />
-
-          <ReviewList
-            productId={product.id}
-            refreshKey={reviewRefreshKey}
-          />
-
-        </section>
-
+        <ReviewSection
+          productId={product.id}
+        />
       </div>
     </main>
   );

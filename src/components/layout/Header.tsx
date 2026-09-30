@@ -24,11 +24,6 @@ import { useWishlistStore } from "../../store/wishlistStore";
 function Header() {
   const navigate = useNavigate();
 
-  /*
-   * =====================================================
-   * GENERAL UI STATE
-   * =====================================================
-   */
 
   const [mobileMenuOpen, setMobileMenuOpen] =
     useState(false);
@@ -42,11 +37,6 @@ function Header() {
   const [logoutConfirmOpen, setLogoutConfirmOpen] =
     useState(false);
 
-  /*
-   * =====================================================
-   * AUTH
-   * =====================================================
-   */
 
   const user = useAuthStore(
     (state) => state.user,
@@ -56,11 +46,6 @@ function Header() {
     (state) => state.logout,
   );
 
-  /*
-   * =====================================================
-   * CART
-   * =====================================================
-   */
 
   const cartItems = useCartStore(
     (state) => state.items,
@@ -72,12 +57,6 @@ function Header() {
     0,
   );
 
-  /*
-   * =====================================================
-   * WISHLIST
-   * =====================================================
-   */
-
   const wishlistItems = useWishlistStore(
     (state) => state.items,
   );
@@ -85,12 +64,7 @@ function Header() {
   const wishlistCount =
     wishlistItems.length;
 
-  /*
-   * =====================================================
-   * LOGOUT
-   * =====================================================
-   */
-
+ 
   const requestLogout = () => {
     setLogoutConfirmOpen(true);
   };
@@ -109,12 +83,6 @@ function Header() {
 
     navigate("/");
   };
-
-  /*
-   * =====================================================
-   * ADMIN MOBILE NAVIGATION
-   * =====================================================
-   */
 
   const adminTabs = [
     {
@@ -150,12 +118,6 @@ function Header() {
     navigate(`/admin?tab=${tab}`);
   };
 
-  /*
-   * =====================================================
-   * ADMIN HEADER
-   * =====================================================
-   */
-
   if (user?.role === "admin") {
     return (
       <>
@@ -164,10 +126,6 @@ function Header() {
           <div className="mx-auto w-full max-w-7xl px-3 sm:px-5 lg:px-8">
 
             <div className="flex h-16 items-center justify-between gap-2 sm:gap-4">
-
-              {/* ==================================================
-                  ADMIN MAIN HEADER BRANDING
-              ================================================== */}
 
               <Link
                 to="/admin"
@@ -206,16 +164,7 @@ function Header() {
                 </div>
               </Link>
 
-              {/* ==================================================
-                  ADMIN RIGHT SIDE
-              ================================================== */}
-
               <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-
-                {/* ==================================================
-                    MOBILE ADMIN MENU
-                    Menu is BEFORE Logout
-                ================================================== */}
 
                 <div className="relative sm:hidden">
 
@@ -245,11 +194,6 @@ function Header() {
                     )}
 
                   </button>
-
-                  {/* ==================================================
-                      ADMIN MOBILE DROPDOWN
-                  ================================================== */}
-
                   {adminMenuOpen && (
                     <div
                       role="menu"
@@ -329,11 +273,6 @@ function Header() {
             </div>
           </div>
         </header>
-
-        {/* =================================================
-            ADMIN LOGOUT CONFIRMATION
-        ================================================== */}
-
         {logoutConfirmOpen && (
           <div
             className="fixed inset-0 z-[11000] flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm"
@@ -392,12 +331,6 @@ function Header() {
     );
   }
 
-  /*
-   * =====================================================
-   * CUSTOMER / GUEST HEADER
-   * =====================================================
-   */
-
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-[10000] w-full border-b border-blue-800 bg-gradient-to-r from-[#1d4ed8] via-[#2563eb] to-[#3b82f6] text-white shadow-lg">
@@ -405,10 +338,6 @@ function Header() {
         <div className="mx-auto w-full max-w-7xl px-3 sm:px-5 lg:px-8">
 
           <div className="flex h-16 items-center justify-between gap-4">
-
-            {/* ==================================================
-                CUSTOMER LOGO
-            ================================================== */}
 
             <Link
               to="/"
@@ -434,10 +363,6 @@ function Header() {
 
               </div>
             </Link>
-
-            {/* ==================================================
-                DESKTOP NAVIGATION
-            ================================================== */}
 
             <nav className="hidden items-center gap-1 md:flex">
 
@@ -477,10 +402,6 @@ function Header() {
 
             </nav>
 
-            {/* ==================================================
-                DESKTOP RIGHT SIDE
-            ================================================== */}
-
             <div className="hidden items-center gap-2 md:flex">
 
               {/* Cart */}
@@ -500,10 +421,6 @@ function Header() {
                 )}
 
               </Link>
-
-              {/* ==================================================
-                  GUEST / CUSTOMER ACCOUNT
-              ================================================== */}
 
               {!user ? (
                 <>
@@ -534,10 +451,7 @@ function Header() {
                   </Link>
                 </>
               ) : (
-                /* ==================================================
-                   CUSTOMER ACCOUNT
-                ================================================== */
-
+         
                 <div className="relative">
 
                   <button
@@ -573,99 +487,69 @@ function Header() {
                   </button>
 
                   {/* Account Dropdown */}
+{accountOpen && (
+  <div
+    role="menu"
+    className="absolute right-0 top-14 z-50 w-64 overflow-hidden rounded-2xl border-2 border-orange-300 p-2 shadow-2xl"
+    style={{
+      background:
+        "linear-gradient(135deg, #ffd166 0%, #ff9f43 45%, #ff6b9a 100%)",
+    }}
+  >
+    <div className="border-b border-black/20 px-3 py-3">
+      <p className="font-black text-black">
+        {user.name}
+      </p>
 
-                  {accountOpen && (
-                    <div
-                      role="menu"
-                      className="absolute right-0 top-14 w-64 overflow-hidden rounded-2xl border border-orange-100 bg-white p-2 shadow-2xl"
-                    >
+      <p className="truncate text-xs font-semibold text-black/70">
+        {user.email}
+      </p>
+    </div>
 
-                      <div className="border-b border-orange-100 px-3 py-3">
+    <Link
+      to="/dashboard"
+      role="menuitem"
+      onClick={() => setAccountOpen(false)}
+      className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-black transition hover:bg-white/30"
+    >
+      <User size={18} />
+      My Dashboard
+    </Link>
 
-                        <p className="font-black text-[#29221b]">
-                          {user.name}
-                        </p>
+    <Link
+      to="/orders"
+      role="menuitem"
+      onClick={() => setAccountOpen(false)}
+      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-black transition hover:bg-white/30"
+    >
+      <Package size={18} />
+      My Orders
+    </Link>
 
-                        <p className="truncate text-xs text-[#8c7a63]">
-                          {user.email}
-                        </p>
+    <Link
+      to="/wishlist"
+      role="menuitem"
+      onClick={() => setAccountOpen(false)}
+      className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-black transition hover:bg-white/30"
+    >
+      <Heart size={18} />
+      Wishlist
+    </Link>
 
-                      </div>
-
-                      <Link
-                        to="/dashboard"
-                        role="menuitem"
-                        onClick={() =>
-                          setAccountOpen(
-                            false,
-                          )
-                        }
-                        className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
-                      >
-
-                        <User size={18} />
-
-                        My Dashboard
-
-                      </Link>
-
-                      <Link
-                        to="/orders"
-                        role="menuitem"
-                        onClick={() =>
-                          setAccountOpen(
-                            false,
-                          )
-                        }
-                        className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
-                      >
-
-                        <Package size={18} />
-
-                        My Orders
-
-                      </Link>
-
-                      <Link
-                        to="/wishlist"
-                        role="menuitem"
-                        onClick={() =>
-                          setAccountOpen(
-                            false,
-                          )
-                        }
-                        className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
-                      >
-
-                        <Heart size={18} />
-
-                        Wishlist
-
-                      </Link>
-
-                      <button
-                        type="button"
-                        onClick={requestLogout}
-                        className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-bold text-[#ef476f] transition hover:bg-pink-50"
-                      >
-
-                        <LogOut size={18} />
-
-                        Logout
-
-                      </button>
-
-                    </div>
-                  )}
-
+    <button
+      type="button"
+      onClick={requestLogout}
+      className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-bold text-black transition hover:bg-white/30"
+    >
+      <LogOut size={18} />
+      Logout
+    </button>
+  </div>
+)}
                 </div>
               )}
 
             </div>
-
-            {/* ==================================================
-                CUSTOMER MOBILE ACTIONS
-            ================================================== */}
 
             <div className="flex items-center gap-1 md:hidden">
 
@@ -717,11 +601,6 @@ function Header() {
 
           </div>
         </div>
-
-        {/* ==================================================
-            CUSTOMER MOBILE MENU
-        ================================================== */}
-
         {mobileMenuOpen && (
           <div className="border-t border-white/10 bg-white px-4 py-4 shadow-xl md:hidden">
 
@@ -788,11 +667,6 @@ function Header() {
                 Orders
 
               </Link>
-
-              {/* ==================================================
-                  LOGGED-IN CUSTOMER
-              ================================================== */}
-
               {user ? (
                 <>
 
@@ -874,10 +748,6 @@ function Header() {
 
                 </>
               ) : (
-                /* ==================================================
-                   GUEST MOBILE
-                ================================================== */
-
                 <>
 
                   <div className="my-2 border-t border-orange-100" />
@@ -926,10 +796,6 @@ function Header() {
         )}
 
       </header>
-
-      {/* =================================================
-          CUSTOMER LOGOUT CONFIRMATION MODAL
-      ================================================== */}
 
       {logoutConfirmOpen && (
         <div
