@@ -17,10 +17,11 @@ import {
 } from "lucide-react";
 
 import {
+  useEffect,
   useMemo,
   useState,
 } from "react";
-
+import { useSearchParams } from "react-router-dom";
 import { useProductStore } from "../../store/productStore";
 import { useAuthStore } from "../../store/authStore";
 
@@ -88,11 +89,7 @@ function Admin() {
     (state) => state.deleteProduct,
   );
 
-  /*
-   * ---------------------------------------------------
-   * GLOBAL USERS
-   * ---------------------------------------------------
-   */
+
   const users = useAuthStore(
     (state) => state.users,
   );
@@ -128,9 +125,33 @@ function Admin() {
    * UI STATE
    * ---------------------------------------------------
    */
+  const [searchParams] =
+  useSearchParams();
   const [activeTab, setActiveTab] =
     useState<Tab>("overview");
+useEffect(() => {
+  const requestedTab =
+    searchParams.get("tab");
 
+  const validTabs: Tab[] = [
+    "overview",
+    "products",
+    "orders",
+    "customers",
+    "analytics",
+  ];
+
+  if (
+    requestedTab &&
+    validTabs.includes(
+      requestedTab as Tab,
+    )
+  ) {
+    setActiveTab(
+      requestedTab as Tab,
+    );
+  }
+}, [searchParams]);
   const [mobileAdminMenuOpen, setMobileAdminMenuOpen] =
     useState(false);
 
