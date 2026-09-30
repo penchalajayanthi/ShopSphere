@@ -310,23 +310,20 @@ function Header() {
 
                 </div>
 
-                {/* ==================================================
-                    ADMIN LOGOUT
-                ================================================== */}
+                <div className="group relative">
+                  <button
+                    type="button"
+                    onClick={requestLogout}
+                    aria-label="Logout"
+                    className="flex h-10 items-center justify-center rounded-xl bg-[#ef476f] px-2.5 text-white shadow-md transition hover:bg-[#db2777] hover:shadow-lg sm:px-3"
+                  >
+                    <LogOut size={17} />
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={requestLogout}
-                  className="flex h-10 items-center gap-1.5 rounded-xl bg-[#ef476f] px-2.5 text-xs font-black text-white shadow-md transition hover:bg-[#db2777] hover:shadow-lg sm:gap-2 sm:px-4 sm:text-sm"
-                >
-
-                  <LogOut size={17} />
-
-                  <span>
+                  <span className="pointer-events-none absolute right-0 top-12 z-[10002] whitespace-nowrap rounded-lg bg-[#29221b] px-3 py-1.5 text-xs font-bold text-white opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100">
                     Logout
                   </span>
-
-                </button>
+                </div>
 
               </div>
             </div>
