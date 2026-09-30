@@ -5,6 +5,7 @@ import {
   CircleDollarSign,
   Edit3,
   Eye,
+  Menu,
   Package,
   Plus,
   Search,
@@ -70,11 +71,7 @@ const formatCurrency = (amount: number) =>
   })}`;
 
 function Admin() {
-  /*
-   * ---------------------------------------------------
-   * GLOBAL PRODUCT CATALOGUE
-   * ---------------------------------------------------
-   */
+
   const products = useProductStore(
     (state) => state.items,
   );
@@ -133,6 +130,9 @@ function Admin() {
    */
   const [activeTab, setActiveTab] =
     useState<Tab>("overview");
+
+  const [mobileAdminMenuOpen, setMobileAdminMenuOpen] =
+    useState(false);
 
   const [productSearch, setProductSearch] =
     useState("");
@@ -429,24 +429,16 @@ function Admin() {
     );
   };
 
-  /*
-   * ---------------------------------------------------
-   * TAB CHANGE
-   * ---------------------------------------------------
-   */
   const changeTab = (tab: Tab) => {
     setActiveTab(tab);
 
     setProductSearch("");
     setOrderSearch("");
     setCustomerSearch("");
+
+    setMobileAdminMenuOpen(false);
   };
 
-  /*
-   * ---------------------------------------------------
-   * TOAST
-   * ---------------------------------------------------
-   */
   const showToast = (
     message: string,
   ) => {
@@ -536,11 +528,6 @@ function Admin() {
     setShowProductModal(true);
   };
 
-  /*
-   * ---------------------------------------------------
-   * CLOSE PRODUCT MODAL
-   * ---------------------------------------------------
-   */
   const closeProductModal = () => {
     setShowProductModal(false);
     setEditingProduct(null);
@@ -549,11 +536,7 @@ function Admin() {
     );
   };
 
-  /*
-   * ---------------------------------------------------
-   * SAVE PRODUCT
-   * ---------------------------------------------------
-   */
+
   const handleSaveProduct = () => {
     if (
       !productForm.title.trim() ||
@@ -957,7 +940,7 @@ function Admin() {
       {/* ==================================================
           BEAUTIFUL ADMIN HEADER
       ================================================== */}
-      <header className="sticky top-16 z-[9990] overflow-hidden bg-gradient-to-br from-[#2f1650] via-[#6d267f] to-[#d85b3d] text-white shadow-xl">
+     <header className="sticky top-16 z-[9990] overflow-hidden bg-gradient-to-br from-[#2f1650] via-[#6d267f] to-[#d85b3d] text-white shadow-xl">
 
         {/* Decorative background circles */}
         <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#f59e0b]/20 blur-3xl" />
@@ -967,14 +950,14 @@ function Admin() {
         <div className="relative mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
 
           {/* Header Top */}
-          <div className="flex flex-col gap-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-5">
 
             {/* Brand */}
             <div className="min-w-0">
 
               <div className="flex items-center gap-3">
 
-                <div className="flex h-13 w-13 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/15 text-2xl shadow-lg backdrop-blur">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/15 text-xl shadow-lg backdrop-blur sm:h-13 sm:w-13">
                   🛍️
                 </div>
 
@@ -992,9 +975,9 @@ function Admin() {
 
                   </div>
 
-                  <h1 className="mt-1 text-2xl font-black tracking-tight text-white sm:text-3xl">
-                    Admin Dashboard
-                  </h1>
+                 <h1 className="mt-1 text-xl font-black tracking-tight text-white sm:text-3xl">
+  Admin Dashboard
+</h1>
 
                 </div>
               </div>
@@ -1029,13 +1012,18 @@ function Admin() {
           {/* ==================================================
               HEADER NAVIGATION
           ================================================== */}
+          {/* ==================================================
+    ADMIN NAVIGATION
+================================================== */}
           <nav
             aria-label="Admin navigation"
             className="border-t border-white/10"
           >
-            <div className="-mx-1 overflow-x-auto py-3">
-
-              <div className="flex min-w-max items-center gap-2 px-1">
+            {/* ================================================
+      DESKTOP NAVIGATION
+  ================================================= */}
+            <div className="hidden py-3 md:block">
+              <div className="flex items-center gap-2">
 
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
@@ -1047,9 +1035,7 @@ function Admin() {
                       key={tab.id}
                       type="button"
                       onClick={() =>
-                        changeTab(
-                          tab.id,
-                        )
+                        changeTab(tab.id)
                       }
                       className={`group inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-black whitespace-nowrap transition-all duration-200 ${active
                           ? "border-white/20 bg-white text-[#6d267f] shadow-lg"
@@ -1068,12 +1054,120 @@ function Admin() {
                       <span>
                         {tab.label}
                       </span>
-
                     </button>
                   );
                 })}
 
               </div>
+            </div>
+
+            {/* ================================================
+      MOBILE MENU BAR
+  ================================================= */}
+            <div className="md:hidden py-3">
+
+              {/* Mobile Menu Button */}
+              <button
+                type="button"
+                onClick={() =>
+                  setMobileAdminMenuOpen(
+                    (value) => !value,
+                  )
+                }
+                aria-expanded={
+                  mobileAdminMenuOpen
+                }
+                aria-controls="mobile-admin-navigation"
+                className="flex w-full items-center justify-between rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-left shadow-md backdrop-blur transition hover:bg-white/15"
+              >
+
+                <div className="flex items-center gap-3">
+
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-[#8b5cf6] shadow-sm">
+                    {mobileAdminMenuOpen ? (
+                      <X size={19} />
+                    ) : (
+                      <Menu size={19} />
+                    )}
+                  </div>
+
+                  <div>
+                    <p className="text-[9px] font-black uppercase tracking-[0.15em] text-yellow-300">
+                      Admin Menu
+                    </p>
+
+                    <p className="mt-0.5 text-sm font-black text-white">
+                      {tabs.find(
+                        (tab) =>
+                          tab.id === activeTab,
+                      )?.label ?? "Overview"}
+                    </p>
+                  </div>
+
+                </div>
+
+                <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-black text-white/75">
+                  {mobileAdminMenuOpen
+                    ? "Close"
+                    : "Open"}
+                </span>
+
+              </button>
+
+              {/* Mobile Dropdown */}
+              {mobileAdminMenuOpen && (
+                <div
+                  id="mobile-admin-navigation"
+                  className="mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[#3b1957]/95 p-2 shadow-xl backdrop-blur-xl"
+                >
+
+                  <div className="space-y-1">
+
+                    {tabs.map((tab) => {
+                      const Icon = tab.icon;
+                      const active =
+                        activeTab === tab.id;
+
+                      return (
+                        <button
+                          key={tab.id}
+                          type="button"
+                          onClick={() =>
+                            changeTab(tab.id)
+                          }
+                          className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-black transition ${active
+                              ? "bg-white text-[#6d267f] shadow-md"
+                              : "text-white/85 hover:bg-white/10 hover:text-white"
+                            }`}
+                        >
+
+                          <div
+                            className={`flex h-9 w-9 items-center justify-center rounded-xl ${active
+                                ? "bg-gradient-to-br from-[#f59e0b] to-[#ec4899] text-white"
+                                : "bg-white/10 text-yellow-300"
+                              }`}
+                          >
+                            <Icon size={17} />
+                          </div>
+
+                          <span className="flex-1">
+                            {tab.label}
+                          </span>
+
+                          {active && (
+                            <span className="rounded-full bg-purple-100 px-2 py-1 text-[9px] font-black uppercase text-[#7c3aed]">
+                              Active
+                            </span>
+                          )}
+
+                        </button>
+                      );
+                    })}
+
+                  </div>
+                </div>
+              )}
+
             </div>
           </nav>
 
@@ -1786,9 +1880,9 @@ function Admin() {
 
                               <span
                                 className={`rounded-full px-2.5 py-1 text-xs font-black ${product.stock <=
-                                    10
-                                    ? "bg-red-100 text-red-600"
-                                    : "bg-green-100 text-green-700"
+                                  10
+                                  ? "bg-red-100 text-red-600"
+                                  : "bg-green-100 text-green-700"
                                   }`}
                               >
                                 Stock:{" "}
@@ -3206,9 +3300,9 @@ function Admin() {
                             className={`rounded-full px-3 py-1.5 text-xs font-black ${Number(
                               productForm.stock,
                             ) <=
-                                10
-                                ? "bg-red-100 text-red-600"
-                                : "bg-green-100 text-green-700"
+                              10
+                              ? "bg-red-100 text-red-600"
+                              : "bg-green-100 text-green-700"
                               }`}
                           >
                             {
@@ -3792,9 +3886,9 @@ function Admin() {
                             status
                           }
                           className={`rounded-full px-3 py-1.5 text-xs font-black ${status ===
-                              selectedOrder.status
-                              ? "bg-[#8b5cf6] text-white"
-                              : "bg-white text-[#8c7a63]"
+                            selectedOrder.status
+                            ? "bg-[#8b5cf6] text-white"
+                            : "bg-white text-[#8c7a63]"
                             }`}
                         >
                           {
