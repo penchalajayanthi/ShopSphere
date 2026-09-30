@@ -1,6 +1,9 @@
 import { create } from "zustand";
+
 import type { User } from "../types/user";
+
 import { users as defaultUsers } from "../data/users";
+
 import { storage } from "../utils/storage";
 
 interface AuthSession {
@@ -32,39 +35,152 @@ interface AuthState {
 
 const USERS_KEY = "shopsphere_users";
 const SESSION_KEY = "shopsphere_auth_session";
+const CURRENT_USER_KEY =
+  "shopsphere_current_user";
 
-const storedUsers = storage.get<User[]>(
-  USERS_KEY,
-  defaultUsers,
-);
+/*
+ * =====================================================
+ * SYNC DEFAULT USERS WITH LOCAL STORAGE
+ * =====================================================
+ *
+ * This is important because users saved in localStorage
+ * can become outdated after the default users file changes.
+ *
+ * Existing registered users are preserved.
+ * Default users are synchronized by email so their
+ * correct role is restored.
+ */
+const syncUsers = (): User[] => {
+  const storedUsers =
+    storage.get<User[]>(
+      USERS_KEY,
+      [],
+    );
 
-const storedSession =
+  const mergedUsers = [
+    ...storedUsers,
+  ];
+
+  defaultUsers.forEach(
+    (defaultUser) => {
+      const existingIndex =
+        mergedUsers.findIndex(
+          (user) =>
+            user.email.toLowerCase() ===
+            defaultUser.email.toLowerCase(),
+        );
+
+      if (existingIndex === -1) {
+        /*
+         * Default user does not exist yet.
+         */
+        mergedUsers.push(
+          defaultUser,
+        );
+      } else {
+        /*
+         * Keep the existing ID and any locally stored
+         * information, but synchronize the predefined
+         * user's role, password, name and other fixed data.
+         */
+        mergedUsers[
+          existingIndex
+        ] = {
+          ...mergedUsers[
+            existingIndex
+          ],
+          ...defaultUser,
+        };
+      }
+    },
+  );
+
+  storage.set(
+    USERS_KEY,
+    mergedUsers,
+  );
+
+  return mergedUsers;
+};
+
+/*
+ * =====================================================
+ * INITIAL USERS
+ * =====================================================
+ */
+const storedUsers =
+  syncUsers();
+
+/*
+ * =====================================================
+ * INITIAL SESSION
+ * =====================================================
+ */
+const rawSession =
   storage.get<AuthSession | null>(
     SESSION_KEY,
     null,
   );
 
-let initialUser: User | null = null;
+let storedSession:
+  | AuthSession
+  | null = rawSession;
 
+let initialUser:
+  | User
+  | null = null;
+
+/*
+ * =====================================================
+ * RESTORE SESSION
+ * =====================================================
+ */
 if (storedSession) {
   const isExpired =
-    Date.now() >= storedSession.expiresAt;
+    Date.now() >=
+    storedSession.expiresAt;
 
-  if (!isExpired) {
+  if (isExpired) {
+    storage.remove(
+      SESSION_KEY,
+    );
+
+    storage.remove(
+      CURRENT_USER_KEY,
+    );
+
+    storedSession = null;
+  } else {
     initialUser =
       storedUsers.find(
         (user) =>
-          user.id === storedSession.userId,
+          user.id ===
+          storedSession?.userId,
       ) ?? null;
-  } else {
-    storage.remove(SESSION_KEY);
+
+    /*
+     * If the session exists but its user can no longer
+     * be found, remove the invalid session.
+     */
+    if (!initialUser) {
+      storage.remove(
+        SESSION_KEY,
+      );
+
+      storage.remove(
+        CURRENT_USER_KEY,
+      );
+
+      storedSession = null;
+    }
   }
 }
 
-if (!localStorage.getItem(USERS_KEY)) {
-  storage.set(USERS_KEY, defaultUsers);
-}
-
+/*
+ * =====================================================
+ * AUTH STORE
+ * =====================================================
+ */
 export const useAuthStore =
   create<AuthState>((set, get) => ({
     user: initialUser,
@@ -73,32 +189,51 @@ export const useAuthStore =
 
     session: storedSession,
 
-    login: (email, password) => {
+    /*
+     * =================================================
+     * LOGIN
+     * =================================================
+     */
+    login: (
+      email,
+      password,
+    ) => {
+      /*
+       * Sync users again before login so predefined
+       * admin/customer roles are always current.
+       */
       const currentUsers =
-        storage.get<User[]>(
-          USERS_KEY,
-          defaultUsers,
-        );
+        syncUsers();
 
       const normalizedEmail =
-        email.trim().toLowerCase();
+        email
+          .trim()
+          .toLowerCase();
 
       const foundUser =
         currentUsers.find(
           (item) =>
-            item.email.toLowerCase() ===
+            item.email
+              .toLowerCase() ===
               normalizedEmail &&
-            item.password === password,
+            item.password ===
+              password,
         );
 
       if (!foundUser) {
         return false;
       }
 
+      /*
+       * Create mock JWT-like session.
+       */
       const session: AuthSession = {
         token:
           `mock-jwt-${foundUser.id}-${Date.now()}`,
-        userId: foundUser.id,
+
+        userId:
+          foundUser.id,
+
         expiresAt:
           Date.now() +
           24 * 60 * 60 * 1000,
@@ -110,7 +245,7 @@ export const useAuthStore =
       );
 
       storage.set(
-        "shopsphere_current_user",
+        CURRENT_USER_KEY,
         foundUser,
       );
 
@@ -123,24 +258,29 @@ export const useAuthStore =
       return true;
     },
 
+    /*
+     * =================================================
+     * REGISTER
+     * =================================================
+     */
     register: (
       name,
       email,
       password,
     ) => {
       const currentUsers =
-        storage.get<User[]>(
-          USERS_KEY,
-          defaultUsers,
-        );
+        syncUsers();
 
       const normalizedEmail =
-        email.trim().toLowerCase();
+        email
+          .trim()
+          .toLowerCase();
 
       const existingUser =
         currentUsers.find(
           (item) =>
-            item.email.toLowerCase() ===
+            item.email
+              .toLowerCase() ===
             normalizedEmail,
         );
 
@@ -148,11 +288,19 @@ export const useAuthStore =
         return false;
       }
 
+      /*
+       * All newly registered users are customers.
+       */
       const newUser: User = {
         id: Date.now(),
+
         name: name.trim(),
-        email: normalizedEmail,
+
+        email:
+          normalizedEmail,
+
         password,
+
         role: "customer",
       };
 
@@ -161,10 +309,16 @@ export const useAuthStore =
         newUser,
       ];
 
+      /*
+       * Create session immediately after registration.
+       */
       const session: AuthSession = {
         token:
           `mock-jwt-${newUser.id}-${Date.now()}`,
-        userId: newUser.id,
+
+        userId:
+          newUser.id,
+
         expiresAt:
           Date.now() +
           24 * 60 * 60 * 1000,
@@ -181,7 +335,7 @@ export const useAuthStore =
       );
 
       storage.set(
-        "shopsphere_current_user",
+        CURRENT_USER_KEY,
         newUser,
       );
 
@@ -194,12 +348,19 @@ export const useAuthStore =
       return true;
     },
 
+    /*
+     * =================================================
+     * LOGOUT
+     * =================================================
+     */
     logout: () => {
       storage.remove(
-        "shopsphere_current_user",
+        CURRENT_USER_KEY,
       );
 
-      storage.remove(SESSION_KEY);
+      storage.remove(
+        SESSION_KEY,
+      );
 
       set({
         user: null,
@@ -207,21 +368,57 @@ export const useAuthStore =
       });
     },
 
+    /*
+     * =================================================
+     * CHECK AUTHENTICATION
+     * =================================================
+     */
     isAuthenticated: () => {
-      const session = get().session;
-      const user = get().user;
+      const session =
+        get().session;
+
+      const user =
+        get().user;
 
       if (!session || !user) {
         return false;
       }
 
-      if (
+      const isExpired =
         Date.now() >=
-        session.expiresAt
-      ) {
-        storage.remove(SESSION_KEY);
+        session.expiresAt;
+
+      if (isExpired) {
         storage.remove(
-          "shopsphere_current_user",
+          SESSION_KEY,
+        );
+
+        storage.remove(
+          CURRENT_USER_KEY,
+        );
+
+        set({
+          user: null,
+          session: null,
+        });
+
+        return false;
+      }
+
+      /*
+       * Make sure the session still points to the
+       * currently stored user.
+       */
+      if (
+        session.userId !==
+        user.id
+      ) {
+        storage.remove(
+          SESSION_KEY,
+        );
+
+        storage.remove(
+          CURRENT_USER_KEY,
         );
 
         set({

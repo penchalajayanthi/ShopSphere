@@ -89,6 +89,24 @@ function Login() {
       return;
     }
 
+    // Get the user that was just logged in
+    const loggedInUser =
+      useAuthStore.getState().user;
+
+    // Automatically send admin users
+    // to the Admin Dashboard
+    if (
+      loggedInUser?.role === "admin"
+    ) {
+      navigate("/admin", {
+        replace: true,
+      });
+      return;
+    }
+
+    // Customers continue to the page
+    // they originally requested,
+    // or Home if there was no previous page.
     navigate(from, {
       replace: true,
     });
@@ -248,6 +266,7 @@ function Login() {
               </div>
             </div>
 
+            {/* Sign In */}
             <button
               type="submit"
               disabled={loading}
@@ -259,9 +278,10 @@ function Login() {
             </button>
           </form>
 
-
+          {/* Register */}
           <p className="mt-7 text-center text-sm text-[#8c7a63]">
             Don't have an account?{" "}
+
             <Link
               to="/register"
               className="font-black text-[#e87500] hover:text-[#8b5cf6]"
