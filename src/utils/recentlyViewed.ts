@@ -14,12 +14,10 @@ export const recentlyViewed = {
   add(product: Product): void {
     const products = recentlyViewed.getAll();
 
-    // Remove the product if it already exists
     const filteredProducts = products.filter(
       (item) => item.id !== product.id,
     );
 
-    // Add the latest product at the beginning
     const updatedProducts = [
       product,
       ...filteredProducts,

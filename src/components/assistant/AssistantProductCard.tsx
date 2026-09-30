@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { ShoppingCart, Star } from "lucide-react";
-
 import type { Product } from "../../types/product";
 import { useCartStore } from "../../store/cartStore";
 import Toast from "../ui/Toast";
@@ -10,22 +9,12 @@ interface AssistantProductCardProps {
   product: Product;
 }
 
-function AssistantProductCard({
-  product,
-}: AssistantProductCardProps) {
-  const addToCart = useCartStore(
-    (state) => state.addToCart,
-  );
-
-  const [toastMessage, setToastMessage] =
-    useState("");
-
+function AssistantProductCard({ product,}: AssistantProductCardProps) {
+  const addToCart = useCartStore((state) => state.addToCart,);
+  const [toastMessage, setToastMessage] = useState("");
   const handleAddToCart = () => {
     addToCart(product);
-
-    setToastMessage(
-      `${product.title} added to cart!`,
-    );
+    setToastMessage( `${product.title} added to cart!`, );
   };
 
   return (

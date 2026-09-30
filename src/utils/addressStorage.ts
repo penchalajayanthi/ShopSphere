@@ -35,11 +35,6 @@ export const addressStorage = {
     const addresses =
       addressStorage.getAll();
 
-    /*
-     * If this address is default,
-     * remove default status from
-     * the user's existing addresses.
-     */
     let updatedAddresses = addresses;
 
     if (address.isDefault) {
@@ -66,10 +61,6 @@ export const addressStorage = {
 
     let updatedAddresses = addresses;
 
-    /*
-     * Only one address can be default
-     * for a particular user.
-     */
     if (address.isDefault) {
       updatedAddresses = addresses.map(
         (item) =>
@@ -115,11 +106,6 @@ export const addressStorage = {
           address.id !== addressId,
       );
 
-    /*
-     * If the deleted address was default,
-     * automatically make another address
-     * default for the same user.
-     */
     if (
       addressToRemove?.isDefault
     ) {

@@ -1,64 +1,34 @@
-import {
-  useEffect,
-  useState,
-} from "react";
-
-import {
-  MapPin,
-  Plus,
-} from "lucide-react";
-
+import {useEffect,useState,} from "react";
+import {MapPin,Plus,} from "lucide-react";
 import type { Address } from "../../types/address";
-
 import { addressStorage } from "../../utils/addressStorage";
-
 import AddressCard from "./AddressCard";
 import AddressForm from "./AddressForm";
 
-interface AddressManagerProps {
-  userId: number;
-}
+interface AddressManagerProps {userId: number;}
 
-function AddressManager({
-  userId,
-}: AddressManagerProps) {
-  const [addresses, setAddresses] =
-    useState<Address[]>([]);
-
-  const [showForm, setShowForm] =
-    useState(false);
-
-  const [editingAddress, setEditingAddress] =
-    useState<Address | null>(null);
-
-  const loadAddresses = () => {
-    setAddresses(
-      addressStorage.getByUser(userId),
-    );
-  };
+function AddressManager({userId,}: AddressManagerProps) {
+  const [addresses, setAddresses] =useState<Address[]>([]);
+  const [showForm, setShowForm] = useState(false);
+  const [editingAddress, setEditingAddress] =useState<Address | null>(null);
+  const loadAddresses = () => {setAddresses(addressStorage.getByUser(userId),);};
 
   useEffect(() => {
     loadAddresses();
   }, [userId]);
 
-  const handleSave = (
-    address: Address,
-  ) => {
+  const handleSave = (address: Address,) => {
     if (editingAddress) {
       addressStorage.update(address);
     } else {
       addressStorage.add(address);
     }
-
     loadAddresses();
-
     setShowForm(false);
     setEditingAddress(null);
   };
 
-  const handleEdit = (
-    address: Address,
-  ) => {
+  const handleEdit = (address: Address,) => {
     setEditingAddress(address);
     setShowForm(true);
 
@@ -68,9 +38,7 @@ function AddressManager({
     });
   };
 
-  const handleDelete = (
-    address: Address,
-  ) => {
+  const handleDelete = (address: Address,) => {
     const confirmed =
       window.confirm(
         `Are you sure you want to delete the address for ${address.fullName}?`,
@@ -87,14 +55,8 @@ function AddressManager({
     loadAddresses();
   };
 
-  const handleSetDefault = (
-    address: Address,
-  ) => {
-    addressStorage.setDefault(
-      address.id,
-      userId,
-    );
-
+  const handleSetDefault = (address: Address,) => {
+    addressStorage.setDefault(address.id,userId,);
     loadAddresses();
   };
 
@@ -115,13 +77,8 @@ function AddressManager({
 
   return (
     <section className="mt-6 rounded-3xl border border-orange-100 bg-white p-6 shadow-sm">
-
-      {/* Header */}
-
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
         <div className="flex items-center gap-3">
-
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-[#d97706]">
             <MapPin size={21} />
           </div>
@@ -150,8 +107,6 @@ function AddressManager({
         )}
 
       </div>
-
-      {/* Form */}
 
       {showForm && (
         <div className="mt-6">

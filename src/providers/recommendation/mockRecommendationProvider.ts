@@ -7,12 +7,6 @@ import type {
   RecommendationStrategy,
 } from "./recommendationProvider";
 
-/*
- * =========================================================
- * HELPER FUNCTIONS
- * =========================================================
- */
-
 const clamp = (
   value: number,
   minimum: number,
@@ -62,11 +56,6 @@ const priceSimilarity = (
   );
 };
 
-/*
- * =========================================================
- * CREATE RECOMMENDATION CANDIDATE
- * =========================================================
- */
 
 const createCandidate = (
   product: Product,
@@ -81,12 +70,6 @@ const createCandidate = (
     reason,
   };
 };
-
-/*
- * =========================================================
- * GET PRODUCT IDS FROM SIGNALS
- * =========================================================
- */
 
 const getSignalProductIds = (
   context: RecommendationProviderContext,
@@ -111,12 +94,6 @@ const getSignalProductIds = (
     );
 };
 
-/*
- * =========================================================
- * GET PRODUCTS BY IDS
- * =========================================================
- */
-
 const getProductsByIds = (
   products: Product[],
   ids: number[],
@@ -129,11 +106,6 @@ const getProductsByIds = (
   );
 };
 
-/*
- * =========================================================
- * CATEGORY FREQUENCY
- * =========================================================
- */
 
 const getCategoryFrequency = (
   products: Product[],
@@ -169,12 +141,6 @@ const getCategoryFrequency = (
         category,
     );
 };
-
-/*
- * =========================================================
- * MOCK RECOMMENDATION PROVIDER
- * =========================================================
- */
 
 export class MockRecommendationProvider
   implements RecommendationProvider
@@ -234,12 +200,6 @@ export class MockRecommendationProvider
     }
   }
 
-  /*
-   * =======================================================
-   * 1. RECENTLY VIEWED
-   * =======================================================
-   */
-
   private recentlyViewed(
     context: RecommendationProviderContext,
   ): RecommendationCandidate[] {
@@ -281,12 +241,6 @@ export class MockRecommendationProvider
       )
       .slice(0, context.limit);
   }
-
-  /*
-   * =======================================================
-   * 2. SIMILAR PRODUCTS
-   * =======================================================
-   */
 
   private similarProducts(
     context: RecommendationProviderContext,
@@ -359,12 +313,6 @@ export class MockRecommendationProvider
       );
   }
 
-  /*
-   * =======================================================
-   * 3. CATEGORY BASED
-   * =======================================================
-   */
-
   private categoryBased(
     context: RecommendationProviderContext,
   ): RecommendationCandidate[] {
@@ -433,11 +381,6 @@ export class MockRecommendationProvider
       );
   }
 
-  /*
-   * =======================================================
-   * 4. PRICE BASED
-   * =======================================================
-   */
 
   private priceBased(
     context: RecommendationProviderContext,
@@ -526,12 +469,6 @@ export class MockRecommendationProvider
       );
   }
 
-  /*
-   * =======================================================
-   * 5. WISHLIST BASED
-   * =======================================================
-   */
-
   private wishlistBased(
     context: RecommendationProviderContext,
   ): RecommendationCandidate[] {
@@ -614,12 +551,6 @@ export class MockRecommendationProvider
       );
   }
 
-  /*
-   * =======================================================
-   * 6. CART BASED
-   * =======================================================
-   */
-
   private cartBased(
     context: RecommendationProviderContext,
   ): RecommendationCandidate[] {
@@ -699,12 +630,6 @@ export class MockRecommendationProvider
           ),
       );
   }
-
-  /*
-   * =======================================================
-   * 7. FREQUENTLY BOUGHT TOGETHER
-   * =======================================================
-   */
 
   private frequentlyBoughtTogether(
     context: RecommendationProviderContext,
@@ -792,12 +717,6 @@ export class MockRecommendationProvider
       });
   }
 
-  /*
-   * =======================================================
-   * 8. TRENDING
-   * =======================================================
-   */
-
   private trending(
     context: RecommendationProviderContext,
   ): RecommendationCandidate[] {
@@ -858,12 +777,6 @@ export class MockRecommendationProvider
       );
   }
 
-  /*
-   * =======================================================
-   * 9. PERSONALIZED
-   * =======================================================
-   */
-
   private personalized(
     context: RecommendationProviderContext,
   ): RecommendationCandidate[] {
@@ -903,11 +816,6 @@ export class MockRecommendationProvider
         context.products,
         allSignalIds,
       );
-
-    /*
-     * No user signals:
-     * use trending products.
-     */
     if (
       signalProducts.length === 0
     ) {
@@ -964,9 +872,6 @@ export class MockRecommendationProvider
         .map((product) => {
           let score = 0;
 
-          /*
-           * Category preference
-           */
           if (
             preferredCategories.includes(
               product.category,
@@ -975,18 +880,12 @@ export class MockRecommendationProvider
             score += 0.3;
           }
 
-          /*
-           * Price preference
-           */
           score +=
             priceSimilarity(
               product.price,
               averagePrice,
             ) * 0.25;
 
-          /*
-           * Rating quality
-           */
           score +=
             normalize(
               product.rating,
@@ -994,9 +893,7 @@ export class MockRecommendationProvider
               5,
             ) * 0.15;
 
-          /*
-           * Viewed relationship
-           */
+       
           if (
             viewedProducts.length > 0
           ) {
@@ -1032,9 +929,6 @@ export class MockRecommendationProvider
               ) * 0.15;
           }
 
-          /*
-           * Wishlist signal
-           */
           if (
             wishlistProducts.length > 0 &&
             wishlistProducts.some(
@@ -1046,9 +940,6 @@ export class MockRecommendationProvider
             score += 0.05;
           }
 
-          /*
-           * Cart signal
-           */
           if (
             cartProducts.length > 0 &&
             cartProducts.some(
@@ -1060,9 +951,6 @@ export class MockRecommendationProvider
             score += 0.05;
           }
 
-          /*
-           * Purchase signal
-           */
           if (
             purchaseProducts.length > 0 &&
             purchaseProducts.some(
@@ -1097,11 +985,6 @@ export class MockRecommendationProvider
   }
 }
 
-/*
- * =========================================================
- * SINGLE PROVIDER INSTANCE
- * =========================================================
- */
 
 export const mockRecommendationProvider =
   new MockRecommendationProvider();

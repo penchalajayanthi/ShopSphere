@@ -36,20 +36,10 @@ function ProductDetails() {
     (item) => item.id === Number(id),
   );
 
-  /*
-   * =====================================
-   * CART
-   * =====================================
-   */
   const addToCart = useCartStore(
     (state) => state.addToCart,
   );
 
-  /*
-   * =====================================
-   * WISHLIST
-   * =====================================
-   */
   const toggleWishlist = useWishlistStore(
     (state) => state.toggleWishlist,
   );
@@ -61,11 +51,6 @@ function ProductDetails() {
         : false,
   );
 
-  /*
-   * =====================================
-   * ADD TO CART
-   * =====================================
-   */
   const handleAddToCart = () => {
     if (!product) {
       return;
@@ -78,11 +63,6 @@ function ProductDetails() {
     );
   };
 
-  /*
-   * =====================================
-   * TOGGLE WISHLIST
-   * =====================================
-   */
   const handleToggleWishlist = () => {
     if (!product) {
       return;
@@ -104,11 +84,6 @@ function ProductDetails() {
     }
   };
 
-  /*
-   * =====================================
-   * AUTOMATICALLY HIDE TOAST
-   * =====================================
-   */
   useEffect(() => {
     if (!toastMessage) {
       return;
@@ -123,11 +98,6 @@ function ProductDetails() {
     };
   }, [toastMessage]);
 
-  /*
-   * =====================================
-   * SAVE PRODUCT TO RECENTLY VIEWED
-   * =====================================
-   */
   useEffect(() => {
     if (!product) {
       return;
@@ -136,11 +106,6 @@ function ProductDetails() {
     recentlyViewed.add(product);
   }, [product]);
 
-  /*
-   * =====================================
-   * PRODUCT NOT FOUND
-   * =====================================
-   */
   if (!product) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#fffaf0] px-4">
@@ -165,12 +130,6 @@ function ProductDetails() {
       </main>
     );
   }
-
-  /*
-   * =====================================
-   * CALCULATE DISCOUNTED PRICE
-   * =====================================
-   */
   const discountedPrice =
     product.price -
     (product.price *
@@ -179,9 +138,7 @@ function ProductDetails() {
 
   return (
     <main className="min-h-screen bg-[#fffaf0]">
-      {/* =====================================
-          TOAST
-      ====================================== */}
+
       {toastMessage && (
         <Toast
           message={toastMessage}
@@ -191,14 +148,8 @@ function ProductDetails() {
         />
       )}
 
-      {/* =====================================
-          MAIN CONTENT
-      ====================================== */}
+ 
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-
-        {/* =====================================
-            BACK BUTTON
-        ====================================== */}
         <Link
           to="/products"
           className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-[#8b5cf6] transition hover:text-[#d97706]"
@@ -207,14 +158,9 @@ function ProductDetails() {
           Back to Products
         </Link>
 
-        {/* =====================================
-            PRODUCT SECTION
-        ====================================== */}
         <div className="grid gap-8 lg:grid-cols-2">
 
-          {/* =====================================
-              PRODUCT IMAGE
-          ====================================== */}
+
           <div className="rounded-3xl border border-orange-100 bg-white p-4 shadow-sm sm:p-6">
             <div className="relative overflow-hidden rounded-2xl bg-[#fff7e6]">
 
@@ -268,9 +214,6 @@ function ProductDetails() {
             </div>
           </div>
 
-          {/* =====================================
-              PRODUCT INFORMATION
-          ====================================== */}
           <div className="flex flex-col justify-center">
 
             {/* Category */}
@@ -364,10 +307,6 @@ function ProductDetails() {
                 </span>
               )}
             </div>
-
-            {/* =====================================
-                BUTTONS
-            ====================================== */}
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
 
               {/* Add to Cart */}
@@ -435,9 +374,6 @@ function ProductDetails() {
               </Link>
             )}
 
-            {/* =====================================
-                AI RECOMMENDATION
-            ====================================== */}
             <div className="mt-7 rounded-2xl bg-gradient-to-r from-[#8b5cf6] to-[#ec4899] p-5 text-white shadow-md">
 
               <div className="flex items-start gap-3">
@@ -463,9 +399,6 @@ function ProductDetails() {
           </div>
         </div>
 
-        {/* =====================================
-            RECOMMENDATION RAIL
-        ====================================== */}
         <RecommendationRail
           currentProduct={product}
           title="You May Also Like"
@@ -473,9 +406,6 @@ function ProductDetails() {
           limit={4}
         />
 
-        {/* =====================================
-            REVIEWS
-        ====================================== */}
         <ReviewSection
           productId={product.id}
         />

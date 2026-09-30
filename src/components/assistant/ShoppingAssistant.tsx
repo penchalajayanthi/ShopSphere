@@ -1,34 +1,15 @@
-import {
-  Bot,
-  MessageCircle,
-  Send,
-  Sparkles,
-  X,
-} from "lucide-react";
-
+import { Bot, MessageCircle, Send, Sparkles, X } from "lucide-react";
 import { useState } from "react";
-
-import type {
-  AssistantFilters,
-  AssistantMessage,
-} from "../../types/assistant";
-
+import type {AssistantFilters,AssistantMessage,} from "../../types/assistant";
 import type { Product } from "../../types/product";
-
 import { products } from "../../data/products";
-
 import { askAssistant } from "../../services/assistantService";
-
 import ChatMessage from "./ChatMessage";
-
-
 
 const createMessageId = () =>
   `${Date.now()}-${Math.random()
     .toString(36)
     .slice(2)}`;
-
-
 
 const createInitialMessage = (): AssistantMessage => ({
   id: "welcome",
@@ -38,7 +19,6 @@ const createInitialMessage = (): AssistantMessage => ({
   createdAt: new Date().toISOString(),
 });
 
-
 const suggestions = [
   "Show mobiles under ₹30000",
   "Show laptops under ₹50000",
@@ -46,30 +26,15 @@ const suggestions = [
   "Show highly rated products",
 ];
 
-
 function ShoppingAssistant() {
   const [isOpen, setIsOpen] = useState(false);
-
   const [input, setInput] = useState("");
-
-  const [messages, setMessages] = useState<AssistantMessage[]>([
-    createInitialMessage(),
-  ]);
-
-  const [filters, setFilters] =
-    useState<AssistantFilters>({});
-
-  const [isTyping, setIsTyping] =
-    useState(false);
-
-
+  const [messages, setMessages] = useState<AssistantMessage[]>([createInitialMessage(),]);
+  const [filters, setFilters] =useState<AssistantFilters>({});
+  const [isTyping, setIsTyping] =useState(false);
 
   const getPreviousProducts = (): Product[] => {
-
-    const lastAssistantMessage = [...messages]
-      .reverse()
-      .find(
-        (message) =>
+    const lastAssistantMessage = [...messages].reverse().find((message) =>
           message.role === "assistant" &&
           message.productIds &&
           message.productIds.length > 0,
@@ -79,12 +44,7 @@ function ShoppingAssistant() {
       return [];
     }
 
-    return lastAssistantMessage.productIds
-      .map((id) =>
-        products.find(
-          (product) => product.id === id,
-        ),
-      )
+    return lastAssistantMessage.productIds.map((id) => products.find((product) => product.id === id,),)
       .filter(
         (product): product is Product =>
           Boolean(product),
@@ -93,9 +53,7 @@ function ShoppingAssistant() {
 
 
   const sendMessage = (messageText?: string) => {
-    const text = (
-      messageText ?? input
-    ).trim();
+    const text = (messageText ?? input).trim();
 
     if (!text || isTyping) {
       return;
@@ -109,80 +67,46 @@ function ShoppingAssistant() {
       createdAt: new Date().toISOString(),
     };
 
-    setMessages((current) => [
-      ...current,
-      userMessage,
-    ]);
-
+    setMessages((current) => [...current, userMessage,]);
     setInput("");
     setIsTyping(true);
-
-
 
     const previousProducts =
       getPreviousProducts();
 
-   
-
     window.setTimeout(() => {
-      const result = askAssistant(
-        text,
-        filters,
-        previousProducts,
-      );
-
+      const result = askAssistant(text,filters,previousProducts,);
       const assistantMessage: AssistantMessage = {
         id: createMessageId(),
         role: "assistant",
         text: result.message,
-        productIds: result.products.map(
-          (product) => product.id,
-        ),
+        productIds: result.products.map((product) => product.id,),
         createdAt: new Date().toISOString(),
       };
-
-      setMessages((current) => [
-        ...current,
-        assistantMessage,
-      ]);
-
+      setMessages((current) => [...current,assistantMessage,]);
       setFilters(result.filters);
-
       setIsTyping(false);
     }, 500);
   };
 
 
   const clearChat = () => {
-    setMessages([
-      {
-        ...createInitialMessage(),
-        id: createMessageId(),
-      },
-    ]);
-
+    setMessages([{ ...createInitialMessage(), id: createMessageId(),},]);
     setFilters({});
     setInput("");
     setIsTyping(false);
   };
 
-
   const openAssistant = () => {
     setIsOpen(true);
   };
-
- 
 
   const closeAssistant = () => {
     setIsOpen(false);
   };
 
-
-
   return (
     <>
-    
-
       {!isOpen && (
         <div className="group fixed bottom-6 right-6 z-50">
           <button

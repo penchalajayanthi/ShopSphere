@@ -405,11 +405,7 @@ function Admin() {
     setCustomerSearch("");
   };
 
-  /*
-   * ---------------------------------------------------
-   * TOAST
-   * ---------------------------------------------------
-   */
+
   const showToast = (
     message: string,
   ) => {
@@ -420,11 +416,6 @@ function Admin() {
     }, 2500);
   };
 
-  /*
-   * ---------------------------------------------------
-   * CATEGORY NAME
-   * ---------------------------------------------------
-   */
   const getCategoryName = (
     categoryId: string,
   ) => {
@@ -436,11 +427,7 @@ function Admin() {
     );
   };
 
-  /*
-   * ---------------------------------------------------
-   * PRODUCT PREVIEW
-   * ---------------------------------------------------
-   */
+ 
   const previewImage =
     productForm.thumbnail.trim() ||
     productForm.images.find(
@@ -448,11 +435,7 @@ function Admin() {
     ) ||
     "";
 
-  /*
-   * ---------------------------------------------------
-   * OPEN ADD PRODUCT
-   * ---------------------------------------------------
-   */
+
   const handleAddProduct = () => {
     const nextId =
       products.length > 0
@@ -478,11 +461,7 @@ function Admin() {
     setShowProductModal(true);
   };
 
-  /*
-   * ---------------------------------------------------
-   * OPEN EDIT PRODUCT
-   * ---------------------------------------------------
-   */
+
   const handleEditProduct = (
     product: Product,
   ) => {
@@ -586,11 +565,7 @@ function Admin() {
     closeProductModal();
   };
 
-  /*
-   * ---------------------------------------------------
-   * DELETE PRODUCT
-   * ---------------------------------------------------
-   */
+
   const handleDeleteProduct = (
     product: Product,
   ) => {
@@ -623,31 +598,19 @@ function Admin() {
     setShowDeleteModal(null);
   };
 
-  /*
-   * ---------------------------------------------------
-   * OPEN CATEGORY MODAL
-   * ---------------------------------------------------
-   */
+  
   const handleAddCategory = () => {
     setNewCategoryName("");
     setShowCategoryModal(true);
   };
 
-  /*
-   * ---------------------------------------------------
-   * CLOSE CATEGORY MODAL
-   * ---------------------------------------------------
-   */
+
   const closeCategoryModal = () => {
     setShowCategoryModal(false);
     setNewCategoryName("");
   };
 
-  /*
-   * ---------------------------------------------------
-   * CREATE CATEGORY
-   * ---------------------------------------------------
-   */
+ 
   const handleCreateCategory = () => {
     const cleanName =
       newCategoryName.trim();
@@ -714,11 +677,7 @@ function Admin() {
     );
   };
 
-  /*
-   * ---------------------------------------------------
-   * UPDATE ORDER STATUS
-   * ---------------------------------------------------
-   */
+ 
   const handleAdvanceOrder = (
     order: Order,
   ) => {
@@ -783,11 +742,6 @@ function Admin() {
     );
   };
 
-  /*
-   * ---------------------------------------------------
-   * ANALYTICS
-   * ---------------------------------------------------
-   */
   const analytics = useMemo(() => {
     const impressions =
       Math.max(
@@ -844,11 +798,7 @@ function Admin() {
     "Rating Based",
   ];
 
-  /*
-   * ---------------------------------------------------
-   * HEADER NAVIGATION
-   * ---------------------------------------------------
-   */
+
   const tabs: Array<{
     id: Tab;
     label: string;
@@ -884,9 +834,6 @@ function Admin() {
   return (
     <main className="min-h-screen bg-[#fffaf0]">
 
-      {/* ==================================================
-          TOAST
-      ================================================== */}
       {toast && (
         <div
           role="status"
@@ -907,12 +854,6 @@ function Admin() {
           </div>
         </div>
       )}
-
-      {/* =========================================================
-          ADMIN SECONDARY NAVIGATION
-          Hidden on mobile only. Visible on tablet, laptop, desktop.
-          Mobile navigation is handled by the main blue Header.tsx.
-      ========================================================= */}
       <header className="sticky top-16 z-[9990] hidden overflow-hidden bg-gradient-to-br from-[#2f1650] via-[#6d267f] to-[#d85b3d] text-white shadow-xl sm:block">
 
         {/* Decorative background circles */}
@@ -967,14 +908,8 @@ function Admin() {
         </div>
       </header>
 
-      {/* ==================================================
-          MAIN CONTENT
-      ================================================== */}
       <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 lg:px-8 lg:py-8">
 
-        {/* ==================================================
-            OVERVIEW
-        ================================================== */}
         {activeTab ===
           "overview" && (
             <div className="space-y-6">
@@ -1436,9 +1371,6 @@ function Admin() {
             </div>
           )}
 
-        {/* ==================================================
-            PRODUCTS
-        ================================================== */}
         {activeTab ===
           "products" && (
             <div className="space-y-6">
@@ -1735,10 +1667,6 @@ function Admin() {
               </div>
             </div>
           )}
-
-        {/* ==================================================
-            ORDERS
-        ================================================== */}
         {activeTab ===
           "orders" && (
             <div className="space-y-6">
@@ -1979,9 +1907,6 @@ function Admin() {
             </div>
           )}
 
-        {/* ==================================================
-            CUSTOMERS
-        ================================================== */}
         {activeTab ===
           "customers" && (
             <div className="space-y-6">
@@ -2135,9 +2060,6 @@ function Admin() {
             </div>
           )}
 
-        {/* ==================================================
-            ANALYTICS
-        ================================================== */}
         {activeTab ===
           "analytics" && (
             <div className="space-y-6">
@@ -2311,10 +2233,6 @@ function Admin() {
           )}
 
       </div>
-
-      {/* ==================================================
-          PRODUCT MODAL
-      ================================================== */}
       {showProductModal && (
         <div
           className="fixed inset-0 z-[9998] flex items-center justify-center bg-[#29221b]/70 p-3 backdrop-blur-sm sm:p-5"
@@ -3172,10 +3090,6 @@ function Admin() {
           </div>
         </div>
       )}
-
-      {/* ==================================================
-          ADD CATEGORY MODAL
-      ================================================== */}
       {showCategoryModal && (
         <div
           className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#29221b]/70 p-4 backdrop-blur-sm"
@@ -3336,9 +3250,6 @@ function Admin() {
         </div>
       )}
 
-      {/* ==================================================
-          DELETE MODAL
-      ================================================== */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#29221b]/70 p-4 backdrop-blur-sm">
 
@@ -3399,9 +3310,6 @@ function Admin() {
         </div>
       )}
 
-      {/* ==================================================
-          ORDER DETAILS MODAL
-      ================================================== */}
       {selectedOrder && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#29221b]/70 p-4 backdrop-blur-sm">
 

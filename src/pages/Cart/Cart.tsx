@@ -26,7 +26,6 @@ export default function Cart() {
   const delivery = 0;
   const total = subtotal + delivery;
 
-  // Empty Cart
   if (items.length === 0) {
     return (
       <main className="min-h-screen bg-[#fffaf0] px-4 py-12 sm:px-6 lg:px-8">

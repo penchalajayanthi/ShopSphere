@@ -1,24 +1,12 @@
-import {
-  useEffect,
-  useState,
-} from "react";
-
+import {useEffect,useState} from "react";
 import type { SyntheticEvent } from "react";
-
-import {
-  MapPin,
-  Save,
-  X,
-} from "lucide-react";
-
+import {MapPin,Save,X,} from "lucide-react";
 import type { Address } from "../../types/address";
 
 interface AddressFormProps {
   address?: Address | null;
   userId: number;
-
   onSave: (address: Address) => void;
-
   onCancel: () => void;
 }
 
@@ -44,32 +32,20 @@ const emptyForm: FormData = {
   isDefault: false,
 };
 
-function AddressForm({
-  address,
-  userId,
-  onSave,
-  onCancel,
-}: AddressFormProps) {
-  const [formData, setFormData] =
-    useState<FormData>(emptyForm);
-
-  const [errors, setErrors] =
-    useState<
-      Partial<Record<keyof FormData, string>>
-    >({});
+function AddressForm({address,userId,onSave,onCancel,}: AddressFormProps) {
+  const [formData, setFormData] =useState<FormData>(emptyForm);
+  const [errors, setErrors] =useState<Partial<Record<keyof FormData, string>>>({});
 
   useEffect(() => {
     if (address) {
       setFormData({
         fullName: address.fullName,
         phone: address.phone,
-        addressLine:
-          address.addressLine,
+        addressLine:address.addressLine,
         city: address.city,
         state: address.state,
         pincode: address.pincode,
-        landmark:
-          address.landmark ?? "",
+        landmark:address.landmark ?? "",
         isDefault: address.isDefault,
       });
     } else {
@@ -79,30 +55,14 @@ function AddressForm({
     setErrors({});
   }, [address]);
 
-  const handleChange = (
-    field: keyof FormData,
-    value: string | boolean,
-  ) => {
-    setFormData((current) => ({
-      ...current,
-      [field]: value,
-    }));
-
-    setErrors((current) => ({
-      ...current,
-      [field]: "",
-    }));
+  const handleChange = (field: keyof FormData,value: string | boolean,) => {
+    setFormData((current) => ({ ...current, [field]: value,}));
+    setErrors((current) => ({...current, [field]: "", }));
   };
 
   const validate = () => {
-    const newErrors: Partial<
-      Record<keyof FormData, string>
-    > = {};
-
-    if (!formData.fullName.trim()) {
-      newErrors.fullName =
-        "Full name is required.";
-    }
+    const newErrors: Partial<Record<keyof FormData, string>> = {};
+    if (!formData.fullName.trim()) {newErrors.fullName = "Full name is required.";}
 
     if (!formData.phone.trim()) {
       newErrors.phone =
@@ -145,66 +105,35 @@ function AddressForm({
 
     setErrors(newErrors);
 
-    return (
-      Object.keys(newErrors).length === 0
-    );
+    return (Object.keys(newErrors).length === 0);
   };
 
-  const handleSubmit = (
-    event: SyntheticEvent<HTMLFormElement>,
-  ) => {
-    event.preventDefault();
+  const handleSubmit = (event: SyntheticEvent<HTMLFormElement>,) => {event.preventDefault();
 
     if (!validate()) {
       return;
     }
 
-    const now =
-      new Date().toISOString();
+    const now =new Date().toISOString();
 
     const savedAddress: Address = {
-      id:
-        address?.id ??
-        `address-${Date.now()}`,
-
+      id:address?.id ??`address-${Date.now()}`,
       userId,
-
-      fullName:
-        formData.fullName.trim(),
-
-      phone:
-        formData.phone.trim(),
-
-      addressLine:
-        formData.addressLine.trim(),
-
-      city:
-        formData.city.trim(),
-
-      state:
-        formData.state.trim(),
-
-      pincode:
-        formData.pincode.trim(),
-
-      landmark:
-        formData.landmark.trim() ||
-        undefined,
-
-      isDefault:
-        formData.isDefault,
-
-      createdAt:
-        address?.createdAt ?? now,
-
+      fullName:formData.fullName.trim(),
+      phone:formData.phone.trim(),
+      addressLine:formData.addressLine.trim(),
+      city:formData.city.trim(),
+      state:formData.state.trim(),
+      pincode:formData.pincode.trim(),
+      landmark: formData.landmark.trim() || undefined,
+      isDefault:formData.isDefault,
+      createdAt: address?.createdAt ?? now,
       updatedAt: now,
     };
-
     onSave(savedAddress);
   };
 
-  const inputClass =
-    "mt-2 w-full rounded-xl border border-orange-200 bg-[#fffaf0] px-4 py-3 text-sm text-[#29221b] outline-none transition focus:border-[#f59e0b] focus:ring-2 focus:ring-orange-100";
+  const inputClass ="mt-2 w-full rounded-xl border border-orange-200 bg-[#fffaf0] px-4 py-3 text-sm text-[#29221b] outline-none transition focus:border-[#f59e0b] focus:ring-2 focus:ring-orange-100";
 
   return (
     <form
@@ -212,10 +141,8 @@ function AddressForm({
       className="rounded-3xl border border-orange-100 bg-white p-6 shadow-lg sm:p-7"
     >
       {/* Header */}
-
       <div className="mb-6 flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-100 text-[#d97706]">
             <MapPin size={22} />
           </div>
@@ -247,11 +174,8 @@ function AddressForm({
       </div>
 
       {/* Form */}
-
       <div className="grid gap-5 sm:grid-cols-2">
-
         {/* Full Name */}
-
         <div>
           <label
             htmlFor="address-full-name"

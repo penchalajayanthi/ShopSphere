@@ -20,9 +20,7 @@ interface ProductStore {
 
 const loadProducts = (): Product[] => {
   try {
-    /*
-     * First use the new shared catalogue.
-     */
+  
     const savedProducts = localStorage.getItem(PRODUCTS_KEY);
 
     if (savedProducts) {
@@ -33,11 +31,6 @@ const loadProducts = (): Product[] => {
       }
     }
 
-    /*
-     * Migration:
-     * if the old admin catalogue exists,
-     * use it and move it into the new shared catalogue.
-     */
     const oldAdminProducts = localStorage.getItem(
       OLD_ADMIN_PRODUCTS_KEY,
     );
@@ -55,10 +48,7 @@ const loadProducts = (): Product[] => {
       }
     }
   } catch {
-    /*
-     * Ignore malformed localStorage data
-     * and fall back to the original catalogue.
-     */
+
   }
 
   return defaultProducts;

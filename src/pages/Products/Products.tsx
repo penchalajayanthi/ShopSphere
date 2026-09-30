@@ -47,11 +47,6 @@ function Products() {
   const [mobileFiltersOpen, setMobileFiltersOpen] =
     useState(false);
 
-  /*
-   * =====================================
-   * CART
-   * =====================================
-   */
   const addToCart = useCartStore(
     (state) => state.addToCart,
   );
@@ -64,11 +59,6 @@ function Products() {
     );
   };
 
-  /*
-   * =====================================
-   * WISHLIST
-   * =====================================
-   */
   const toggleWishlist = useWishlistStore(
     (state) => state.toggleWishlist,
   );
@@ -96,11 +86,6 @@ function Products() {
     }
   };
 
-  /*
-   * =====================================
-   * AUTOMATICALLY HIDE TOAST
-   * =====================================
-   */
   useEffect(() => {
     if (!toastMessage) {
       return;
@@ -115,17 +100,10 @@ function Products() {
     };
   }, [toastMessage]);
 
-  /*
-   * =====================================
-   * FILTER + SORT
-   * =====================================
-   */
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    /*
-     * Search
-     */
+  
     if (search.trim()) {
       const searchTerm =
         search.toLowerCase().trim();
@@ -158,9 +136,6 @@ function Products() {
       });
     }
 
-    /*
-     * Category
-     */
     if (selectedCategory !== "all") {
       result = result.filter(
         (product) =>
@@ -169,9 +144,6 @@ function Products() {
       );
     }
 
-    /*
-     * Sorting
-     */
     switch (sortBy) {
       case "price-low":
         result.sort(
@@ -209,11 +181,6 @@ function Products() {
     sortBy,
   ]);
 
-  /*
-   * =====================================
-   * CLEAR FILTERS
-   * =====================================
-   */
   const clearFilters = () => {
     setSearch("");
     setSelectedCategory("all");
@@ -223,9 +190,6 @@ function Products() {
   return (
     <main className="min-h-screen bg-[#fffaf0]">
 
-      {/* =====================================
-          SUCCESS TOAST
-      ====================================== */}
       {toastMessage && (
         <Toast
           message={toastMessage}
@@ -235,9 +199,6 @@ function Products() {
         />
       )}
 
-      {/* =====================================
-          PAGE HEADER
-      ====================================== */}
       <section className="border-b border-[#eee1c8] bg-gradient-to-r from-[#fff8e7] via-[#fff4dc] to-[#ffe8f2]">
 
         <div className="mx-auto max-w-7xl px-4 py-8 sm:py-10 md:px-6">
@@ -262,14 +223,8 @@ function Products() {
 
       </section>
 
-      {/* =====================================
-          MAIN CONTENT
-      ====================================== */}
       <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 lg:py-8">
 
-        {/* =====================================
-            SEARCH + MOBILE FILTER BUTTON
-        ====================================== */}
         <div className="flex flex-col gap-3 lg:flex-row">
 
           {/* Search */}
@@ -318,10 +273,6 @@ function Products() {
           </button>
 
         </div>
-
-        {/* =====================================
-            DESKTOP FILTERS
-        ====================================== */}
         <div className="mt-5 hidden rounded-2xl border border-[#eadcc2] bg-white p-4 shadow-sm lg:block">
 
           <div className="flex flex-wrap items-center gap-4">
@@ -424,9 +375,6 @@ function Products() {
 
         </div>
 
-        {/* =====================================
-            MOBILE FILTER DRAWER
-        ====================================== */}
         {mobileFiltersOpen && (
           <div className="fixed inset-0 z-[9998] lg:hidden">
 
@@ -611,9 +559,6 @@ function Products() {
           </div>
         )}
 
-        {/* =====================================
-            ACTIVE FILTER SUMMARY
-        ====================================== */}
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
 
           <div className="flex flex-wrap items-center gap-2">
@@ -662,9 +607,6 @@ function Products() {
 
         </div>
 
-        {/* =====================================
-            PRODUCT GRID
-        ====================================== */}
         {filteredProducts.length > 0 ? (
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5 xl:grid-cols-5">
 
@@ -809,9 +751,6 @@ function Products() {
           </div>
         ) : (
 
-          /* =====================================
-              EMPTY STATE
-          ====================================== */
           <div className="mt-6 rounded-3xl border border-dashed border-[#decda9] bg-white px-6 py-16 text-center shadow-sm">
 
             <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#fff4d6]">
@@ -844,9 +783,6 @@ function Products() {
           </div>
         )}
 
-        {/* =====================================
-            AI RECOMMENDATION BANNER
-        ====================================== */}
         <section className="mt-10 overflow-hidden rounded-3xl bg-gradient-to-r from-[#7c3aed] via-[#8b5cf6] to-[#ec4899] p-6 text-white shadow-xl sm:p-8">
 
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">

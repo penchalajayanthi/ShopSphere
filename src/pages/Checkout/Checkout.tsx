@@ -97,19 +97,12 @@ function Checkout() {
   const [error, setError] = useState("");
   const [paymentError, setPaymentError] = useState("");
 
-  /*
-   * Load saved addresses for logged-in customer.
-   */
   useEffect(() => {
     if (!user) return;
 
     const addresses = addressStorage.getByUser(user.id);
     setSavedAddresses(addresses);
 
-    /*
-     * If there is no checkout state saved yet,
-     * automatically use the user's default address.
-     */
     if (checkout.selectedAddressId === "" && addresses.length > 0) {
       const defaultAddress =
         addresses.find((address) => address.isDefault) ?? addresses[0];
@@ -133,17 +126,10 @@ function Checkout() {
     }
   }, [user]);
 
-  /*
-   * Persist checkout state after every change.
-   * This satisfies the PRD refresh requirement.
-   */
   useEffect(() => {
     storage.set(CHECKOUT_STORAGE_KEY, checkout);
   }, [checkout]);
 
-  /*
-   * If user logs in and email is empty, populate it.
-   */
   useEffect(() => {
     if (!user) return;
 
@@ -179,9 +165,6 @@ function Checkout() {
 
   const total = subtotal + delivery;
 
-  /*
-   * Cart protection.
-   */
   if (items.length === 0 && checkout.step !== 6) {
     return (
       <main className="min-h-screen bg-[#fffaf0] px-4 py-16">
@@ -236,9 +219,6 @@ function Checkout() {
     }));
   };
 
-  /*
-   * Select an existing saved address.
-   */
   const handleSavedAddress = (address: Address) => {
     setUseNewAddress(false);
 
@@ -262,9 +242,6 @@ function Checkout() {
     setError("");
   };
 
-  /*
-   * Validate each checkout step.
-   */
   const validateCurrentStep = (): boolean => {
     setError("");
 
@@ -348,18 +325,9 @@ function Checkout() {
     }
   };
 
-  /*
-   * Mock payment.
-   *
-   * IMPORTANT:
-   * No real card/CVV/bank/UPI PIN is collected.
-   */
   const handlePlaceOrder = () => {
     setPaymentError("");
 
-    /*
-     * Simulated payment validation.
-     */
     if (!checkout.paymentMethod) {
       setPaymentError("Please select a mock payment method.");
       return;
@@ -408,10 +376,6 @@ function Checkout() {
     storage.set(ORDERS_KEY, [order, ...existingOrders]);
 
     storage.set(LAST_ORDER_KEY, order);
-
-    /*
-     * Clear checkout progress after successful order.
-     */
     storage.remove(CHECKOUT_STORAGE_KEY);
 
     clearCart();

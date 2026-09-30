@@ -12,10 +12,6 @@ export interface AssistantResult {
   filters: AssistantFilters;
 }
 
-/* =========================================================
-   BASIC HELPERS
-========================================================= */
-
 function normalize(text: string): string {
   return text
     .toLowerCase()
@@ -30,23 +26,13 @@ function uniqueProducts(items: Product[]): Product[] {
   );
 }
 
-/* =========================================================
-   PRICE DETECTION
-========================================================= */
 function detectPrice(text: string): number | undefined {
   const value = normalize(text);
 
   const patterns = [
-    // under 30000, below 30000, under ₹30000, under 30000 rupees
     /(?:under|below|less than|upto|up to|max|maximum|within)\s*₹?\s*(\d[\d,]*(?:\.\d+)?)\s*(k|thousand|lakh)?\s*(?:rupees?|rs\.?)?/i,
-
-    // ₹30,000 / ₹30000
     /₹\s*(\d[\d,]*(?:\.\d+)?)\s*(k|thousand|lakh)?/i,
-
-    // 30000 rupees / 30,000 rupees
     /(\d[\d,]*(?:\.\d+)?)\s*(k|thousand|lakh)?\s*rupees?/i,
-
-    // 30k / 30 thousand / 1.5 lakh
     /(\d+(?:\.\d+)?)\s*(k|thousand|lakh)/i,
   ];
 
@@ -57,7 +43,6 @@ function detectPrice(text: string): number | undefined {
       continue;
     }
 
-    // Remove commas before converting to number
     let amount = Number(
       match[1].replace(/,/g, ""),
     );
@@ -80,9 +65,6 @@ function detectPrice(text: string): number | undefined {
   return undefined;
 }
 
-/* =========================================================
-   RATING DETECTION
-========================================================= */
 
 function detectRating(text: string): number | undefined {
   const value = normalize(text);
@@ -106,18 +88,9 @@ function detectRating(text: string): number | undefined {
 
   return undefined;
 }
-
-/* =========================================================
-   CATEGORY DETECTION
-========================================================= */
-
 function detectCategory(text: string): string | undefined {
   const value = normalize(text);
 
-  /*
-   * First check the actual categories that exist
-   * inside products.ts.
-   */
   const actualCategories = Array.from(
     new Set(products.map((product) => product.category)),
   );
@@ -133,9 +106,6 @@ function detectCategory(text: string): string | undefined {
     }
   }
 
-  /*
-   * Common shopping aliases.
-   */
   const aliases: Record<string, string[]> = {
     smartphones: [
       "phone",
@@ -267,21 +237,12 @@ function detectCategory(text: string): string | undefined {
         return matchingActualCategory;
       }
 
-      /*
-       * Return the category alias when it exists
-       * in the product data.
-       */
       return category;
     }
   }
 
   return undefined;
 }
-
-
-/* =========================================================
-   INTENT DETECTION
-========================================================= */
 
 export function parseAssistantIntent(
   text: string,
@@ -313,9 +274,6 @@ export function parseAssistantIntent(
     };
   }
 
-  /*
-   * BETTER RATED
-   */
   if (
     value.includes("better rated") ||
     value.includes("higher rated") ||
@@ -333,9 +291,6 @@ export function parseAssistantIntent(
     };
   }
 
-  /*
-   * SIMILAR
-   */
   if (
     value.includes("similar") ||
     value.includes("like this") ||
@@ -352,9 +307,6 @@ export function parseAssistantIntent(
     };
   }
 
-  /*
-   * HELP
-   */
   if (
     value.includes("help") ||
     value.includes("what can you do") ||
@@ -367,9 +319,6 @@ export function parseAssistantIntent(
     };
   }
 
-  /*
-   * GREETINGS
-   */
   if (
     value === "hi" ||
     value === "hello" ||
@@ -384,9 +333,6 @@ export function parseAssistantIntent(
     };
   }
 
-  /*
-   * SEARCH
-   */
   if (
     category ||
     maxPrice !== undefined ||
@@ -401,14 +347,6 @@ export function parseAssistantIntent(
     };
   }
 
-  /*
-   * GENERAL PRODUCT SEARCH
-   *
-   * Questions like:
-   * "What products do you have?"
-   * "Show me products"
-   * "What can I buy?"
-   */
   if (
     value.includes("show products") ||
     value.includes("show me products") ||
@@ -432,19 +370,12 @@ export function parseAssistantIntent(
   };
 }
 
-/* =========================================================
-   SEARCH PRODUCTS
-========================================================= */
-
 export function searchAssistantProducts(
   intent: AssistantIntent,
   previousProducts: Product[] = [],
 ): Product[] {
   let result = [...products];
 
-  /*
-   * CATEGORY
-   */
   if (intent.category) {
     result = result.filter(
       (product) =>
@@ -453,9 +384,7 @@ export function searchAssistantProducts(
     );
   }
 
-  /*
-   * PRICE
-   */
+
   if (intent.maxPrice !== undefined) {
     result = result.filter(
       (product) =>
@@ -463,9 +392,6 @@ export function searchAssistantProducts(
     );
   }
 
-  /*
-   * RATING
-   */
   if (intent.minRating !== undefined) {
     result = result.filter(
       (product) =>
@@ -473,9 +399,7 @@ export function searchAssistantProducts(
     );
   }
 
-  /*
-   * CHEAPER THAN PREVIOUS RESULTS
-   */
+
   if (
     intent.refinement === "cheaper" &&
     previousProducts.length > 0
@@ -496,9 +420,6 @@ export function searchAssistantProducts(
     );
   }
 
-  /*
-   * BETTER RATED THAN PREVIOUS RESULTS
-   */
   else if (
     intent.refinement === "better-rated" &&
     previousProducts.length > 0
@@ -519,9 +440,6 @@ export function searchAssistantProducts(
     );
   }
 
-  /*
-   * SIMILAR PRODUCTS
-   */
   else if (
     intent.refinement === "similar" &&
     previousProducts.length > 0
@@ -548,9 +466,6 @@ export function searchAssistantProducts(
         ),
     );
 
-    /*
-     * Don't show the exact same products.
-     */
     const previousIds = new Set(
       previousProducts.map(
         (product) => product.id,
@@ -567,11 +482,7 @@ export function searchAssistantProducts(
     );
   }
 
-  /*
-   * NORMAL SEARCH
-   *
-   * Best rated first, then cheaper.
-   */
+
   else {
     result.sort((a, b) => {
       if (b.rating !== a.rating) {
@@ -584,10 +495,6 @@ export function searchAssistantProducts(
 
   return uniqueProducts(result).slice(0, 6);
 }
-
-/* =========================================================
-   NATURAL ANSWERS
-========================================================= */
 
 export function getAssistantReply(
   intent: AssistantIntent,
@@ -686,9 +593,6 @@ export function getAssistantReply(
   return `I found ${count} products you may like. 🛍️`;
 }
 
-/* =========================================================
-   MAIN ASSISTANT FUNCTION
-========================================================= */
 
 export function askAssistant(
   text: string,
@@ -697,13 +601,6 @@ export function askAssistant(
 ): AssistantResult {
   const intent = parseAssistantIntent(text);
 
-  /*
-   * Only keep previous filters when the new
-   * question is actually a refinement.
-   *
-   * This prevents old filters from affecting
-   * completely new questions.
-   */
   const isRefinement =
     intent.type === "refine" ||
     intent.type === "similar";

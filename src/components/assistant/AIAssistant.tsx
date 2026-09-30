@@ -1,19 +1,7 @@
-import {
-  Bot,
-  MessageCircle,
-  Send,
-  Sparkles,
-  X,
-} from "lucide-react";
+import {Bot,MessageCircle,Send,Sparkles,X,} from "lucide-react";
 import { useState } from "react";
-
-import type {
-  AssistantFilters,
-  AssistantMessage,
-} from "../../types/assistant";
-
+import type {AssistantFilters,AssistantMessage,} from "../../types/assistant";
 import { askAssistant } from "../../services/assistantService";
-
 import ChatMessage from "./ChatMessage";
 
 const createMessageId = () =>
@@ -38,26 +26,12 @@ const suggestions = [
 
 function AIAssistant() {
   const [isOpen, setIsOpen] = useState(false);
-
   const [input, setInput] = useState("");
-
-  const [messages, setMessages] =
-    useState<AssistantMessage[]>([
-      createInitialMessage(),
-    ]);
-
-  const [filters, setFilters] =
-    useState<AssistantFilters>({});
-
-  const [isTyping, setIsTyping] =
-    useState(false);
-
-  const sendMessage = (
-    messageText?: string,
-  ) => {
-    const text = (
-      messageText ?? input
-    ).trim();
+  const [messages, setMessages] =useState<AssistantMessage[]>([createInitialMessage(),]);
+  const [filters, setFilters] =useState<AssistantFilters>({});
+  const [isTyping, setIsTyping] =useState(false);
+  const sendMessage = (messageText?: string,) => {
+    const text = (messageText ?? input).trim();
 
     if (!text || isTyping) {
       return;
@@ -92,11 +66,6 @@ function AIAssistant() {
         role: "assistant",
         text: result.message,
 
-        /*
-         * AssistantMessage stores
-         * product IDs, not complete
-         * product objects.
-         */
         productIds:
           result.products.map(
             (product) => product.id,

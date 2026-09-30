@@ -9,10 +9,6 @@ const SIGNALS_KEY = "shopsphere_recommendation_signals";
 const PREFERENCES_KEY = "shopsphere_recommendation_preferences";
 
 export const recommendationStorage = {
-  // ==========================================
-  // RECOMMENDATION SIGNALS
-  // ==========================================
-
   getSignals(): RecommendationSignal[] {
     return storage.get<RecommendationSignal[]>(
       SIGNALS_KEY,
@@ -55,10 +51,6 @@ export const recommendationStorage = {
     storage.set(SIGNALS_KEY, updatedSignals);
   },
 
-  // ==========================================
-  // RECOMMENDATION PREFERENCES
-  // ==========================================
-
   getPreferences(
     userId: number,
   ): RecommendationPreferences {
@@ -76,7 +68,6 @@ export const recommendationStorage = {
       return existingPreference;
     }
 
-    // Default preferences for a new user
     return {
       userId,
       mode: "personalized",
@@ -102,7 +93,6 @@ export const recommendationStorage = {
         preference.userId === updatedPreference.userId,
     );
 
-    // New preference record
     if (existingIndex === -1) {
       storage.set(PREFERENCES_KEY, [
         updatedPreference,
@@ -112,7 +102,6 @@ export const recommendationStorage = {
       return;
     }
 
-    // Update existing preference record
     const updatedPreferences = [...preferences];
 
     updatedPreferences[existingIndex] = {
@@ -142,10 +131,6 @@ export const recommendationStorage = {
       updatedPreferences,
     );
   },
-
-  // ==========================================
-  // RESET EVERYTHING FOR ONE USER
-  // ==========================================
 
   resetUserPersonalization(userId: number): void {
     recommendationStorage.clearUserSignals(userId);

@@ -1,42 +1,21 @@
-import {
-  Bot,
-  User,
-} from "lucide-react";
-
+import { Bot, User,} from "lucide-react";
 import type { AssistantMessage } from "../../types/assistant";
-
 import { products } from "../../data/products";
-
 import AssistantProductCard from "./AssistantProductCard";
 
 interface ChatMessageProps {
   message: AssistantMessage;
 }
 
-function ChatMessage({
-  message,
-}: ChatMessageProps) {
-  const isUser =
-    message.role === "user";
+function ChatMessage({message,}: ChatMessageProps) {
+  const isUser = message.role === "user";
 
-  const messageProducts =
-    message.productIds
-      ?.map((id) =>
-        products.find(
-          (product) =>
-            product.id === id,
-        ),
-      )
-      .filter(
-        (
-          product,
-        ): product is (typeof products)[number] =>
-          Boolean(product),
-      ) ?? [];
+  const messageProducts =message.productIds?.map((id) =>
+        products.find((product) =>product.id === id,),).filter(
+        (product,): product is (typeof products)[number] =>Boolean(product),) ?? [];
 
   return (
-    <div
-      className={`flex gap-3 ${
+    <div className={`flex gap-3 ${
         isUser
           ? "justify-end"
           : "justify-start"

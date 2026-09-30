@@ -4,9 +4,7 @@ const image = (id: string) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=800&q=80`;
 
 export const products: Product[] = [
-  // =========================================================
-  // 📱 MOBILES - 10 PRODUCTS
-  // =========================================================
+
   {
     id: 101,
     title: "Galaxy Pro Max 5G",
@@ -146,9 +144,6 @@ export const products: Product[] = [
     images: [image("photo-1556656793-08538906a9f8")],
   },
 
-  // =========================================================
-  // 💻 LAPTOPS - 10 PRODUCTS
-  // =========================================================
   {
     id: 201,
     title: "UltraBook Pro 14",
@@ -284,9 +279,6 @@ export const products: Product[] = [
     images: [image("photo-1611078489935-0cb964de46d6")],
   },
 
-  // =========================================================
-  // 🍳 UTENSILS - 10 PRODUCTS
-  // =========================================================
 {
   id: 301,
   title: "Stainless Steel Cookware Set",
@@ -422,9 +414,6 @@ export const products: Product[] = [
     images: [image("photo-1556912167-f556f1f39fdf")],
   },
 
-  // =========================================================
-  // 👟 SHOES - 10 PRODUCTS
-  // =========================================================
   {
     id: 401,
     title: "Urban Running Shoes",
@@ -556,9 +545,6 @@ export const products: Product[] = [
     images: [image("photo-1525966222134-fcfa99b8ae77")],
   },
 
-  // =========================================================
-  // 🩴 CHAPPALS - 10 PRODUCTS
-  // =========================================================
   {
     id: 501,
     title: "Comfort Daily Chappals",
@@ -694,9 +680,6 @@ export const products: Product[] = [
     images: [image("photo-1552346154-21d32810aba3")],
   },
 
-  // =========================================================
-  // 👗 DRESSES - 10 PRODUCTS
-  // =========================================================
   {
     id: 601,
     title: "Floral Summer Dress",
@@ -836,9 +819,6 @@ export const products: Product[] = [
   ],
 },
 
-  // =========================================================
-  // ⌚ WATCHES - 10 PRODUCTS
-  // =========================================================
   {
     id: 701,
     title: "Classic Analog Watch",
@@ -970,9 +950,6 @@ export const products: Product[] = [
     images: [image("photo-1522337360788-8b13dee7a37e")],
   },
 
-  // =========================================================
-  // 💄 BEAUTY - 10 PRODUCTS
-  // =========================================================
   {
     id: 801,
     title: "Hydrating Face Serum",
@@ -1104,9 +1081,6 @@ export const products: Product[] = [
     images: [image("photo-1596462502278-27bfdc403348")],
   },
 
-  // =========================================================
-  // 🏠 HOME & LIVING - 10 PRODUCTS
-  // =========================================================
   {
     id: 901,
     title: "Modern Table Lamp",
@@ -1237,10 +1211,6 @@ export const products: Product[] = [
     thumbnail: image("photo-1618220179428-22790b461013"),
     images: [image("photo-1618220179428-22790b461013")],
   },
-
-  // =========================================================
-  // 🎧 ELECTRONICS - 10 PRODUCTS
-  // =========================================================
   {
     id: 1001,
     title: "Wireless Headphones",

@@ -5,11 +5,6 @@ import type {
   RecommendedProduct,
 } from "../../types/recommendation";
 
-/*
- * =========================================================
- * RECOMMENDATION STRATEGY
- * =========================================================
- */
 
 export type RecommendationStrategy =
   | "recently-viewed"
@@ -21,12 +16,6 @@ export type RecommendationStrategy =
   | "frequently-bought-together"
   | "trending"
   | "personalized";
-
-/*
- * =========================================================
- * PROVIDER CONTEXT
- * =========================================================
- */
 
 export interface RecommendationProviderContext {
   products: Product[];
@@ -46,31 +35,8 @@ export interface RecommendationProviderContext {
   limit: number;
 }
 
-/*
- * =========================================================
- * IMPORTANT
- * =========================================================
- *
- * RecommendationCandidate MUST have this shape:
- *
- * {
- *   product,
- *   score,
- *   reason
- * }
- *
- * because RecommendationCard expects RecommendedProduct.
- * =========================================================
- */
-
 export type RecommendationCandidate =
   RecommendedProduct;
-
-/*
- * =========================================================
- * PROVIDER CONTRACT
- * =========================================================
- */
 
 export interface RecommendationProvider {
   getRecommendations(

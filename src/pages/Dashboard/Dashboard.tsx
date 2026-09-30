@@ -43,9 +43,6 @@ function Dashboard() {
     (state) => state.items,
   );
 
-  /*
-   * Get all orders from localStorage.
-   */
   const orders = useMemo(() => {
     return storage.get<Order[]>(
       "shopsphere_orders",
@@ -53,10 +50,6 @@ function Dashboard() {
     );
   }, []);
 
-  /*
-   * Show only orders belonging
-   * to the logged-in user.
-   */
   const userOrders = useMemo(() => {
     if (!user) {
       return [];
@@ -69,10 +62,7 @@ function Dashboard() {
     );
   }, [orders, user]);
 
-  /*
-   * Calculate total amount spent
-   * by the logged-in customer.
-   */
+
   const totalSpent = useMemo(() => {
     return userOrders.reduce(
       (total, order) =>
@@ -81,14 +71,6 @@ function Dashboard() {
     );
   }, [userOrders]);
 
-  /*
-   * Get review count for the
-   * logged-in user.
-   *
-   * IMPORTANT:
-   * user?.id prevents the
-   * "possibly null" TypeScript error.
-   */
   const reviewCount = useMemo(() => {
     if (!user) {
       return 0;
@@ -115,18 +97,11 @@ function Dashboard() {
     ).length;
   }, [user]);
 
-  /*
-   * Logout handler.
-   */
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
-  /*
-   * If there is no authenticated user,
-   * don't render the dashboard.
-   */
   if (!user) {
     return null;
   }
@@ -134,11 +109,6 @@ function Dashboard() {
   return (
     <main className="min-h-screen bg-[#fffaf0] px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-
-        {/* =====================================================
-            WELCOME BANNER
-        ====================================================== */}
-
         <section className="overflow-hidden rounded-3xl bg-gradient-to-r from-[#f59e0b] via-[#ef476f] to-[#8b5cf6] p-6 text-white shadow-xl sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
 
@@ -169,11 +139,6 @@ function Dashboard() {
 
           </div>
         </section>
-
-        {/* =====================================================
-            STATISTICS
-        ====================================================== */}
-
         <section className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
 
           {/* Total Orders */}
@@ -263,11 +228,6 @@ function Dashboard() {
           </div>
 
         </section>
-
-        {/* =====================================================
-            PROFILE + QUICK ACTIONS
-        ====================================================== */}
-
         <section className="mt-6 grid gap-6 lg:grid-cols-3">
 
           {/* Profile */}
@@ -403,10 +363,6 @@ function Dashboard() {
 
         </section>
 
-        {/* =====================================================
-            RECENT ORDERS
-        ====================================================== */}
-
         <section className="mt-6 rounded-3xl border border-orange-100 bg-white p-6 shadow-sm">
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -525,10 +481,6 @@ function Dashboard() {
 
         </section>
 
-        {/* =====================================================
-            WISHLIST
-        ====================================================== */}
-
         <section className="mt-6 rounded-3xl border border-pink-100 bg-white p-6 shadow-sm">
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -618,27 +570,15 @@ function Dashboard() {
 
         </section>
 
-        {/* =====================================================
-            RECENTLY VIEWED
-        ====================================================== */}
-
         <section className="mt-6">
           <RecentlyViewed />
         </section>
-
-        {/* =====================================================
-            ADDRESSES
-        ====================================================== */}
 
         <section className="mt-6">
           <AddressManager
             userId={user.id}
           />
         </section>
-
-        {/* =====================================================
-            RECOMMENDATION PREFERENCES
-        ====================================================== */}
 
         <section className="mt-6 rounded-3xl bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 p-6">
 
@@ -707,11 +647,6 @@ function Dashboard() {
           </div>
 
         </section>
-
-        {/* =====================================================
-            ACCOUNT SECURITY
-        ====================================================== */}
-
         <section className="mt-6 pb-10">
 
           <div className="rounded-3xl border border-purple-100 bg-white p-6 shadow-sm">

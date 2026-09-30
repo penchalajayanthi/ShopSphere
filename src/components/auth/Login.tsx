@@ -1,100 +1,42 @@
-import {
-  useState,
-} from "react";
-
-import type {
-  FormEvent,
-} from "react";
-
-import {
-  Link,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
-
-import {
-  Eye,
-  EyeOff,
-  Lock,
-  Mail,
-  ShoppingBag,
-} from "lucide-react";
-
+import {useState} from "react";
+import type {FormEvent,} from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Lock, Mail, ShoppingBag } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
 
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const login = useAuthStore(
-    (state) => state.login,
-  );
-
-  const [email, setEmail] =
-    useState("");
-
-  const [password, setPassword] =
-    useState("");
-
-  const [showPassword, setShowPassword] =
-    useState(false);
-
-  const [error, setError] =
-    useState("");
-
-  const [loading, setLoading] =
-    useState(false);
-
-  const from =
-    (
-      location.state as {
-        from?: string;
-      } | null
-    )?.from || "/";
-
-  const handleSubmit = (
-    event: FormEvent<HTMLFormElement>,
-  ) => {
-    event.preventDefault();
-
+  const login = useAuthStore((state) => state.login,);
+  const [email, setEmail] =useState("");
+  const [password, setPassword] =useState("");
+  const [showPassword, setShowPassword] =useState(false);
+  const [error, setError] =useState("");
+  const [loading, setLoading] =useState(false);
+  const from =(location.state as {from?: string;} | null)?.from || "/";
+  const handleSubmit = (event: FormEvent<HTMLFormElement>,) => {event.preventDefault();
     setError("");
-
     if (!email.trim()) {
-      setError(
-        "Please enter your email address.",
-      );
+      setError("Please enter your email address.",);
       return;
     }
 
     if (!password) {
-      setError(
-        "Please enter your password.",
-      );
+      setError("Please enter your password.",);
       return;
     }
-
     setLoading(true);
-
-    const success = login(
-      email,
-      password,
-    );
-
+    const success = login(email,password,);
     setLoading(false);
 
     if (!success) {
-      setError(
-        "Invalid email or password.",
-      );
+      setError("Invalid email or password.",);
       return;
     }
 
-    // Get the user that was just logged in
     const loggedInUser =
       useAuthStore.getState().user;
 
-    // Automatically send admin users
-    // to the Admin Dashboard
     if (
       loggedInUser?.role === "admin"
     ) {
@@ -103,10 +45,6 @@ function Login() {
       });
       return;
     }
-
-    // Customers continue to the page
-    // they originally requested,
-    // or Home if there was no previous page.
     navigate(from, {
       replace: true,
     });

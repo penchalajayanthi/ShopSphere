@@ -30,11 +30,7 @@ import type { Product } from "../../types/product";
 import RecommendationRail from "../../components/recommendations/RecommendationRail";
 
 function Wishlist() {
-  /*
-   * =====================================
-   * WISHLIST
-   * =====================================
-   */
+
   const items = useWishlistStore(
     (state) => state.items,
   );
@@ -50,28 +46,13 @@ function Wishlist() {
       (state) => state.clearWishlist,
     );
 
-  /*
-   * =====================================
-   * CART
-   * =====================================
-   */
   const addToCart = useCartStore(
     (state) => state.addToCart,
   );
 
-  /*
-   * =====================================
-   * TOAST
-   * =====================================
-   */
   const [toastMessage, setToastMessage] =
     useState<string | null>(null);
 
-  /*
-   * =====================================
-   * ADD TO CART
-   * =====================================
-   */
   const handleAddToCart = (
     product: Product,
   ) => {
@@ -82,11 +63,6 @@ function Wishlist() {
     );
   };
 
-  /*
-   * =====================================
-   * REMOVE FROM WISHLIST
-   * =====================================
-   */
   const handleRemoveFromWishlist = (
     product: Product,
   ) => {
@@ -97,11 +73,6 @@ function Wishlist() {
     );
   };
 
-  /*
-   * =====================================
-   * CLEAR WISHLIST
-   * =====================================
-   */
   const handleClearWishlist = () => {
     clearWishlist();
 
@@ -110,11 +81,6 @@ function Wishlist() {
     );
   };
 
-  /*
-   * =====================================
-   * AUTOMATICALLY HIDE TOAST
-   * =====================================
-   */
   useEffect(() => {
     if (!toastMessage) {
       return;
@@ -132,9 +98,6 @@ function Wishlist() {
   return (
     <main className="min-h-screen bg-[#fffaf0] px-4 py-8 sm:px-6 lg:px-8">
 
-      {/* =====================================
-          TOAST
-      ====================================== */}
       {toastMessage && (
         <Toast
           message={toastMessage}
@@ -146,9 +109,6 @@ function Wishlist() {
 
       <div className="mx-auto max-w-7xl">
 
-        {/* =====================================
-            HEADER
-        ====================================== */}
         <section className="mb-8 overflow-hidden rounded-3xl bg-gradient-to-r from-[#fff0f6] via-[#fff7ed] to-[#f5f0ff] p-6 shadow-sm sm:p-8">
 
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
@@ -192,9 +152,6 @@ function Wishlist() {
 
         </section>
 
-        {/* =====================================
-            EMPTY WISHLIST
-        ====================================== */}
         {items.length === 0 && (
           <section className="rounded-3xl bg-white px-6 py-16 text-center shadow-lg">
 
@@ -227,9 +184,6 @@ function Wishlist() {
           </section>
         )}
 
-        {/* =====================================
-            WISHLIST PRODUCTS
-        ====================================== */}
         {items.length > 0 && (
           <>
 
@@ -264,9 +218,6 @@ function Wishlist() {
                   className="group overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
 
-                  {/* =====================================
-                      IMAGE
-                  ====================================== */}
                   <div className="relative aspect-square overflow-hidden bg-[#fff7ed]">
 
                     <Link
@@ -310,9 +261,6 @@ function Wishlist() {
 
                   </div>
 
-                  {/* =====================================
-                      PRODUCT CONTENT
-                  ====================================== */}
                   <div className="p-3 sm:p-4">
 
                     <p className="text-[10px] font-bold uppercase tracking-wide text-[#8b5cf6] sm:text-xs">
@@ -375,9 +323,6 @@ function Wishlist() {
                 </article>
               ))}
             </div>
-            {/* =====================================
-                AI BANNER
-            ====================================== */}
             <section className="mt-8 overflow-hidden rounded-3xl bg-gradient-to-r from-[#8b5cf6] via-[#a855f7] to-[#ec4899] p-6 text-white shadow-lg sm:p-8">
 
               <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
@@ -420,10 +365,6 @@ function Wishlist() {
 
           </>
         )}
-
-        {/* =====================================
-            RECOMMENDATIONS
-        ====================================== */}
         <RecommendationRail
           title="More Products You May Like"
           subtitle="AI recommendations based on your wishlist."
