@@ -29,6 +29,7 @@ function Header() {
    * GENERAL UI STATE
    * =====================================================
    */
+
   const [mobileMenuOpen, setMobileMenuOpen] =
     useState(false);
 
@@ -46,6 +47,7 @@ function Header() {
    * AUTH
    * =====================================================
    */
+
   const user = useAuthStore(
     (state) => state.user,
   );
@@ -59,16 +61,8 @@ function Header() {
    * CART
    * =====================================================
    */
-  const cartItems = useCartStore(
-    (state) => state.items,
-  );
 
-  /*
-   * =====================================================
-   * WISHLIST
-   * =====================================================
-   */
-  const wishlistItems = useWishlistStore(
+  const cartItems = useCartStore(
     (state) => state.items,
   );
 
@@ -76,6 +70,16 @@ function Header() {
     (total, item) =>
       total + item.quantity,
     0,
+  );
+
+  /*
+   * =====================================================
+   * WISHLIST
+   * =====================================================
+   */
+
+  const wishlistItems = useWishlistStore(
+    (state) => state.items,
   );
 
   const wishlistCount =
@@ -86,6 +90,7 @@ function Header() {
    * LOGOUT
    * =====================================================
    */
+
   const requestLogout = () => {
     setLogoutConfirmOpen(true);
   };
@@ -110,6 +115,7 @@ function Header() {
    * ADMIN MOBILE NAVIGATION
    * =====================================================
    */
+
   const adminTabs = [
     {
       label: "Overview",
@@ -138,14 +144,10 @@ function Header() {
     },
   ];
 
-  const openAdminTab = (
-    tab: string,
-  ) => {
+  const openAdminTab = (tab: string) => {
     setAdminMenuOpen(false);
 
-    navigate(
-      `/admin?tab=${tab}`,
-    );
+    navigate(`/admin?tab=${tab}`);
   };
 
   /*
@@ -153,57 +155,75 @@ function Header() {
    * ADMIN HEADER
    * =====================================================
    */
+
   if (user?.role === "admin") {
     return (
       <>
         <header className="fixed inset-x-0 top-0 z-[10000] w-full border-b border-blue-800 bg-gradient-to-r from-[#1d4ed8] via-[#2563eb] to-[#3b82f6] text-white shadow-lg">
 
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl px-3 sm:px-5 lg:px-8">
 
-            <div className="flex h-16 items-center justify-between gap-3">
+            <div className="flex h-16 items-center justify-between gap-2 sm:gap-4">
 
               {/* ==================================================
-                  ADMIN LOGO
+                  ADMIN MAIN HEADER BRANDING
               ================================================== */}
+
               <Link
                 to="/admin"
                 onClick={() => {
                   setAdminMenuOpen(false);
                 }}
-                className="flex min-w-0 items-center gap-2"
+                className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f59e0b] to-[#ec4899] text-xl shadow-md">
+
+                {/* ShopSphere Icon */}
+
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/15 text-xl shadow-lg backdrop-blur sm:h-[52px] sm:w-[52px]">
                   🛍️
                 </div>
 
-                <div className="hidden min-w-0 sm:block">
-                  <h1 className="truncate text-lg font-black text-white">
-                    ShopSphere
+                {/* Branding */}
+
+                <div className="min-w-0">
+
+                  <div className="flex items-center gap-2">
+
+                    <p className="truncate text-[9px] font-black uppercase tracking-[0.17em] text-yellow-300 sm:text-[10px] sm:tracking-[0.22em]">
+                      SHOPSPHERE AI
+                    </p>
+
+                    <span className="shrink-0 rounded-full border border-white/20 bg-white/10 px-2 py-0.5 text-[8px] font-black uppercase tracking-wider text-white/90 sm:text-[9px]">
+                      Admin
+                    </span>
+
+                  </div>
+
+                  <h1 className="mt-0.5 truncate text-lg font-black tracking-tight text-white sm:mt-1 sm:text-3xl">
+                    Admin Dashboard
                   </h1>
 
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-yellow-300">
-                    Admin Panel
-                  </p>
                 </div>
               </Link>
 
               {/* ==================================================
                   ADMIN RIGHT SIDE
               ================================================== */}
-              <div className="flex items-center gap-2">
+
+              <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
 
                 {/* ==================================================
                     MOBILE ADMIN MENU
                     Menu is BEFORE Logout
                 ================================================== */}
-                <div className="relative md:hidden">
+
+                <div className="relative sm:hidden">
 
                   <button
                     type="button"
                     onClick={() =>
                       setAdminMenuOpen(
-                        (open) =>
-                          !open,
+                        (open) => !open,
                       )
                     }
                     aria-label={
@@ -215,33 +235,31 @@ function Header() {
                       adminMenuOpen
                     }
                     aria-haspopup="menu"
-                    className="flex h-10 items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 text-sm font-black text-white shadow-sm backdrop-blur transition hover:bg-white/20"
+                    className="flex h-10 items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-2.5 text-xs font-black text-white shadow-sm backdrop-blur transition hover:bg-white/20"
                   >
+
                     {adminMenuOpen ? (
-                      <X
-                        size={19}
-                      />
+                      <X size={18} />
                     ) : (
-                      <Menu
-                        size={19}
-                      />
+                      <Menu size={18} />
                     )}
 
-                    <span className="hidden xs:inline">
-                      Menu
-                    </span>
                   </button>
 
                   {/* ==================================================
                       ADMIN MOBILE DROPDOWN
                   ================================================== */}
+
                   {adminMenuOpen && (
                     <div
                       role="menu"
-                      className="absolute right-0 top-[52px] w-[270px] overflow-hidden rounded-2xl border border-blue-200 bg-white p-2 shadow-2xl"
+                      className="absolute right-0 top-[52px] z-[10001] w-[270px] overflow-hidden rounded-2xl border border-blue-100 bg-white p-2 shadow-2xl"
                     >
 
+                      {/* Menu Header */}
+
                       <div className="border-b border-orange-100 px-3 py-3">
+
                         <p className="text-[10px] font-black uppercase tracking-[0.15em] text-[#8b5cf6]">
                           Admin Menu
                         </p>
@@ -249,18 +267,17 @@ function Header() {
                         <p className="mt-1 text-xs text-[#8c7a63]">
                           Navigate ShopSphere Admin
                         </p>
+
                       </div>
+
+                      {/* Menu Items */}
 
                       <div className="mt-2 space-y-1">
 
                         {adminTabs.map(
-                          (
-                            item,
-                          ) => (
+                          (item) => (
                             <button
-                              key={
-                                item.tab
-                              }
+                              key={item.tab}
                               type="button"
                               role="menuitem"
                               onClick={() =>
@@ -270,6 +287,7 @@ function Header() {
                               }
                               className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-black text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
                             >
+
                               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-50 to-purple-50 text-base">
                                 {
                                   item.icon
@@ -281,6 +299,7 @@ function Header() {
                                   item.label
                                 }
                               </span>
+
                             </button>
                           ),
                         )}
@@ -294,20 +313,19 @@ function Header() {
                 {/* ==================================================
                     ADMIN LOGOUT
                 ================================================== */}
+
                 <button
                   type="button"
-                  onClick={
-                    requestLogout
-                  }
-                  className="flex h-10 items-center gap-2 rounded-xl bg-[#ef476f] px-3 text-sm font-black text-white shadow-md transition hover:bg-[#db2777] hover:shadow-lg sm:px-4"
+                  onClick={requestLogout}
+                  className="flex h-10 items-center gap-1.5 rounded-xl bg-[#ef476f] px-2.5 text-xs font-black text-white shadow-md transition hover:bg-[#db2777] hover:shadow-lg sm:gap-2 sm:px-4 sm:text-sm"
                 >
-                  <LogOut
-                    size={17}
-                  />
+
+                  <LogOut size={17} />
 
                   <span>
                     Logout
                   </span>
+
                 </button>
 
               </div>
@@ -318,6 +336,7 @@ function Header() {
         {/* =================================================
             ADMIN LOGOUT CONFIRMATION
         ================================================== */}
+
         {logoutConfirmOpen && (
           <div
             className="fixed inset-0 z-[11000] flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm"
@@ -329,10 +348,12 @@ function Header() {
             <div className="w-full max-w-sm rounded-3xl border border-orange-100 bg-white p-6 shadow-2xl">
 
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-pink-100">
+
                 <LogOut
                   size={26}
                   className="text-[#ef476f]"
                 />
+
               </div>
 
               <h2
@@ -351,9 +372,7 @@ function Header() {
 
                 <button
                   type="button"
-                  onClick={
-                    cancelLogout
-                  }
+                  onClick={cancelLogout}
                   className="flex-1 rounded-xl border border-[#eadcc2] bg-white px-4 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-[#fffaf0]"
                 >
                   No
@@ -361,15 +380,14 @@ function Header() {
 
                 <button
                   type="button"
-                  onClick={
-                    confirmLogout
-                  }
+                  onClick={confirmLogout}
                   className="flex-1 rounded-xl bg-[#ef476f] px-4 py-3 text-sm font-black text-white transition hover:bg-[#db2777]"
                 >
                   Yes, Logout
                 </button>
 
               </div>
+
             </div>
           </div>
         )}
@@ -382,34 +400,34 @@ function Header() {
    * CUSTOMER / GUEST HEADER
    * =====================================================
    */
+
   return (
     <>
       <header className="fixed inset-x-0 top-0 z-[10000] w-full border-b border-blue-800 bg-gradient-to-r from-[#1d4ed8] via-[#2563eb] to-[#3b82f6] text-white shadow-lg">
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-7xl px-3 sm:px-5 lg:px-8">
 
           <div className="flex h-16 items-center justify-between gap-4">
 
             {/* ==================================================
-                LOGO
+                CUSTOMER LOGO
             ================================================== */}
+
             <Link
               to="/"
               onClick={() =>
-                setMobileMenuOpen(
-                  false,
-                )
+                setMobileMenuOpen(false)
               }
-              className="flex items-center gap-2"
+              className="flex min-w-0 items-center gap-2"
             >
 
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f59e0b] to-[#ec4899] text-xl shadow-md">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f59e0b] to-[#ec4899] text-xl shadow-md">
                 🛍️
               </div>
 
-              <div className="hidden sm:block">
+              <div className="hidden min-w-0 sm:block">
 
-                <h1 className="text-lg font-black text-white">
+                <h1 className="truncate text-lg font-black text-white">
                   ShopSphere
                 </h1>
 
@@ -423,6 +441,7 @@ function Header() {
             {/* ==================================================
                 DESKTOP NAVIGATION
             ================================================== */}
+
             <nav className="hidden items-center gap-1 md:flex">
 
               <Link
@@ -447,9 +466,7 @@ function Header() {
 
                 {wishlistCount > 0 && (
                   <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#ec4899] px-1 text-[10px] font-black text-white">
-                    {
-                      wishlistCount
-                    }
+                    {wishlistCount}
                   </span>
                 )}
               </Link>
@@ -466,69 +483,74 @@ function Header() {
             {/* ==================================================
                 DESKTOP RIGHT SIDE
             ================================================== */}
+
             <div className="hidden items-center gap-2 md:flex">
 
               {/* Cart */}
+
               <Link
                 to="/cart"
                 aria-label="Shopping cart"
                 className="relative flex h-10 w-10 items-center justify-center rounded-xl text-white transition hover:bg-white/15 hover:text-yellow-300"
               >
-                <ShoppingCart
-                  size={21}
-                />
+
+                <ShoppingCart size={21} />
 
                 {cartCount > 0 && (
                   <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#f59e0b] px-1 text-[10px] font-black text-white">
-                    {
-                      cartCount
-                    }
+                    {cartCount}
                   </span>
                 )}
+
               </Link>
 
-              {/* Guest */}
+              {/* ==================================================
+                  GUEST / CUSTOMER ACCOUNT
+              ================================================== */}
+
               {!user ? (
                 <>
+                  {/* Login */}
 
                   <Link
                     to="/login"
                     className="flex items-center gap-2 rounded-xl border border-white/30 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/10"
                   >
-                    <LogIn
-                      size={17}
-                    />
+
+                    <LogIn size={17} />
 
                     Login
+
                   </Link>
+
+                  {/* Register */}
 
                   <Link
                     to="/register"
                     className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#ec4899] px-4 py-2 text-sm font-bold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
                   >
-                    <UserPlus
-                      size={17}
-                    />
+
+                    <UserPlus size={17} />
 
                     Register
-                  </Link>
 
+                  </Link>
                 </>
               ) : (
-                /* Customer Account */
+                /* ==================================================
+                   CUSTOMER ACCOUNT
+                ================================================== */
+
                 <div className="relative">
 
                   <button
                     type="button"
                     onClick={() =>
                       setAccountOpen(
-                        (open) =>
-                          !open,
+                        (open) => !open,
                       )
                     }
-                    aria-expanded={
-                      accountOpen
-                    }
+                    aria-expanded={accountOpen}
                     aria-haspopup="menu"
                     className="flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-2 transition hover:bg-white/20"
                   >
@@ -542,20 +564,18 @@ function Header() {
                     <div className="hidden text-left lg:block">
 
                       <p className="max-w-[120px] truncate text-sm font-black text-white">
-                        {
-                          user.name
-                        }
+                        {user.name}
                       </p>
 
                       <p className="text-[10px] font-bold uppercase text-yellow-300">
-                        {
-                          user.role
-                        }
+                        {user.role}
                       </p>
 
                     </div>
 
                   </button>
+
+                  {/* Account Dropdown */}
 
                   {accountOpen && (
                     <div
@@ -566,15 +586,11 @@ function Header() {
                       <div className="border-b border-orange-100 px-3 py-3">
 
                         <p className="font-black text-[#29221b]">
-                          {
-                            user.name
-                          }
+                          {user.name}
                         </p>
 
                         <p className="truncate text-xs text-[#8c7a63]">
-                          {
-                            user.email
-                          }
+                          {user.email}
                         </p>
 
                       </div>
@@ -589,11 +605,11 @@ function Header() {
                         }
                         className="mt-2 flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
                       >
-                        <User
-                          size={18}
-                        />
+
+                        <User size={18} />
 
                         My Dashboard
+
                       </Link>
 
                       <Link
@@ -606,11 +622,11 @@ function Header() {
                         }
                         className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
                       >
-                        <Package
-                          size={18}
-                        />
+
+                        <Package size={18} />
 
                         My Orders
+
                       </Link>
 
                       <Link
@@ -623,25 +639,23 @@ function Header() {
                         }
                         className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-orange-50 hover:text-[#d97706]"
                       >
-                        <Heart
-                          size={18}
-                        />
+
+                        <Heart size={18} />
 
                         Wishlist
+
                       </Link>
 
                       <button
                         type="button"
-                        onClick={
-                          requestLogout
-                        }
+                        onClick={requestLogout}
                         className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-bold text-[#ef476f] transition hover:bg-pink-50"
                       >
-                        <LogOut
-                          size={18}
-                        />
+
+                        <LogOut size={18} />
 
                         Logout
+
                       </button>
 
                     </div>
@@ -655,32 +669,34 @@ function Header() {
             {/* ==================================================
                 CUSTOMER MOBILE ACTIONS
             ================================================== */}
+
             <div className="flex items-center gap-1 md:hidden">
+
+              {/* Mobile Cart */}
 
               <Link
                 to="/cart"
                 aria-label="Shopping cart"
                 className="relative flex h-10 w-10 items-center justify-center rounded-xl text-white transition hover:bg-white/10"
               >
-                <ShoppingCart
-                  size={21}
-                />
+
+                <ShoppingCart size={21} />
 
                 {cartCount > 0 && (
                   <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#f59e0b] px-1 text-[9px] font-black text-white">
-                    {
-                      cartCount
-                    }
+                    {cartCount}
                   </span>
                 )}
+
               </Link>
+
+              {/* Mobile Menu */}
 
               <button
                 type="button"
                 onClick={() =>
                   setMobileMenuOpen(
-                    (open) =>
-                      !open,
+                    (open) => !open,
                   )
                 }
                 aria-label={
@@ -688,20 +704,16 @@ function Header() {
                     ? "Close menu"
                     : "Open menu"
                 }
-                aria-expanded={
-                  mobileMenuOpen
-                }
+                aria-expanded={mobileMenuOpen}
                 className="flex h-10 w-10 items-center justify-center rounded-xl text-white transition hover:bg-white/10"
               >
+
                 {mobileMenuOpen ? (
-                  <X
-                    size={23}
-                  />
+                  <X size={23} />
                 ) : (
-                  <Menu
-                    size={23}
-                  />
+                  <Menu size={23} />
                 )}
+
               </button>
 
             </div>
@@ -712,41 +724,42 @@ function Header() {
         {/* ==================================================
             CUSTOMER MOBILE MENU
         ================================================== */}
+
         {mobileMenuOpen && (
           <div className="border-t border-white/10 bg-white px-4 py-4 shadow-xl md:hidden">
 
             <nav className="mx-auto max-w-7xl space-y-1">
 
+              {/* Home */}
+
               <Link
                 to="/"
                 onClick={() =>
-                  setMobileMenuOpen(
-                    false,
-                  )
+                  setMobileMenuOpen(false)
                 }
                 className="block rounded-xl px-4 py-3 font-bold text-[#6b5b47] transition hover:bg-orange-50"
               >
                 Home
               </Link>
 
+              {/* Products */}
+
               <Link
                 to="/products"
                 onClick={() =>
-                  setMobileMenuOpen(
-                    false,
-                  )
+                  setMobileMenuOpen(false)
                 }
                 className="block rounded-xl px-4 py-3 font-bold text-[#6b5b47] transition hover:bg-orange-50"
               >
                 Products
               </Link>
 
+              {/* Wishlist */}
+
               <Link
                 to="/wishlist"
                 onClick={() =>
-                  setMobileMenuOpen(
-                    false,
-                  )
+                  setMobileMenuOpen(false)
                 }
                 className="flex items-center justify-between rounded-xl px-4 py-3 font-bold text-[#6b5b47] transition hover:bg-orange-50"
               >
@@ -757,34 +770,38 @@ function Header() {
 
                 {wishlistCount > 0 && (
                   <span className="rounded-full bg-[#ec4899] px-2 py-1 text-xs font-black text-white">
-                    {
-                      wishlistCount
-                    }
+                    {wishlistCount}
                   </span>
                 )}
 
               </Link>
 
+              {/* Orders */}
+
               <Link
                 to="/orders"
                 onClick={() =>
-                  setMobileMenuOpen(
-                    false,
-                  )
+                  setMobileMenuOpen(false)
                 }
                 className="flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#6b5b47] transition hover:bg-orange-50"
               >
-                <Package
-                  size={18}
-                />
+
+                <Package size={18} />
 
                 Orders
+
               </Link>
+
+              {/* ==================================================
+                  LOGGED-IN CUSTOMER
+              ================================================== */}
 
               {user ? (
                 <>
 
                   <div className="my-2 border-t border-orange-100" />
+
+                  {/* User Info */}
 
                   <div className="flex items-center gap-3 rounded-xl bg-orange-50 px-4 py-3">
 
@@ -797,20 +814,18 @@ function Header() {
                     <div>
 
                       <p className="font-black text-[#29221b]">
-                        {
-                          user.name
-                        }
+                        {user.name}
                       </p>
 
                       <p className="text-xs font-bold capitalize text-[#8b5cf6]">
-                        {
-                          user.role
-                        }
+                        {user.role}
                       </p>
 
                     </div>
 
                   </div>
+
+                  {/* Dashboard */}
 
                   <Link
                     to="/dashboard"
@@ -821,12 +836,14 @@ function Header() {
                     }
                     className="mt-1 flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#6b5b47] transition hover:bg-orange-50"
                   >
-                    <User
-                      size={18}
-                    />
+
+                    <User size={18} />
 
                     My Dashboard
+
                   </Link>
+
+                  {/* Orders */}
 
                   <Link
                     to="/orders"
@@ -837,33 +854,38 @@ function Header() {
                     }
                     className="flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#6b5b47] transition hover:bg-orange-50"
                   >
-                    <Package
-                      size={18}
-                    />
+
+                    <Package size={18} />
 
                     My Orders
+
                   </Link>
 
-                  {/* Mobile Logout */}
+                  {/* Logout */}
+
                   <button
                     type="button"
-                    onClick={
-                      requestLogout
-                    }
+                    onClick={requestLogout}
                     className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left font-bold text-[#ef476f] transition hover:bg-pink-50"
                   >
-                    <LogOut
-                      size={18}
-                    />
+
+                    <LogOut size={18} />
 
                     Logout
+
                   </button>
 
                 </>
               ) : (
+                /* ==================================================
+                   GUEST MOBILE
+                ================================================== */
+
                 <>
 
                   <div className="my-2 border-t border-orange-100" />
+
+                  {/* Login */}
 
                   <Link
                     to="/login"
@@ -874,12 +896,14 @@ function Header() {
                     }
                     className="flex items-center gap-3 rounded-xl px-4 py-3 font-bold text-[#d97706] transition hover:bg-orange-50"
                   >
-                    <LogIn
-                      size={18}
-                    />
+
+                    <LogIn size={18} />
 
                     Login
+
                   </Link>
+
+                  {/* Register */}
 
                   <Link
                     to="/register"
@@ -890,11 +914,11 @@ function Header() {
                     }
                     className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#ec4899] px-4 py-3 font-bold text-white"
                   >
-                    <UserPlus
-                      size={18}
-                    />
+
+                    <UserPlus size={18} />
 
                     Register
+
                   </Link>
 
                 </>
@@ -909,6 +933,7 @@ function Header() {
       {/* =================================================
           CUSTOMER LOGOUT CONFIRMATION MODAL
       ================================================== */}
+
       {logoutConfirmOpen && (
         <div
           className="fixed inset-0 z-[11000] flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm"
@@ -920,10 +945,12 @@ function Header() {
           <div className="w-full max-w-sm rounded-3xl border border-orange-100 bg-white p-6 shadow-2xl">
 
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-pink-100">
+
               <LogOut
                 size={26}
                 className="text-[#ef476f]"
               />
+
             </div>
 
             <h2
@@ -942,9 +969,7 @@ function Header() {
 
               <button
                 type="button"
-                onClick={
-                  cancelLogout
-                }
+                onClick={cancelLogout}
                 className="flex-1 rounded-xl border border-[#eadcc2] bg-white px-4 py-3 text-sm font-bold text-[#6b5b47] transition hover:bg-[#fffaf0]"
               >
                 No
@@ -952,9 +977,7 @@ function Header() {
 
               <button
                 type="button"
-                onClick={
-                  confirmLogout
-                }
+                onClick={confirmLogout}
                 className="flex-1 rounded-xl bg-[#ef476f] px-4 py-3 text-sm font-black text-white transition hover:bg-[#db2777]"
               >
                 Yes, Logout

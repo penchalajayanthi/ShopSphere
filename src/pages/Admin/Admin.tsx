@@ -970,79 +970,12 @@ useEffect(() => {
 
         <div className="relative mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
 
-          {/* Header Top */}
-          <div className="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-5">
-
-            {/* Brand */}
-            <div className="min-w-0">
-
-              <div className="flex items-center gap-3">
-
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/15 text-xl shadow-lg backdrop-blur sm:h-13 sm:w-13">
-                  🛍️
-                </div>
-
-                <div className="min-w-0">
-
-                  <div className="flex items-center gap-2">
-
-                    <p className="text-[10px] font-black uppercase tracking-[0.22em] text-yellow-300">
-                      SHOPSPHERE AI
-                    </p>
-
-                    <span className="rounded-full border border-white/20 bg-white/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-white/80">
-                      Admin
-                    </span>
-
-                  </div>
-
-                 <h1 className="mt-1 text-xl font-black tracking-tight text-white sm:text-3xl">
-  Admin Dashboard
-</h1>
-
-                </div>
-              </div>
-
-              <p className="mt-2 hidden text-sm text-white/70 sm:block">
-                Manage products, orders, customers and recommendation insights.
-              </p>
-
-            </div>
-
-            {/* Workspace Card */}
-            <div className="flex w-fit items-center gap-3 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 shadow-lg backdrop-blur-md">
-
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#f59e0b] to-[#ec4899] text-lg shadow-md">
-                ✨
-              </div>
-
-              <div>
-                <p className="text-[9px] font-black uppercase tracking-[0.15em] text-yellow-200/80">
-                  Admin Workspace
-                </p>
-
-                <p className="mt-0.5 text-sm font-black text-white">
-                  Global Platform Data
-                </p>
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* ==================================================
-              HEADER NAVIGATION
-          ================================================== */}
-          {/* ==================================================
-    ADMIN NAVIGATION
-================================================== */}
+      
           <nav
             aria-label="Admin navigation"
             className="border-t border-white/10"
           >
-            {/* ================================================
-      DESKTOP NAVIGATION
-  ================================================= */}
+
             <div className="hidden py-3 md:block">
               <div className="flex items-center gap-2">
 
