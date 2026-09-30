@@ -322,9 +322,9 @@ function Admin() {
 
         const matchesCategory =
           productCategory ===
-            "all" ||
+          "all" ||
           product.category ===
-            productCategory;
+          productCategory;
 
         return (
           matchesSearch &&
@@ -370,9 +370,9 @@ function Admin() {
 
         const matchesStatus =
           orderStatusFilter ===
-            "all" ||
+          "all" ||
           order.status ===
-            orderStatusFilter;
+          orderStatusFilter;
 
         return (
           matchesSearch &&
@@ -494,11 +494,11 @@ function Admin() {
     const nextId =
       products.length > 0
         ? Math.max(
-            ...products.map(
-              (product) =>
-                product.id,
-            ),
-          ) + 1
+          ...products.map(
+            (product) =>
+              product.id,
+          ),
+        ) + 1
         : 1;
 
     setEditingProduct(null);
@@ -776,16 +776,16 @@ function Admin() {
     if (
       currentIndex === -1 ||
       order.status ===
-        "Delivered" ||
+      "Delivered" ||
       order.status ===
-        "Cancelled"
+      "Cancelled"
     ) {
       return;
     }
 
     const nextStatus =
       orderStatuses[
-        currentIndex + 1
+      currentIndex + 1
       ];
 
     if (!nextStatus) {
@@ -797,10 +797,10 @@ function Admin() {
         (item) =>
           item.id === order.id
             ? {
-                ...item,
-                status:
-                  nextStatus,
-              }
+              ...item,
+              status:
+                nextStatus,
+            }
             : item,
       );
 
@@ -839,14 +839,14 @@ function Admin() {
       Math.max(
         50,
         products.length * 8 +
-          orders.length * 12,
+        orders.length * 12,
       );
 
     const clicks =
       Math.max(
         10,
         products.length * 2 +
-          orders.length * 5,
+        orders.length * 5,
       );
 
     const conversions =
@@ -855,15 +855,15 @@ function Admin() {
     const ctr =
       impressions > 0
         ? (clicks /
-            impressions) *
-          100
+          impressions) *
+        100
         : 0;
 
     const conversionRate =
       clicks > 0
         ? (conversions /
-            clicks) *
-          100
+          clicks) *
+        100
         : 0;
 
     return {
@@ -900,32 +900,32 @@ function Admin() {
     label: string;
     icon: typeof BarChart3;
   }> = [
-    {
-      id: "overview",
-      label: "Overview",
-      icon: BarChart3,
-    },
-    {
-      id: "products",
-      label: "Products",
-      icon: Boxes,
-    },
-    {
-      id: "orders",
-      label: "Orders",
-      icon: ShoppingBag,
-    },
-    {
-      id: "customers",
-      label: "Customers",
-      icon: Users,
-    },
-    {
-      id: "analytics",
-      label: "Recommendation Analytics",
-      icon: TrendingUp,
-    },
-  ];
+      {
+        id: "overview",
+        label: "Overview",
+        icon: BarChart3,
+      },
+      {
+        id: "products",
+        label: "Products",
+        icon: Boxes,
+      },
+      {
+        id: "orders",
+        label: "Orders",
+        icon: ShoppingBag,
+      },
+      {
+        id: "customers",
+        label: "Customers",
+        icon: Users,
+      },
+      {
+        id: "analytics",
+        label: "Recommendation Analytics",
+        icon: TrendingUp,
+      },
+    ];
 
   return (
     <main className="min-h-screen bg-[#fffaf0]">
@@ -957,7 +957,7 @@ function Admin() {
       {/* ==================================================
           BEAUTIFUL ADMIN HEADER
       ================================================== */}
-      <header className="sticky top-0 z-50 overflow-hidden bg-gradient-to-br from-[#2f1650] via-[#6d267f] to-[#d85b3d] text-white shadow-xl">
+      <header className="sticky top-16 z-[9990] overflow-hidden bg-gradient-to-br from-[#2f1650] via-[#6d267f] to-[#d85b3d] text-white shadow-xl">
 
         {/* Decorative background circles */}
         <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#f59e0b]/20 blur-3xl" />
@@ -1051,11 +1051,10 @@ function Admin() {
                           tab.id,
                         )
                       }
-                      className={`group inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-black whitespace-nowrap transition-all duration-200 ${
-                        active
+                      className={`group inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-black whitespace-nowrap transition-all duration-200 ${active
                           ? "border-white/20 bg-white text-[#6d267f] shadow-lg"
                           : "border-white/10 bg-white/5 text-white/80 hover:border-white/20 hover:bg-white/10 hover:text-white"
-                      }`}
+                        }`}
                     >
                       <Icon
                         size={17}
@@ -1091,246 +1090,908 @@ function Admin() {
         ================================================== */}
         {activeTab ===
           "overview" && (
-          <div className="space-y-6">
+            <div className="space-y-6">
 
-            {/* Stats */}
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {/* Stats */}
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
 
-              <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm">
-                <div className="flex items-center justify-between">
+                <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
 
-                  <div>
-                    <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
-                      Products
-                    </p>
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
+                        Products
+                      </p>
 
-                    <p className="mt-2 text-3xl font-black text-[#29221b]">
-                      {
-                        products.length
-                      }
-                    </p>
+                      <p className="mt-2 text-3xl font-black text-[#29221b]">
+                        {
+                          products.length
+                        }
+                      </p>
+                    </div>
+
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-[#d97706]">
+                      <Package
+                        size={23}
+                      />
+                    </div>
+
                   </div>
-
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100 text-[#d97706]">
-                    <Package
-                      size={23}
-                    />
-                  </div>
-
                 </div>
-              </div>
 
-              <div className="rounded-3xl border border-purple-100 bg-white p-5 shadow-sm">
-                <div className="flex items-center justify-between">
+                <div className="rounded-3xl border border-purple-100 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
 
-                  <div>
-                    <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
-                      Customers
-                    </p>
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
+                        Customers
+                      </p>
 
-                    <p className="mt-2 text-3xl font-black text-[#29221b]">
-                      {
-                        customers.length
-                      }
-                    </p>
+                      <p className="mt-2 text-3xl font-black text-[#29221b]">
+                        {
+                          customers.length
+                        }
+                      </p>
+                    </div>
+
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-100 text-[#8b5cf6]">
+                      <Users
+                        size={23}
+                      />
+                    </div>
+
                   </div>
-
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-100 text-[#8b5cf6]">
-                    <Users
-                      size={23}
-                    />
-                  </div>
-
                 </div>
-              </div>
 
-              <div className="rounded-3xl border border-pink-100 bg-white p-5 shadow-sm">
-                <div className="flex items-center justify-between">
+                <div className="rounded-3xl border border-pink-100 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
 
-                  <div>
-                    <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
-                      Orders
-                    </p>
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
+                        Orders
+                      </p>
 
-                    <p className="mt-2 text-3xl font-black text-[#29221b]">
-                      {orders.length}
-                    </p>
+                      <p className="mt-2 text-3xl font-black text-[#29221b]">
+                        {orders.length}
+                      </p>
+                    </div>
+
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-pink-100 text-[#ec4899]">
+                      <ShoppingBag
+                        size={23}
+                      />
+                    </div>
+
                   </div>
-
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-pink-100 text-[#ec4899]">
-                    <ShoppingBag
-                      size={23}
-                    />
-                  </div>
-
                 </div>
-              </div>
 
-              <div className="rounded-3xl border border-amber-100 bg-white p-5 shadow-sm">
-                <div className="flex items-center justify-between">
+                <div className="rounded-3xl border border-amber-100 bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between">
 
-                  <div>
-                    <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
-                      Revenue
-                    </p>
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
+                        Revenue
+                      </p>
 
-                    <p className="mt-2 text-2xl font-black text-[#29221b]">
-                      {formatCurrency(
-                        totalRevenue,
-                      )}
-                    </p>
+                      <p className="mt-2 text-2xl font-black text-[#29221b]">
+                        {formatCurrency(
+                          totalRevenue,
+                        )}
+                      </p>
 
-                    <p className="mt-1 text-xs font-bold text-[#a6957e]">
-                      Simulated local revenue
-                    </p>
+                      <p className="mt-1 text-xs font-bold text-[#a6957e]">
+                        Simulated local revenue
+                      </p>
+                    </div>
+
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-[#d97706]">
+                      <CircleDollarSign
+                        size={23}
+                      />
+                    </div>
+
                   </div>
-
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-[#d97706]">
-                    <CircleDollarSign
-                      size={23}
-                    />
-                  </div>
-
                 </div>
-              </div>
-
-            </div>
-
-            {/* Secondary Metrics */}
-            <div className="grid gap-4 sm:grid-cols-3">
-
-              <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm">
-
-                <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
-                  Active Orders
-                </p>
-
-                <p className="mt-2 text-2xl font-black text-[#29221b]">
-                  {activeOrders}
-                </p>
-
-                <p className="mt-1 text-xs text-[#8c7a63]">
-                  Orders not yet delivered
-                </p>
 
               </div>
 
-              <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm">
+              {/* Secondary Metrics */}
+              <div className="grid gap-4 sm:grid-cols-3">
 
-                <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
-                  Average Order Value
-                </p>
+                <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm">
 
-                <p className="mt-2 text-2xl font-black text-[#29221b]">
-                  {formatCurrency(
-                    averageOrderValue,
-                  )}
-                </p>
-
-              </div>
-
-              <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm">
-
-                <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
-                  Low Stock
-                </p>
-
-                <p className="mt-2 text-2xl font-black text-[#ef476f]">
-                  {
-                    lowStockProducts.length
-                  }
-                </p>
-
-                <p className="mt-1 text-xs text-[#8c7a63]">
-                  Products with 10 or fewer units
-                </p>
-
-              </div>
-
-            </div>
-
-            {/* Recent Orders */}
-            <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-6">
-
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-
-                <div>
-                  <h2 className="text-xl font-black text-[#29221b]">
-                    Recent Orders
-                  </h2>
-
-                  <p className="mt-1 text-sm text-[#8c7a63]">
-                    All customer orders on the platform.
+                  <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
+                    Active Orders
                   </p>
+
+                  <p className="mt-2 text-2xl font-black text-[#29221b]">
+                    {activeOrders}
+                  </p>
+
+                  <p className="mt-1 text-xs text-[#8c7a63]">
+                    Orders not yet delivered
+                  </p>
+
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    changeTab(
-                      "orders",
-                    )
-                  }
-                  className="w-fit rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#ec4899] px-4 py-2 text-sm font-black text-white shadow-md"
-                >
-                  View All Orders
-                </button>
+                <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm">
+
+                  <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
+                    Average Order Value
+                  </p>
+
+                  <p className="mt-2 text-2xl font-black text-[#29221b]">
+                    {formatCurrency(
+                      averageOrderValue,
+                    )}
+                  </p>
+
+                </div>
+
+                <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm">
+
+                  <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
+                    Low Stock
+                  </p>
+
+                  <p className="mt-2 text-2xl font-black text-[#ef476f]">
+                    {
+                      lowStockProducts.length
+                    }
+                  </p>
+
+                  <p className="mt-1 text-xs text-[#8c7a63]">
+                    Products with 10 or fewer units
+                  </p>
+
+                </div>
 
               </div>
 
-              <div className="mt-5 overflow-x-auto">
+              {/* Recent Orders */}
+              <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-6">
 
-                {orders.length ===
-                0 ? (
-                  <div className="rounded-2xl border border-dashed border-orange-200 bg-orange-50/40 px-6 py-10 text-center">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
-                    <ShoppingBag
-                      size={35}
+                  <div>
+                    <h2 className="text-xl font-black text-[#29221b]">
+                      Recent Orders
+                    </h2>
+
+                    <p className="mt-1 text-sm text-[#8c7a63]">
+                      All customer orders on the platform.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      changeTab(
+                        "orders",
+                      )
+                    }
+                    className="w-fit rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#ec4899] px-4 py-2 text-sm font-black text-white shadow-md"
+                  >
+                    View All Orders
+                  </button>
+
+                </div>
+
+                <div className="mt-5 overflow-x-auto">
+
+                  {orders.length ===
+                    0 ? (
+                    <div className="rounded-2xl border border-dashed border-orange-200 bg-orange-50/40 px-6 py-10 text-center">
+
+                      <ShoppingBag
+                        size={35}
+                        className="mx-auto text-orange-300"
+                      />
+
+                      <p className="mt-3 font-bold text-[#6b5b47]">
+                        No orders yet.
+                      </p>
+
+                    </div>
+                  ) : (
+                    <table className="min-w-full text-left text-sm">
+
+                      <thead>
+                        <tr className="border-b border-orange-100 text-xs uppercase tracking-wide text-[#8c7a63]">
+
+                          <th className="px-3 py-3">
+                            Order
+                          </th>
+
+                          <th className="px-3 py-3">
+                            Customer
+                          </th>
+
+                          <th className="px-3 py-3">
+                            Date
+                          </th>
+
+                          <th className="px-3 py-3">
+                            Total
+                          </th>
+
+                          <th className="px-3 py-3">
+                            Status
+                          </th>
+
+                        </tr>
+                      </thead>
+
+                      <tbody>
+
+                        {orders
+                          .slice(
+                            0,
+                            6,
+                          )
+                          .map(
+                            (
+                              order,
+                            ) => (
+                              <tr
+                                key={
+                                  order.id
+                                }
+                                className="border-b border-orange-50 last:border-0"
+                              >
+
+                                <td className="px-3 py-4 font-black text-[#29221b]">
+                                  #
+                                  {
+                                    order.id
+                                  }
+                                </td>
+
+                                <td className="px-3 py-4">
+
+                                  <p className="font-bold text-[#29221b]">
+                                    {
+                                      order
+                                        .shippingAddress
+                                        .fullName
+                                    }
+                                  </p>
+
+                                  <p className="text-xs text-[#8c7a63]">
+                                    {
+                                      order
+                                        .shippingAddress
+                                        .email
+                                    }
+                                  </p>
+
+                                </td>
+
+                                <td className="px-3 py-4 text-[#6b5b47]">
+                                  {new Date(
+                                    order.createdAt,
+                                  ).toLocaleDateString(
+                                    "en-IN",
+                                  )}
+                                </td>
+
+                                <td className="px-3 py-4 font-black text-[#d97706]">
+                                  {formatCurrency(
+                                    order.total,
+                                  )}
+                                </td>
+
+                                <td className="px-3 py-4">
+
+                                  <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-black text-[#7c3aed]">
+                                    {
+                                      order.status
+                                    }
+                                  </span>
+
+                                </td>
+
+                              </tr>
+                            ),
+                          )}
+
+                      </tbody>
+                    </table>
+                  )}
+
+                </div>
+              </div>
+
+              {/* Inventory Alerts */}
+              <div className="rounded-3xl border border-red-100 bg-white p-5 shadow-sm sm:p-6">
+
+                <div className="flex items-center gap-3">
+
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-100 text-red-600">
+                    <Boxes
+                      size={21}
+                    />
+                  </div>
+
+                  <div>
+                    <h2 className="font-black text-[#29221b]">
+                      Inventory Alerts
+                    </h2>
+
+                    <p className="text-sm text-[#8c7a63]">
+                      Products that may need restocking.
+                    </p>
+                  </div>
+
+                </div>
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+
+                  {lowStockProducts
+                    .slice(0, 6)
+                    .map(
+                      (
+                        product,
+                      ) => (
+                        <div
+                          key={
+                            product.id
+                          }
+                          className="rounded-2xl bg-red-50 p-4"
+                        >
+
+                          <p className="font-black text-[#29221b]">
+                            {
+                              product.title
+                            }
+                          </p>
+
+                          <p className="mt-1 text-sm font-bold text-red-600">
+                            {
+                              product.stock
+                            }{" "}
+                            left in stock
+                          </p>
+
+                        </div>
+                      ),
+                    )}
+
+                  {lowStockProducts.length ===
+                    0 && (
+                      <div className="rounded-2xl bg-green-50 p-4 sm:col-span-2 lg:col-span-3">
+
+                        <p className="font-bold text-green-700">
+                          No low-stock products right now.
+                        </p>
+
+                      </div>
+                    )}
+
+                </div>
+              </div>
+
+              {/* Top Products */}
+              <div className="rounded-3xl border border-purple-100 bg-white p-5 shadow-sm sm:p-6">
+
+                <div className="flex items-center gap-3">
+
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-purple-100 text-[#8b5cf6]">
+                    <TrendingUp
+                      size={21}
+                    />
+                  </div>
+
+                  <div>
+                    <h2 className="font-black text-[#29221b]">
+                      Top Products
+                    </h2>
+
+                    <p className="text-sm text-[#8c7a63]">
+                      Based on global local order history.
+                    </p>
+                  </div>
+
+                </div>
+
+                <div className="mt-5 grid gap-3">
+
+                  {topProducts.map(
+                    ({
+                      product,
+                      sales,
+                    }) => (
+                      <div
+                        key={
+                          product.id
+                        }
+                        className="flex items-center gap-4 rounded-2xl bg-[#fffaf0] p-3"
+                      >
+
+                        <img
+                          src={
+                            product.thumbnail
+                          }
+                          alt={
+                            product.title
+                          }
+                          className="h-14 w-14 rounded-xl object-cover"
+                        />
+
+                        <div className="min-w-0 flex-1">
+
+                          <p className="truncate font-black text-[#29221b]">
+                            {
+                              product.title
+                            }
+                          </p>
+
+                          <p className="mt-1 text-xs font-bold text-[#8c7a63]">
+                            {sales}{" "}
+                            units ordered
+                          </p>
+
+                        </div>
+
+                        <p className="font-black text-[#d97706]">
+                          {formatCurrency(
+                            product.price,
+                          )}
+                        </p>
+
+                      </div>
+                    ),
+                  )}
+
+                </div>
+              </div>
+
+            </div>
+          )}
+
+        {/* ==================================================
+            PRODUCTS
+        ================================================== */}
+        {activeTab ===
+          "products" && (
+            <div className="space-y-6">
+
+              <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-6">
+
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+                  <div>
+                    <h2 className="text-2xl font-black text-[#29221b]">
+                      Product Management
+                    </h2>
+
+                    <p className="mt-1 text-sm text-[#8c7a63]">
+                      This catalogue is shared with customer-facing product pages.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={
+                      handleAddProduct
+                    }
+                    className="inline-flex w-fit items-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#ec4899] px-5 py-3 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl"
+                  >
+                    <Plus
+                      size={18}
+                    />
+                    Add Product
+                  </button>
+
+                </div>
+
+                <div className="mt-6 grid gap-3 md:grid-cols-[1fr_220px]">
+
+                  <div className="relative">
+
+                    <Search
+                      size={18}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#a6957e]"
+                    />
+
+                    <input
+                      value={
+                        productSearch
+                      }
+                      onChange={(
+                        event,
+                      ) =>
+                        setProductSearch(
+                          event.target.value,
+                        )
+                      }
+                      placeholder="Search products or brands..."
+                      className="w-full rounded-xl border border-orange-100 bg-[#fffaf0] py-3 pl-11 pr-4 text-sm outline-none focus:border-[#f59e0b] focus:ring-4 focus:ring-orange-100"
+                    />
+
+                  </div>
+
+                  <select
+                    value={
+                      productCategory
+                    }
+                    onChange={(
+                      event,
+                    ) =>
+                      setProductCategory(
+                        event.target.value,
+                      )
+                    }
+                    className="rounded-xl border border-orange-100 bg-[#fffaf0] px-4 py-3 text-sm font-bold outline-none focus:border-[#f59e0b] focus:ring-4 focus:ring-orange-100"
+                  >
+
+                    <option value="all">
+                      All Categories
+                    </option>
+
+                    {adminCategories.map(
+                      (
+                        category,
+                      ) => (
+                        <option
+                          key={
+                            category.id
+                          }
+                          value={
+                            category.id
+                          }
+                        >
+                          {
+                            category.icon
+                          }{" "}
+                          {
+                            category.name
+                          }
+                        </option>
+                      ),
+                    )}
+
+                  </select>
+
+                </div>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+
+                  {adminCategories.map(
+                    (
+                      category,
+                    ) => (
+                      <span
+                        key={
+                          category.id
+                        }
+                        className="rounded-full bg-orange-50 px-3 py-1.5 text-xs font-bold text-[#d97706]"
+                      >
+                        {
+                          category.icon
+                        }{" "}
+                        {
+                          category.name
+                        }
+                      </span>
+                    ),
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={
+                      handleAddCategory
+                    }
+                    className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1.5 text-xs font-black text-[#8b5cf6] transition hover:from-purple-200 hover:to-pink-200"
+                  >
+                    <Plus
+                      size={13}
+                    />
+                    Add Category
+                  </button>
+
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-6">
+
+                <div className="mb-5 flex items-center justify-between">
+
+                  <div>
+                    <p className="text-sm font-black text-[#29221b]">
+                      {
+                        filteredProducts.length
+                      }{" "}
+                      products
+                    </p>
+
+                    <p className="text-xs text-[#8c7a63]">
+                      Global catalogue
+                    </p>
+                  </div>
+
+                </div>
+
+                {filteredProducts.length ===
+                  0 ? (
+                  <div className="rounded-2xl border border-dashed border-orange-200 bg-orange-50/30 px-6 py-14 text-center">
+
+                    <Package
+                      size={40}
                       className="mx-auto text-orange-300"
                     />
 
-                    <p className="mt-3 font-bold text-[#6b5b47]">
-                      No orders yet.
+                    <p className="mt-3 font-black text-[#29221b]">
+                      No products found
                     </p>
 
                   </div>
                 ) : (
-                  <table className="min-w-full text-left text-sm">
+                  <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
 
-                    <thead>
-                      <tr className="border-b border-orange-100 text-xs uppercase tracking-wide text-[#8c7a63]">
+                    {filteredProducts.map(
+                      (
+                        product,
+                      ) => (
+                        <article
+                          key={
+                            product.id
+                          }
+                          className="overflow-hidden rounded-2xl border border-orange-100 bg-[#fffaf0]"
+                        >
 
-                        <th className="px-3 py-3">
-                          Order
-                        </th>
+                          <div className="relative">
 
-                        <th className="px-3 py-3">
-                          Customer
-                        </th>
+                            <img
+                              src={
+                                product.thumbnail
+                              }
+                              alt={
+                                product.title
+                              }
+                              className="h-48 w-full object-cover"
+                            />
 
-                        <th className="px-3 py-3">
-                          Date
-                        </th>
+                            <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-black text-[#d97706] shadow">
+                              {
+                                getCategoryName(
+                                  product.category,
+                                )
+                              }
+                            </span>
 
-                        <th className="px-3 py-3">
-                          Total
-                        </th>
+                          </div>
 
-                        <th className="px-3 py-3">
-                          Status
-                        </th>
+                          <div className="p-4">
 
-                      </tr>
-                    </thead>
+                            <p className="text-xs font-bold uppercase tracking-wide text-[#a6957e]">
+                              {
+                                product.brand
+                              }
+                            </p>
 
-                    <tbody>
+                            <h3 className="mt-1 line-clamp-2 font-black text-[#29221b]">
+                              {
+                                product.title
+                              }
+                            </h3>
 
-                      {orders
-                        .slice(
-                          0,
-                          6,
+                            <div className="mt-3 flex items-center justify-between">
+
+                              <p className="font-black text-[#d97706]">
+                                {formatCurrency(
+                                  product.price,
+                                )}
+                              </p>
+
+                              <span
+                                className={`rounded-full px-2.5 py-1 text-xs font-black ${product.stock <=
+                                    10
+                                    ? "bg-red-100 text-red-600"
+                                    : "bg-green-100 text-green-700"
+                                  }`}
+                              >
+                                Stock:{" "}
+                                {
+                                  product.stock
+                                }
+                              </span>
+
+                            </div>
+
+                            <div className="mt-4 flex gap-2">
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleEditProduct(
+                                    product,
+                                  )
+                                }
+                                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-purple-100 px-3 py-2.5 text-sm font-black text-[#7c3aed] transition hover:bg-purple-200"
+                              >
+                                <Edit3
+                                  size={
+                                    16
+                                  }
+                                />
+                                Edit
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setShowDeleteModal(
+                                    product,
+                                  )
+                                }
+                                className="flex items-center justify-center rounded-xl bg-red-100 px-3 py-2.5 text-red-600 transition hover:bg-red-200"
+                                aria-label={`Delete ${product.title}`}
+                              >
+                                <Trash2
+                                  size={
+                                    16
+                                  }
+                                />
+                              </button>
+
+                            </div>
+                          </div>
+
+                        </article>
+                      ),
+                    )}
+
+                  </div>
+                )}
+
+              </div>
+            </div>
+          )}
+
+        {/* ==================================================
+            ORDERS
+        ================================================== */}
+        {activeTab ===
+          "orders" && (
+            <div className="space-y-6">
+
+              <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-6">
+
+                <div>
+                  <h2 className="text-2xl font-black text-[#29221b]">
+                    Order Management
+                  </h2>
+
+                  <p className="mt-1 text-sm text-[#8c7a63]">
+                    All customer orders are visible here.
+                  </p>
+                </div>
+
+                <div className="mt-6 grid gap-3 md:grid-cols-[1fr_220px]">
+
+                  <div className="relative">
+
+                    <Search
+                      size={18}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#a6957e]"
+                    />
+
+                    <input
+                      value={
+                        orderSearch
+                      }
+                      onChange={(
+                        event,
+                      ) =>
+                        setOrderSearch(
+                          event.target.value,
                         )
-                        .map(
+                      }
+                      placeholder="Search order ID or customer..."
+                      className="w-full rounded-xl border border-orange-100 bg-[#fffaf0] py-3 pl-11 pr-4 text-sm outline-none focus:border-[#f59e0b] focus:ring-4 focus:ring-orange-100"
+                    />
+
+                  </div>
+
+                  <select
+                    value={
+                      orderStatusFilter
+                    }
+                    onChange={(
+                      event,
+                    ) =>
+                      setOrderStatusFilter(
+                        event.target.value as
+                        | "all"
+                        | OrderStatus,
+                      )
+                    }
+                    className="rounded-xl border border-orange-100 bg-[#fffaf0] px-4 py-3 text-sm font-bold outline-none focus:border-[#f59e0b] focus:ring-4 focus:ring-orange-100"
+                  >
+
+                    <option value="all">
+                      All Statuses
+                    </option>
+
+                    {orderStatuses.map(
+                      (
+                        status,
+                      ) => (
+                        <option
+                          key={
+                            status
+                          }
+                          value={
+                            status
+                          }
+                        >
+                          {
+                            status
+                          }
+                        </option>
+                      ),
+                    )}
+
+                  </select>
+
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-6">
+
+                <div className="overflow-x-auto">
+
+                  {filteredOrders.length ===
+                    0 ? (
+                    <div className="py-14 text-center">
+
+                      <ShoppingBag
+                        size={40}
+                        className="mx-auto text-orange-300"
+                      />
+
+                      <p className="mt-3 font-black text-[#29221b]">
+                        No orders found
+                      </p>
+
+                    </div>
+                  ) : (
+                    <table className="min-w-full text-left text-sm">
+
+                      <thead>
+                        <tr className="border-b border-orange-100 text-xs uppercase tracking-wide text-[#8c7a63]">
+
+                          <th className="px-3 py-3">
+                            Order
+                          </th>
+
+                          <th className="px-3 py-3">
+                            Customer
+                          </th>
+
+                          <th className="px-3 py-3">
+                            Items
+                          </th>
+
+                          <th className="px-3 py-3">
+                            Total
+                          </th>
+
+                          <th className="px-3 py-3">
+                            Status
+                          </th>
+
+                          <th className="px-3 py-3">
+                            Action
+                          </th>
+
+                        </tr>
+                      </thead>
+
+                      <tbody>
+
+                        {filteredOrders.map(
                           (
                             order,
                           ) => (
@@ -1338,7 +1999,7 @@ function Admin() {
                               key={
                                 order.id
                               }
-                              className="border-b border-orange-50 last:border-0"
+                              className="border-b border-orange-50"
                             >
 
                               <td className="px-3 py-4 font-black text-[#29221b]">
@@ -1350,7 +2011,7 @@ function Admin() {
 
                               <td className="px-3 py-4">
 
-                                <p className="font-bold text-[#29221b]">
+                                <p className="font-bold">
                                   {
                                     order
                                       .shippingAddress
@@ -1368,11 +2029,15 @@ function Admin() {
 
                               </td>
 
-                              <td className="px-3 py-4 text-[#6b5b47]">
-                                {new Date(
-                                  order.createdAt,
-                                ).toLocaleDateString(
-                                  "en-IN",
+                              <td className="px-3 py-4">
+                                {order.items.reduce(
+                                  (
+                                    sum,
+                                    item,
+                                  ) =>
+                                    sum +
+                                    item.quantity,
+                                  0,
                                 )}
                               </td>
 
@@ -1392,1038 +2057,371 @@ function Admin() {
 
                               </td>
 
+                              <td className="px-3 py-4">
+
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setSelectedOrder(
+                                      order,
+                                    )
+                                  }
+                                  className="inline-flex items-center gap-2 rounded-xl bg-orange-100 px-3 py-2 text-xs font-black text-[#d97706]"
+                                >
+                                  <Eye
+                                    size={
+                                      15
+                                    }
+                                  />
+                                  View
+                                </button>
+
+                              </td>
+
                             </tr>
                           ),
                         )}
 
-                    </tbody>
-                  </table>
-                )}
+                      </tbody>
 
-              </div>
-            </div>
-
-            {/* Inventory Alerts */}
-            <div className="rounded-3xl border border-red-100 bg-white p-5 shadow-sm sm:p-6">
-
-              <div className="flex items-center gap-3">
-
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-100 text-red-600">
-                  <Boxes
-                    size={21}
-                  />
-                </div>
-
-                <div>
-                  <h2 className="font-black text-[#29221b]">
-                    Inventory Alerts
-                  </h2>
-
-                  <p className="text-sm text-[#8c7a63]">
-                    Products that may need restocking.
-                  </p>
-                </div>
-
-              </div>
-
-              <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-
-                {lowStockProducts
-                  .slice(0, 6)
-                  .map(
-                    (
-                      product,
-                    ) => (
-                      <div
-                        key={
-                          product.id
-                        }
-                        className="rounded-2xl bg-red-50 p-4"
-                      >
-
-                        <p className="font-black text-[#29221b]">
-                          {
-                            product.title
-                          }
-                        </p>
-
-                        <p className="mt-1 text-sm font-bold text-red-600">
-                          {
-                            product.stock
-                          }{" "}
-                          left in stock
-                        </p>
-
-                      </div>
-                    ),
-                  )}
-
-                {lowStockProducts.length ===
-                  0 && (
-                  <div className="rounded-2xl bg-green-50 p-4 sm:col-span-2 lg:col-span-3">
-
-                    <p className="font-bold text-green-700">
-                      No low-stock products right now.
-                    </p>
-
-                  </div>
-                )}
-
-              </div>
-            </div>
-
-            {/* Top Products */}
-            <div className="rounded-3xl border border-purple-100 bg-white p-5 shadow-sm sm:p-6">
-
-              <div className="flex items-center gap-3">
-
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-purple-100 text-[#8b5cf6]">
-                  <TrendingUp
-                    size={21}
-                  />
-                </div>
-
-                <div>
-                  <h2 className="font-black text-[#29221b]">
-                    Top Products
-                  </h2>
-
-                  <p className="text-sm text-[#8c7a63]">
-                    Based on global local order history.
-                  </p>
-                </div>
-
-              </div>
-
-              <div className="mt-5 grid gap-3">
-
-                {topProducts.map(
-                  ({
-                    product,
-                    sales,
-                  }) => (
-                    <div
-                      key={
-                        product.id
-                      }
-                      className="flex items-center gap-4 rounded-2xl bg-[#fffaf0] p-3"
-                    >
-
-                      <img
-                        src={
-                          product.thumbnail
-                        }
-                        alt={
-                          product.title
-                        }
-                        className="h-14 w-14 rounded-xl object-cover"
-                      />
-
-                      <div className="min-w-0 flex-1">
-
-                        <p className="truncate font-black text-[#29221b]">
-                          {
-                            product.title
-                          }
-                        </p>
-
-                        <p className="mt-1 text-xs font-bold text-[#8c7a63]">
-                          {sales}{" "}
-                          units ordered
-                        </p>
-
-                      </div>
-
-                      <p className="font-black text-[#d97706]">
-                        {formatCurrency(
-                          product.price,
-                        )}
-                      </p>
-
-                    </div>
-                  ),
-                )}
-
-              </div>
-            </div>
-
-          </div>
-        )}
-
-        {/* ==================================================
-            PRODUCTS
-        ================================================== */}
-        {activeTab ===
-          "products" && (
-          <div className="space-y-6">
-
-            <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-6">
-
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-
-                <div>
-                  <h2 className="text-2xl font-black text-[#29221b]">
-                    Product Management
-                  </h2>
-
-                  <p className="mt-1 text-sm text-[#8c7a63]">
-                    This catalogue is shared with customer-facing product pages.
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={
-                    handleAddProduct
-                  }
-                  className="inline-flex w-fit items-center gap-2 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#ec4899] px-5 py-3 text-sm font-black text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl"
-                >
-                  <Plus
-                    size={18}
-                  />
-                  Add Product
-                </button>
-
-              </div>
-
-              <div className="mt-6 grid gap-3 md:grid-cols-[1fr_220px]">
-
-                <div className="relative">
-
-                  <Search
-                    size={18}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-[#a6957e]"
-                  />
-
-                  <input
-                    value={
-                      productSearch
-                    }
-                    onChange={(
-                      event,
-                    ) =>
-                      setProductSearch(
-                        event.target.value,
-                      )
-                    }
-                    placeholder="Search products or brands..."
-                    className="w-full rounded-xl border border-orange-100 bg-[#fffaf0] py-3 pl-11 pr-4 text-sm outline-none focus:border-[#f59e0b] focus:ring-4 focus:ring-orange-100"
-                  />
-
-                </div>
-
-                <select
-                  value={
-                    productCategory
-                  }
-                  onChange={(
-                    event,
-                  ) =>
-                    setProductCategory(
-                      event.target.value,
-                    )
-                  }
-                  className="rounded-xl border border-orange-100 bg-[#fffaf0] px-4 py-3 text-sm font-bold outline-none focus:border-[#f59e0b] focus:ring-4 focus:ring-orange-100"
-                >
-
-                  <option value="all">
-                    All Categories
-                  </option>
-
-                  {adminCategories.map(
-                    (
-                      category,
-                    ) => (
-                      <option
-                        key={
-                          category.id
-                        }
-                        value={
-                          category.id
-                        }
-                      >
-                        {
-                          category.icon
-                        }{" "}
-                        {
-                          category.name
-                        }
-                      </option>
-                    ),
-                  )}
-
-                </select>
-
-              </div>
-
-              <div className="mt-5 flex flex-wrap gap-2">
-
-                {adminCategories.map(
-                  (
-                    category,
-                  ) => (
-                    <span
-                      key={
-                        category.id
-                      }
-                      className="rounded-full bg-orange-50 px-3 py-1.5 text-xs font-bold text-[#d97706]"
-                    >
-                      {
-                        category.icon
-                      }{" "}
-                      {
-                        category.name
-                      }
-                    </span>
-                  ),
-                )}
-
-                <button
-                  type="button"
-                  onClick={
-                    handleAddCategory
-                  }
-                  className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1.5 text-xs font-black text-[#8b5cf6] transition hover:from-purple-200 hover:to-pink-200"
-                >
-                  <Plus
-                    size={13}
-                  />
-                  Add Category
-                </button>
-
-              </div>
-            </div>
-
-            <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-6">
-
-              <div className="mb-5 flex items-center justify-between">
-
-                <div>
-                  <p className="text-sm font-black text-[#29221b]">
-                    {
-                      filteredProducts.length
-                    }{" "}
-                    products
-                  </p>
-
-                  <p className="text-xs text-[#8c7a63]">
-                    Global catalogue
-                  </p>
-                </div>
-
-              </div>
-
-              {filteredProducts.length ===
-              0 ? (
-                <div className="rounded-2xl border border-dashed border-orange-200 bg-orange-50/30 px-6 py-14 text-center">
-
-                  <Package
-                    size={40}
-                    className="mx-auto text-orange-300"
-                  />
-
-                  <p className="mt-3 font-black text-[#29221b]">
-                    No products found
-                  </p>
-
-                </div>
-              ) : (
-                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-
-                  {filteredProducts.map(
-                    (
-                      product,
-                    ) => (
-                      <article
-                        key={
-                          product.id
-                        }
-                        className="overflow-hidden rounded-2xl border border-orange-100 bg-[#fffaf0]"
-                      >
-
-                        <div className="relative">
-
-                          <img
-                            src={
-                              product.thumbnail
-                            }
-                            alt={
-                              product.title
-                            }
-                            className="h-48 w-full object-cover"
-                          />
-
-                          <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-black text-[#d97706] shadow">
-                            {
-                              getCategoryName(
-                                product.category,
-                              )
-                            }
-                          </span>
-
-                        </div>
-
-                        <div className="p-4">
-
-                          <p className="text-xs font-bold uppercase tracking-wide text-[#a6957e]">
-                            {
-                              product.brand
-                            }
-                          </p>
-
-                          <h3 className="mt-1 line-clamp-2 font-black text-[#29221b]">
-                            {
-                              product.title
-                            }
-                          </h3>
-
-                          <div className="mt-3 flex items-center justify-between">
-
-                            <p className="font-black text-[#d97706]">
-                              {formatCurrency(
-                                product.price,
-                              )}
-                            </p>
-
-                            <span
-                              className={`rounded-full px-2.5 py-1 text-xs font-black ${
-                                product.stock <=
-                                10
-                                  ? "bg-red-100 text-red-600"
-                                  : "bg-green-100 text-green-700"
-                              }`}
-                            >
-                              Stock:{" "}
-                              {
-                                product.stock
-                              }
-                            </span>
-
-                          </div>
-
-                          <div className="mt-4 flex gap-2">
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleEditProduct(
-                                  product,
-                                )
-                              }
-                              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-purple-100 px-3 py-2.5 text-sm font-black text-[#7c3aed] transition hover:bg-purple-200"
-                            >
-                              <Edit3
-                                size={
-                                  16
-                                }
-                              />
-                              Edit
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setShowDeleteModal(
-                                  product,
-                                )
-                              }
-                              className="flex items-center justify-center rounded-xl bg-red-100 px-3 py-2.5 text-red-600 transition hover:bg-red-200"
-                              aria-label={`Delete ${product.title}`}
-                            >
-                              <Trash2
-                                size={
-                                  16
-                                }
-                              />
-                            </button>
-
-                          </div>
-                        </div>
-
-                      </article>
-                    ),
+                    </table>
                   )}
 
                 </div>
-              )}
-
-            </div>
-          </div>
-        )}
-
-        {/* ==================================================
-            ORDERS
-        ================================================== */}
-        {activeTab ===
-          "orders" && (
-          <div className="space-y-6">
-
-            <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-6">
-
-              <div>
-                <h2 className="text-2xl font-black text-[#29221b]">
-                  Order Management
-                </h2>
-
-                <p className="mt-1 text-sm text-[#8c7a63]">
-                  All customer orders are visible here.
-                </p>
-              </div>
-
-              <div className="mt-6 grid gap-3 md:grid-cols-[1fr_220px]">
-
-                <div className="relative">
-
-                  <Search
-                    size={18}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-[#a6957e]"
-                  />
-
-                  <input
-                    value={
-                      orderSearch
-                    }
-                    onChange={(
-                      event,
-                    ) =>
-                      setOrderSearch(
-                        event.target.value,
-                      )
-                    }
-                    placeholder="Search order ID or customer..."
-                    className="w-full rounded-xl border border-orange-100 bg-[#fffaf0] py-3 pl-11 pr-4 text-sm outline-none focus:border-[#f59e0b] focus:ring-4 focus:ring-orange-100"
-                  />
-
-                </div>
-
-                <select
-                  value={
-                    orderStatusFilter
-                  }
-                  onChange={(
-                    event,
-                  ) =>
-                    setOrderStatusFilter(
-                      event.target.value as
-                        | "all"
-                        | OrderStatus,
-                    )
-                  }
-                  className="rounded-xl border border-orange-100 bg-[#fffaf0] px-4 py-3 text-sm font-bold outline-none focus:border-[#f59e0b] focus:ring-4 focus:ring-orange-100"
-                >
-
-                  <option value="all">
-                    All Statuses
-                  </option>
-
-                  {orderStatuses.map(
-                    (
-                      status,
-                    ) => (
-                      <option
-                        key={
-                          status
-                        }
-                        value={
-                          status
-                        }
-                      >
-                        {
-                          status
-                        }
-                      </option>
-                    ),
-                  )}
-
-                </select>
-
               </div>
             </div>
-
-            <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-6">
-
-              <div className="overflow-x-auto">
-
-                {filteredOrders.length ===
-                0 ? (
-                  <div className="py-14 text-center">
-
-                    <ShoppingBag
-                      size={40}
-                      className="mx-auto text-orange-300"
-                    />
-
-                    <p className="mt-3 font-black text-[#29221b]">
-                      No orders found
-                    </p>
-
-                  </div>
-                ) : (
-                  <table className="min-w-full text-left text-sm">
-
-                    <thead>
-                      <tr className="border-b border-orange-100 text-xs uppercase tracking-wide text-[#8c7a63]">
-
-                        <th className="px-3 py-3">
-                          Order
-                        </th>
-
-                        <th className="px-3 py-3">
-                          Customer
-                        </th>
-
-                        <th className="px-3 py-3">
-                          Items
-                        </th>
-
-                        <th className="px-3 py-3">
-                          Total
-                        </th>
-
-                        <th className="px-3 py-3">
-                          Status
-                        </th>
-
-                        <th className="px-3 py-3">
-                          Action
-                        </th>
-
-                      </tr>
-                    </thead>
-
-                    <tbody>
-
-                      {filteredOrders.map(
-                        (
-                          order,
-                        ) => (
-                          <tr
-                            key={
-                              order.id
-                            }
-                            className="border-b border-orange-50"
-                          >
-
-                            <td className="px-3 py-4 font-black text-[#29221b]">
-                              #
-                              {
-                                order.id
-                              }
-                            </td>
-
-                            <td className="px-3 py-4">
-
-                              <p className="font-bold">
-                                {
-                                  order
-                                    .shippingAddress
-                                    .fullName
-                                }
-                              </p>
-
-                              <p className="text-xs text-[#8c7a63]">
-                                {
-                                  order
-                                    .shippingAddress
-                                    .email
-                                }
-                              </p>
-
-                            </td>
-
-                            <td className="px-3 py-4">
-                              {order.items.reduce(
-                                (
-                                  sum,
-                                  item,
-                                ) =>
-                                  sum +
-                                  item.quantity,
-                                0,
-                              )}
-                            </td>
-
-                            <td className="px-3 py-4 font-black text-[#d97706]">
-                              {formatCurrency(
-                                order.total,
-                              )}
-                            </td>
-
-                            <td className="px-3 py-4">
-
-                              <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-black text-[#7c3aed]">
-                                {
-                                  order.status
-                                }
-                              </span>
-
-                            </td>
-
-                            <td className="px-3 py-4">
-
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setSelectedOrder(
-                                    order,
-                                  )
-                                }
-                                className="inline-flex items-center gap-2 rounded-xl bg-orange-100 px-3 py-2 text-xs font-black text-[#d97706]"
-                              >
-                                <Eye
-                                  size={
-                                    15
-                                  }
-                                />
-                                View
-                              </button>
-
-                            </td>
-
-                          </tr>
-                        ),
-                      )}
-
-                    </tbody>
-
-                  </table>
-                )}
-
-              </div>
-            </div>
-          </div>
-        )}
+          )}
 
         {/* ==================================================
             CUSTOMERS
         ================================================== */}
         {activeTab ===
           "customers" && (
-          <div className="space-y-6">
+            <div className="space-y-6">
 
-            <div className="rounded-3xl border border-purple-100 bg-white p-5 shadow-sm sm:p-6">
+              <div className="rounded-3xl border border-purple-100 bg-white p-5 shadow-sm sm:p-6">
 
-              <h2 className="text-2xl font-black text-[#29221b]">
-                Customers
-              </h2>
+                <h2 className="text-2xl font-black text-[#29221b]">
+                  Customers
+                </h2>
 
-              <p className="mt-1 text-sm text-[#8c7a63]">
-                Customers registered on this ShopSphere demo.
-              </p>
-
-              <div className="relative mt-6">
-
-                <Search
-                  size={18}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#a6957e]"
-                />
-
-                <input
-                  value={
-                    customerSearch
-                  }
-                  onChange={(
-                    event,
-                  ) =>
-                    setCustomerSearch(
-                      event.target.value,
-                    )
-                  }
-                  placeholder="Search customer name or email..."
-                  className="w-full rounded-xl border border-purple-100 bg-[#fffaf0] py-3 pl-11 pr-4 text-sm outline-none focus:border-[#8b5cf6] focus:ring-4 focus:ring-purple-100"
-                />
-
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-
-              {filteredCustomers.map(
-                (
-                  customer,
-                ) => {
-                  const customerOrders =
-                    getCustomerOrders(
-                      customer.email,
-                    );
-
-                  const spent =
-                    customerOrders.reduce(
-                      (
-                        sum,
-                        order,
-                      ) =>
-                        sum +
-                        order.total,
-                      0,
-                    );
-
-                  return (
-                    <article
-                      key={
-                        customer.id
-                      }
-                      className="rounded-3xl border border-purple-100 bg-white p-5 shadow-sm"
-                    >
-
-                      <div className="flex items-center gap-4">
-
-                        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#ec4899] text-lg font-black text-white">
-                          {customer.name
-                            .charAt(
-                              0,
-                            )
-                            .toUpperCase()}
-                        </div>
-
-                        <div className="min-w-0">
-
-                          <h3 className="truncate font-black text-[#29221b]">
-                            {
-                              customer.name
-                            }
-                          </h3>
-
-                          <p className="truncate text-xs text-[#8c7a63]">
-                            {
-                              customer.email
-                            }
-                          </p>
-
-                        </div>
-                      </div>
-
-                      <div className="mt-5 grid grid-cols-2 gap-3">
-
-                        <div className="rounded-2xl bg-purple-50 p-3">
-
-                          <p className="text-[10px] font-black uppercase tracking-wide text-[#8b5cf6]">
-                            Orders
-                          </p>
-
-                          <p className="mt-1 text-xl font-black text-[#29221b]">
-                            {
-                              customerOrders.length
-                            }
-                          </p>
-
-                        </div>
-
-                        <div className="rounded-2xl bg-orange-50 p-3">
-
-                          <p className="text-[10px] font-black uppercase tracking-wide text-[#d97706]">
-                            Spent
-                          </p>
-
-                          <p className="mt-1 text-xl font-black text-[#29221b]">
-                            {formatCurrency(
-                              spent,
-                            )}
-                          </p>
-
-                        </div>
-
-                      </div>
-                    </article>
-                  );
-                },
-              )}
-
-            </div>
-
-            {filteredCustomers.length ===
-              0 && (
-              <div className="rounded-3xl border border-dashed border-purple-200 bg-purple-50/40 px-6 py-14 text-center">
-
-                <Users
-                  size={40}
-                  className="mx-auto text-purple-300"
-                />
-
-                <p className="mt-3 font-black text-[#29221b]">
-                  No customers found
+                <p className="mt-1 text-sm text-[#8c7a63]">
+                  Customers registered on this ShopSphere demo.
                 </p>
 
-              </div>
-            )}
+                <div className="relative mt-6">
 
-          </div>
-        )}
+                  <Search
+                    size={18}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-[#a6957e]"
+                  />
+
+                  <input
+                    value={
+                      customerSearch
+                    }
+                    onChange={(
+                      event,
+                    ) =>
+                      setCustomerSearch(
+                        event.target.value,
+                      )
+                    }
+                    placeholder="Search customer name or email..."
+                    className="w-full rounded-xl border border-purple-100 bg-[#fffaf0] py-3 pl-11 pr-4 text-sm outline-none focus:border-[#8b5cf6] focus:ring-4 focus:ring-purple-100"
+                  />
+
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+
+                {filteredCustomers.map(
+                  (
+                    customer,
+                  ) => {
+                    const customerOrders =
+                      getCustomerOrders(
+                        customer.email,
+                      );
+
+                    const spent =
+                      customerOrders.reduce(
+                        (
+                          sum,
+                          order,
+                        ) =>
+                          sum +
+                          order.total,
+                        0,
+                      );
+
+                    return (
+                      <article
+                        key={
+                          customer.id
+                        }
+                        className="rounded-3xl border border-purple-100 bg-white p-5 shadow-sm"
+                      >
+
+                        <div className="flex items-center gap-4">
+
+                          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#ec4899] text-lg font-black text-white">
+                            {customer.name
+                              .charAt(
+                                0,
+                              )
+                              .toUpperCase()}
+                          </div>
+
+                          <div className="min-w-0">
+
+                            <h3 className="truncate font-black text-[#29221b]">
+                              {
+                                customer.name
+                              }
+                            </h3>
+
+                            <p className="truncate text-xs text-[#8c7a63]">
+                              {
+                                customer.email
+                              }
+                            </p>
+
+                          </div>
+                        </div>
+
+                        <div className="mt-5 grid grid-cols-2 gap-3">
+
+                          <div className="rounded-2xl bg-purple-50 p-3">
+
+                            <p className="text-[10px] font-black uppercase tracking-wide text-[#8b5cf6]">
+                              Orders
+                            </p>
+
+                            <p className="mt-1 text-xl font-black text-[#29221b]">
+                              {
+                                customerOrders.length
+                              }
+                            </p>
+
+                          </div>
+
+                          <div className="rounded-2xl bg-orange-50 p-3">
+
+                            <p className="text-[10px] font-black uppercase tracking-wide text-[#d97706]">
+                              Spent
+                            </p>
+
+                            <p className="mt-1 text-xl font-black text-[#29221b]">
+                              {formatCurrency(
+                                spent,
+                              )}
+                            </p>
+
+                          </div>
+
+                        </div>
+                      </article>
+                    );
+                  },
+                )}
+
+              </div>
+
+              {filteredCustomers.length ===
+                0 && (
+                  <div className="rounded-3xl border border-dashed border-purple-200 bg-purple-50/40 px-6 py-14 text-center">
+
+                    <Users
+                      size={40}
+                      className="mx-auto text-purple-300"
+                    />
+
+                    <p className="mt-3 font-black text-[#29221b]">
+                      No customers found
+                    </p>
+
+                  </div>
+                )}
+
+            </div>
+          )}
 
         {/* ==================================================
             ANALYTICS
         ================================================== */}
         {activeTab ===
           "analytics" && (
-          <div className="space-y-6">
+            <div className="space-y-6">
 
-            <div className="overflow-hidden rounded-3xl bg-gradient-to-r from-[#4c1d95] via-[#8b5cf6] to-[#ec4899] p-6 text-white shadow-xl sm:p-8">
+              <div className="overflow-hidden rounded-3xl bg-gradient-to-r from-[#4c1d95] via-[#8b5cf6] to-[#ec4899] p-6 text-white shadow-xl sm:p-8">
 
-              <p className="text-sm font-bold text-white/75">
-                SHOPSPHERE AI
-              </p>
-
-              <h2 className="mt-1 text-3xl font-black">
-                Recommendation Analytics
-              </h2>
-
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-white/85">
-                Local demo analytics for recommendation impressions, clicks and conversions.
-                These metrics are simulated because this frontend has no backend analytics service.
-              </p>
-
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-
-              <div className="rounded-3xl border border-purple-100 bg-white p-5 shadow-sm">
-
-                <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
-                  Impressions
+                <p className="text-sm font-bold text-white/75">
+                  SHOPSPHERE AI
                 </p>
 
-                <p className="mt-2 text-3xl font-black text-[#29221b]">
-                  {analytics.impressions.toLocaleString(
-                    "en-IN",
-                  )}
+                <h2 className="mt-1 text-3xl font-black">
+                  Recommendation Analytics
+                </h2>
+
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-white/85">
+                  Local demo analytics for recommendation impressions, clicks and conversions.
+                  These metrics are simulated because this frontend has no backend analytics service.
                 </p>
 
               </div>
 
-              <div className="rounded-3xl border border-pink-100 bg-white p-5 shadow-sm">
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
 
-                <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
-                  Clicks
-                </p>
+                <div className="rounded-3xl border border-purple-100 bg-white p-5 shadow-sm">
 
-                <p className="mt-2 text-3xl font-black text-[#29221b]">
-                  {analytics.clicks.toLocaleString(
-                    "en-IN",
-                  )}
-                </p>
+                  <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
+                    Impressions
+                  </p>
 
-              </div>
+                  <p className="mt-2 text-3xl font-black text-[#29221b]">
+                    {analytics.impressions.toLocaleString(
+                      "en-IN",
+                    )}
+                  </p>
 
-              <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm">
-
-                <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
-                  CTR
-                </p>
-
-                <p className="mt-2 text-3xl font-black text-[#29221b]">
-                  {analytics.ctr.toFixed(
-                    1,
-                  )}
-                  %
-                </p>
-
-              </div>
-
-              <div className="rounded-3xl border border-green-100 bg-white p-5 shadow-sm">
-
-                <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
-                  Conversions
-                </p>
-
-                <p className="mt-2 text-3xl font-black text-[#29221b]">
-                  {
-                    analytics.conversions
-                  }
-                </p>
-
-                <p className="mt-1 text-xs font-bold text-green-600">
-                  {analytics.conversionRate.toFixed(
-                    1,
-                  )}
-                  % conversion rate
-                </p>
-
-              </div>
-
-            </div>
-
-            <div className="rounded-3xl border border-purple-100 bg-white p-5 shadow-sm sm:p-6">
-
-              <div className="flex items-center gap-3">
-
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-purple-100 text-[#8b5cf6]">
-                  <BarChart3
-                    size={21}
-                  />
                 </div>
 
-                <div>
+                <div className="rounded-3xl border border-pink-100 bg-white p-5 shadow-sm">
 
-                  <h3 className="font-black text-[#29221b]">
-                    Strategy Breakdown
-                  </h3>
+                  <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
+                    Clicks
+                  </p>
 
-                  <p className="text-sm text-[#8c7a63]">
-                    Nine recommendation strategies from the ShopSphere AI architecture.
+                  <p className="mt-2 text-3xl font-black text-[#29221b]">
+                    {analytics.clicks.toLocaleString(
+                      "en-IN",
+                    )}
+                  </p>
+
+                </div>
+
+                <div className="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm">
+
+                  <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
+                    CTR
+                  </p>
+
+                  <p className="mt-2 text-3xl font-black text-[#29221b]">
+                    {analytics.ctr.toFixed(
+                      1,
+                    )}
+                    %
+                  </p>
+
+                </div>
+
+                <div className="rounded-3xl border border-green-100 bg-white p-5 shadow-sm">
+
+                  <p className="text-xs font-black uppercase tracking-wide text-[#8c7a63]">
+                    Conversions
+                  </p>
+
+                  <p className="mt-2 text-3xl font-black text-[#29221b]">
+                    {
+                      analytics.conversions
+                    }
+                  </p>
+
+                  <p className="mt-1 text-xs font-bold text-green-600">
+                    {analytics.conversionRate.toFixed(
+                      1,
+                    )}
+                    % conversion rate
                   </p>
 
                 </div>
 
               </div>
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="rounded-3xl border border-purple-100 bg-white p-5 shadow-sm sm:p-6">
 
-                {strategyNames.map(
-                  (
-                    strategy,
-                    index,
-                  ) => {
+                <div className="flex items-center gap-3">
 
-                    const share =
-                      Math.max(
-                        4,
-                        18 -
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-purple-100 text-[#8b5cf6]">
+                    <BarChart3
+                      size={21}
+                    />
+                  </div>
+
+                  <div>
+
+                    <h3 className="font-black text-[#29221b]">
+                      Strategy Breakdown
+                    </h3>
+
+                    <p className="text-sm text-[#8c7a63]">
+                      Nine recommendation strategies from the ShopSphere AI architecture.
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+
+                  {strategyNames.map(
+                    (
+                      strategy,
+                      index,
+                    ) => {
+
+                      const share =
+                        Math.max(
+                          4,
+                          18 -
                           index,
+                        );
+
+                      return (
+                        <div
+                          key={
+                            strategy
+                          }
+                          className="rounded-2xl bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 p-4"
+                        >
+
+                          <div className="flex items-center justify-between gap-3">
+
+                            <p className="font-black text-[#29221b]">
+                              {
+                                strategy
+                              }
+                            </p>
+
+                            <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-[#8b5cf6]">
+                              {share}%
+                            </span>
+
+                          </div>
+
+                          <div className="mt-3 h-2 overflow-hidden rounded-full bg-white">
+
+                            <div
+                              className="h-full rounded-full bg-gradient-to-r from-[#f59e0b] to-[#ec4899]"
+                              style={{
+                                width: `${share}%`,
+                              }}
+                            />
+
+                          </div>
+
+                        </div>
                       );
+                    },
+                  )}
 
-                    return (
-                      <div
-                        key={
-                          strategy
-                        }
-                        className="rounded-2xl bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 p-4"
-                      >
-
-                        <div className="flex items-center justify-between gap-3">
-
-                          <p className="font-black text-[#29221b]">
-                            {
-                              strategy
-                            }
-                          </p>
-
-                          <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-[#8b5cf6]">
-                            {share}%
-                          </span>
-
-                        </div>
-
-                        <div className="mt-3 h-2 overflow-hidden rounded-full bg-white">
-
-                          <div
-                            className="h-full rounded-full bg-gradient-to-r from-[#f59e0b] to-[#ec4899]"
-                            style={{
-                              width: `${share}%`,
-                            }}
-                          />
-
-                        </div>
-
-                      </div>
-                    );
-                  },
-                )}
-
+                </div>
               </div>
-            </div>
 
-          </div>
-        )}
+            </div>
+          )}
 
       </div>
 
@@ -2982,7 +2980,7 @@ function Admin() {
                           image
                           {
                             productForm.images.length ===
-                            1
+                              1
                               ? ""
                               : "s"
                           }
@@ -3023,10 +3021,10 @@ function Admin() {
                                             currentIndex,
                                           ) =>
                                             currentIndex ===
-                                            index
+                                              index
                                               ? event
-                                                  .target
-                                                  .value
+                                                .target
+                                                .value
                                               : currentImage,
                                         ),
                                     }),
@@ -3129,14 +3127,14 @@ function Admin() {
 
                         {productForm.discountPercentage >
                           0 && (
-                          <span className="absolute left-3 top-3 rounded-full bg-[#ec4899] px-3 py-1 text-xs font-black text-white shadow-md">
-                            -
-                            {
-                              productForm.discountPercentage
-                            }
-                            %
-                          </span>
-                        )}
+                            <span className="absolute left-3 top-3 rounded-full bg-[#ec4899] px-3 py-1 text-xs font-black text-white shadow-md">
+                              -
+                              {
+                                productForm.discountPercentage
+                              }
+                              %
+                            </span>
+                          )}
 
                       </div>
 
@@ -3197,22 +3195,21 @@ function Admin() {
                             {Number(
                               productForm.discountPercentage,
                             ) > 0 && (
-                              <p className="mt-1 text-xs font-bold text-[#a6957e]">
-                                Discount applied
-                              </p>
-                            )}
+                                <p className="mt-1 text-xs font-bold text-[#a6957e]">
+                                  Discount applied
+                                </p>
+                              )}
 
                           </div>
 
                           <span
-                            className={`rounded-full px-3 py-1.5 text-xs font-black ${
-                              Number(
-                                productForm.stock,
-                              ) <=
-                              10
+                            className={`rounded-full px-3 py-1.5 text-xs font-black ${Number(
+                              productForm.stock,
+                            ) <=
+                                10
                                 ? "bg-red-100 text-red-600"
                                 : "bg-green-100 text-green-700"
-                            }`}
+                              }`}
                           >
                             {
                               productForm.stock
@@ -3686,7 +3683,7 @@ function Admin() {
                         <p className="font-black text-[#d97706]">
                           {formatCurrency(
                             item.price *
-                              item.quantity,
+                            item.quantity,
                           )}
                         </p>
 
@@ -3762,7 +3759,7 @@ function Admin() {
                   {selectedOrder.status !==
                     "Delivered" &&
                     selectedOrder.status !==
-                      "Cancelled" && (
+                    "Cancelled" && (
                       <button
                         type="button"
                         onClick={() =>
@@ -3794,12 +3791,11 @@ function Admin() {
                           key={
                             status
                           }
-                          className={`rounded-full px-3 py-1.5 text-xs font-black ${
-                            status ===
-                            selectedOrder.status
+                          className={`rounded-full px-3 py-1.5 text-xs font-black ${status ===
+                              selectedOrder.status
                               ? "bg-[#8b5cf6] text-white"
                               : "bg-white text-[#8c7a63]"
-                          }`}
+                            }`}
                         >
                           {
                             status
